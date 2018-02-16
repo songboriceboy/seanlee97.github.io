@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="nlp," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="python下NLP工具有很多 jieba, nltk, ltp 等， 虽然他们很强大，但是提供的功能比较分散，而且通常模型比较大。为了方便平时的处理工作，我尝试找了一些集成工具包，发现snownlp还可以，它的分词是基于TnT的，总得来说分词效果逊色于基于词典的分词（比如jieba）。所以决定自己写一个包xmnlp，主打轻量快捷。 功能 中文分词 &amp;amp; 词性标注： 基于词典构建DAG图，">
+<meta name="keywords" content="nlp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xmnlp — A Lightweight Chinese NLP Toolkit.">
+<meta property="og:url" content="http://seanlee97.github.io/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/index.html">
+<meta property="og:site_name" content="SeanLee - 明天探索者">
+<meta property="og:description" content="python下NLP工具有很多 jieba, nltk, ltp 等， 虽然他们很强大，但是提供的功能比较分散，而且通常模型比较大。为了方便平时的处理工作，我尝试找了一些集成工具包，发现snownlp还可以，它的分词是基于TnT的，总得来说分词效果逊色于基于词典的分词（比如jieba）。所以决定自己写一个包xmnlp，主打轻量快捷。 功能 中文分词 &amp;amp; 词性标注： 基于词典构建DAG图，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/xmnlp/slogan.png">
+<meta property="og:updated_time" content="2018-02-16T15:24:31.114Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="xmnlp — A Lightweight Chinese NLP Toolkit.">
+<meta name="twitter:description" content="python下NLP工具有很多 jieba, nltk, ltp 等， 虽然他们很强大，但是提供的功能比较分散，而且通常模型比较大。为了方便平时的处理工作，我尝试找了一些集成工具包，发现snownlp还可以，它的分词是基于TnT的，总得来说分词效果逊色于基于词典的分词（比如jieba）。所以决定自己写一个包xmnlp，主打轻量快捷。 功能 中文分词 &amp;amp; 词性标注： 基于词典构建DAG图，">
+<meta name="twitter:image" content="http://seanlee97.github.io/images/posts/xmnlp/slogan.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://seanlee97.github.io/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/"/>
+
+
+
+
+
+  <title>xmnlp — A Lightweight Chinese NLP Toolkit. | SeanLee - 明天探索者</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SeanLee - 明天探索者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SeanLee - 明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">xmnlp — A Lightweight Chinese NLP Toolkit.</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-16T23:13:07+08:00">
+                2018-02-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="/images/posts/xmnlp/slogan.png" alt="slogan"></p>
+<p>python下NLP工具有很多 jieba, nltk, ltp 等， 虽然他们很强大，但是提供的功能比较分散，而且通常模型比较大。为了方便平时的处理工作，我尝试找了一些集成工具包，发现snownlp还可以，它的分词是基于TnT的，总得来说分词效果逊色于基于词典的分词（比如jieba）。所以决定自己写一个包xmnlp，主打轻量快捷。</p>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><ol>
+<li><p>中文分词 &amp; 词性标注： 基于词典构建DAG图，然后采用动态规划的思想求得最大概率路径（jieba分词采用了反向输出，我采用了正向加权反向输出的方式，使得正反向共同影响分词效果），对于未登录词采用HMM+Viterbi处理</p>
+</li>
+<li><p>文本纠错：采用了bi-gram + levenshtein实现</p>
+</li>
+<li><p>文本摘要 &amp; 关键词提取：textrank</p>
+</li>
+<li><p>情感分析：naive bayes</p>
+</li>
+<li><p>文本转拼音：Trie 树检索</p>
+</li>
+</ol>
+<p>以下展示xmnlp的功能效果，不同模块的原理之后的文章会补上。</p>
+<h2 id="分词-amp-词性标注"><a href="#分词-amp-词性标注" class="headerlink" title="分词&amp;词性标注"></a>分词&amp;词性标注</h2><p>[ doc ]</p>
+<p>自然语言处理: 是人工智能和语言学领域的分支学科。<br>在这此领域中探讨如何处理及运用自然语言；自然语言认知则是指让电脑“懂”人类的语言。<br>自然语言生成系统把计算机数据转化为自然语言。<br>自然语言理解系统把自然语言转化为计算机程序更易于处理的形式。</p>
+<p>[ 分词 ]</p>
+<p>自然语言处理 / : / 是 / 人工智能 / 和 / 语言学 / 领域 / 的 / 分支 / 学科 / 。 / 在 / 这此 / 领域 / 中 / 探讨 / 如何 / 处理 / 及 / 运用 / 自然 / 语言 / ； / 自然 / 语言 / 认知 / 则 / 是 / 指让 / 电脑 / “ / 懂 / ” / 人类 / 的 / 语言 / 。 / 自然 / 语言 / 生成 / 系统 / 把 / 计算机 / 数据 / 转化 / 为 / 自然 / 语言 / 。 / 自然 / 语言 / 理解 / 系统 / 把 / 自然 / 语言 / 转化 / 为 / 计算机程序 / 更 / 易于 / 处理 / 的 / 形式 / 。</p>
+<p>[ 标注 ]</p>
+<p>自然语言处理 un / : un / 是 v / 人工智能 nw / 和 c / 语言学 n / 领域 n / 的 uj / 分支 n / 学科 n / 。 un / 在 p / 这此 un / 领域 n / 中 f / 探讨 v / 如何 r / 处理 v / 及 c / 运用 vn / 自然 d / 语言 n / ； un / 自然 d / 语言 n / 认知 v / 则 d / 是 v / 指让 un / 电脑 n / “ un / 懂 v / ” un / 人类 n / 的 uj / 语言 n / 。 un / 自然 d / 语言 n / 生成 v / 系统 n / 把 p / 计算机 n / 数据 n / 转化 v / 为 p / 自然 d / 语言 n / 。 un / 自然 d / 语言 n / 理解 v / 系统 n / 把 p / 自然 d / 语言 n / 转化 v / 为 p / 计算机程序 n / 更 d / 易于 v / 处理 v / 的 uj / 形式 n / 。 un</p>
+<h2 id="文本纠错"><a href="#文本纠错" class="headerlink" title="文本纠错"></a>文本纠错</h2><p>[ doc ]</p>
+<p>这理风景绣丽，而且天汽不错，我的心情各外舒畅!</p>
+<p>[ 纠错 ]</p>
+<p>这里风景秀丽，而且天气不错，我的心情格外舒畅!</p>
+<h2 id="文本摘要-amp-关键词"><a href="#文本摘要-amp-关键词" class="headerlink" title="文本摘要&amp;关键词"></a>文本摘要&amp;关键词</h2><p>[ doc ]</p>
+<p>自然语言处理: 是人工智能和语言学领域的分支学科。<br>在这此领域中探讨如何处理及运用自然语言；自然语言认知则是指让电脑“懂”人类的语言。<br>自然语言生成系统把计算机数据转化为自然语言。<br>自然语言理解系统把自然语言转化为计算机程序更易于处理的形式。</p>
+<p> [ 关键词 ]</p>
+<p>(‘自然语言’, 2.2069266136741321), </p>
+<p>(‘处理’, 1.5572478858429686), </p>
+<p>(‘是’, 1.4182222157079281), </p>
+<p>(‘系统’, 1.2431338210535401), </p>
+<p>(‘转化’, 1.1532093387566391)</p>
+<p>[ 摘要 ]</p>
+<p>自然语言理解系统把自然语言转化为计算机程序更易于处理的形式</p>
+<h2 id="情感分析"><a href="#情感分析" class="headerlink" title="情感分析"></a>情感分析</h2><p>[ doc ]</p>
+<p>这件衣服的质量也太差了吧！一穿就烂！</p>
+<p>[ 分值 ]</p>
+<p>0.009959694621645698</p>
+<h2 id="文本转拼音"><a href="#文本转拼音" class="headerlink" title="文本转拼音"></a>文本转拼音</h2><p>[ doc ]</p>
+<p>面朝大海，春暖花开</p>
+<p>[ 拼音 ]</p>
+<p>[‘mian’, ‘zhao’, ‘da’, ‘hai’, ‘，’, ‘chun’, ‘nuan’, ‘hua’, ‘kai’]</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nlp/" rel="tag"># nlp</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/16/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="sean lee" />
+            
+              <p class="site-author-name" itemprop="name">sean lee</p>
+              <p class="site-description motion-element" itemprop="description">interests in NLP / NLU / DL / ML</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/SeanLee97" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:xmlee97@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://plus.google.com/u/0/114423502510761945752" target="_blank" title="Google">
+                      
+                        <i class="fa fa-fw fa-google"></i>Google</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/SeanLee_xm" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#功能"><span class="nav-number">1.</span> <span class="nav-text">功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分词-amp-词性标注"><span class="nav-number">2.</span> <span class="nav-text">分词&amp;词性标注</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文本纠错"><span class="nav-number">3.</span> <span class="nav-text">文本纠错</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文本摘要-amp-关键词"><span class="nav-number">4.</span> <span class="nav-text">文本摘要&amp;关键词</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#情感分析"><span class="nav-number">5.</span> <span class="nav-text">情感分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文本转拼音"><span class="nav-number">6.</span> <span class="nav-text">文本转拼音</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sean lee</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://seanlee97.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://seanlee97.github.io/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/';
+          this.page.identifier = '2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/';
+          this.page.title = 'xmnlp — A Lightweight Chinese NLP Toolkit.';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://seanlee97.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
