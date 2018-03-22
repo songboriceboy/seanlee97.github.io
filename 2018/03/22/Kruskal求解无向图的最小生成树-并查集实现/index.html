@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="sean lee`s blog" />
+  <meta name="keywords" content="数据结构," />
 
 
 
@@ -79,16 +79,21 @@
 
 
 
-<meta name="description" content="interests in NLP / NLU / DL / ML">
-<meta property="og:type" content="website">
-<meta property="og:title" content="SeanLee - 明天探索者">
-<meta property="og:url" content="http://seanlee97.github.io/index.html">
+<meta name="description" content="Kruskal 概述Kruskal算法，是用来求加权连通图的最小生成树的算法。  它的基本思想是：按照权值从小到大的顺序选择n-1条边，并保证这n-1条边不构成回路（环）。 具体做法是：首先构造一个只含n个顶点的森林，然后依权值从小到大从连通网中选择边加入到森林中，并使森林中不产生回路，直至森林变成一棵树为止。 更多关于kruskal的知识欢迎查看维基百科-Kruskal’s algorithm，">
+<meta name="keywords" content="数据结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kruskal求解无向图的最小生成树(并查集实现)">
+<meta property="og:url" content="http://seanlee97.github.io/2018/03/22/Kruskal求解无向图的最小生成树-并查集实现/index.html">
 <meta property="og:site_name" content="SeanLee - 明天探索者">
-<meta property="og:description" content="interests in NLP / NLU / DL / ML">
+<meta property="og:description" content="Kruskal 概述Kruskal算法，是用来求加权连通图的最小生成树的算法。  它的基本思想是：按照权值从小到大的顺序选择n-1条边，并保证这n-1条边不构成回路（环）。 具体做法是：首先构造一个只含n个顶点的森林，然后依权值从小到大从连通网中选择边加入到森林中，并使森林中不产生回路，直至森林变成一棵树为止。 更多关于kruskal的知识欢迎查看维基百科-Kruskal’s algorithm，">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/unionfind/union-find.png">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/unionfind/cycle-graph.png">
+<meta property="og:updated_time" content="2018-03-22T05:15:37.258Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SeanLee - 明天探索者">
-<meta name="twitter:description" content="interests in NLP / NLU / DL / ML">
+<meta name="twitter:title" content="Kruskal求解无向图的最小生成树(并查集实现)">
+<meta name="twitter:description" content="Kruskal 概述Kruskal算法，是用来求加权连通图的最小生成树的算法。  它的基本思想是：按照权值从小到大的顺序选择n-1条边，并保证这n-1条边不构成回路（环）。 具体做法是：首先构造一个只含n个顶点的森林，然后依权值从小到大从连通网中选择边加入到森林中，并使森林中不产生回路，直至森林变成一棵树为止。 更多关于kruskal的知识欢迎查看维基百科-Kruskal’s algorithm，">
+<meta name="twitter:image" content="http://seanlee97.github.io/images/posts/unionfind/union-find.png">
 
 
 
@@ -118,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://seanlee97.github.io/"/>
+  <link rel="canonical" href="http://seanlee97.github.io/2018/03/22/Kruskal求解无向图的最小生成树-并查集实现/"/>
 
 
 
 
 
-  <title>SeanLee - 明天探索者</title>
+  <title>Kruskal求解无向图的最小生成树(并查集实现) | SeanLee - 明天探索者</title>
   
 
 
@@ -143,8 +148,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -217,9 +221,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -249,9 +253,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/22/Kruskal求解无向图的最小生成树-并查集实现/" itemprop="url">Kruskal求解无向图的最小生成树(并查集实现)</a></h1>
+          <h1 class="post-title" itemprop="name headline">Kruskal求解无向图的最小生成树(并查集实现)</h1>
         
 
         <div class="post-meta">
@@ -312,9 +314,7 @@
       
 
       
-        
-          
-            <h2 id="Kruskal-概述"><a href="#Kruskal-概述" class="headerlink" title="Kruskal 概述"></a>Kruskal 概述</h2><p>Kruskal算法，是用来求加权连通图的最小生成树的算法。 </p>
+        <h2 id="Kruskal-概述"><a href="#Kruskal-概述" class="headerlink" title="Kruskal 概述"></a>Kruskal 概述</h2><p>Kruskal算法，是用来求加权连通图的最小生成树的算法。 </p>
 <p>它的基本思想是：按照权值从小到大的顺序选择n-1条边，并保证这n-1条边不构成回路（环）。</p>
 <p>具体做法是：首先构造一个只含n个顶点的森林，<br>然后依权值从小到大从连通网中选择边加入到森林中，<br>并使森林中不产生回路，直至森林变成一棵树为止。</p>
 <p>更多关于kruskal的知识欢迎查看<a href="https://en.wikipedia.org/wiki/Kruskal%27s_algorithm" target="_blank" rel="noopener">维基百科-Kruskal’s algorithm</a><br>，本文主要是记录并查集这个数据结构怎么用在Kruskal求解最小生成树的问题上。</p>
@@ -368,8 +368,6 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">Kruskal解决无向图最小生成树(并查集作为主要数据结构)</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Graph</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.vertex = set()</span><br><span class="line">        self.edge = []</span><br><span class="line"></span><br><span class="line">    <span class="comment"># u - source vertex</span></span><br><span class="line">    <span class="comment"># v - target vertex</span></span><br><span class="line">    <span class="comment"># w - weight</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_edge</span><span class="params">(self, u, v, w=<span class="number">0</span>)</span>:</span></span><br><span class="line">        self.vertex.add(u)</span><br><span class="line">        self.vertex.add(v)</span><br><span class="line">        self.edge.append([u, v, w])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_parent</span><span class="params">(self, parent, i)</span>:</span></span><br><span class="line">        j = i </span><br><span class="line">        <span class="keyword">while</span> parent[j] != j:</span><br><span class="line">            j = parent[j]</span><br><span class="line">        x = i</span><br><span class="line">        <span class="keyword">while</span> x != j:</span><br><span class="line">            y = parent[x]</span><br><span class="line">            parent[x] = j</span><br><span class="line">            x = y</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    def find_parent(self, parent, i):</span></span><br><span class="line"><span class="string">        if parent[i] == i:</span></span><br><span class="line"><span class="string">            return i</span></span><br><span class="line"><span class="string">        return self.find_parent(parent, parent[i])</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(self, parent, rank, x, y)</span>:</span></span><br><span class="line">        x_set_flag = self.find_parent(parent, x)</span><br><span class="line">        y_set_flag = self.find_parent(parent, y)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> rank[x_set_flag] &lt; rank[y_set_flag]:</span><br><span class="line">            <span class="comment"># y_set_flag是大集合的代表</span></span><br><span class="line">            <span class="comment"># 小集合往大集合并,可知y_set_flag是大集合的代表,故小集合的代表应该换成大集合的代表</span></span><br><span class="line">            parent[x_set_flag] = y_set_flag</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># x_set_flag是大集合的代表</span></span><br><span class="line">            <span class="keyword">if</span> rank[x_set_flag] == rank[y_set_flag]:</span><br><span class="line">                <span class="comment"># 如果集合大小相等，因为选择了x_set_flag作为代表,则x_set_flag大表的值应该+1</span></span><br><span class="line">                rank[x_set_flag] += <span class="number">1</span></span><br><span class="line">            <span class="comment"># x_set_flag是大集合的代表，故y_set_flag的代表值为x_set_flag</span></span><br><span class="line">            parent[y_set_flag] = x_set_flag            </span><br><span class="line"></span><br><span class="line">    <span class="comment"># kruskal求最小生成树</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">kruskal</span><span class="params">(self)</span>:</span></span><br><span class="line">        result = []</span><br><span class="line">        i = <span class="number">0</span></span><br><span class="line">        e = <span class="number">0</span></span><br><span class="line">        <span class="comment"># sorted(asc) by weight</span></span><br><span class="line">        self.edge = sorted(self.edge, key=<span class="keyword">lambda</span> x: x[<span class="number">2</span>])</span><br><span class="line">        <span class="comment">#print(self.edge)</span></span><br><span class="line">        parent = []</span><br><span class="line">        rank = []</span><br><span class="line">        <span class="keyword">for</span> v <span class="keyword">in</span> range(len(self.vertex)):</span><br><span class="line">            parent.append(v)</span><br><span class="line">            rank.append(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> e &lt; len(self.vertex) - <span class="number">1</span>:</span><br><span class="line">            u, v, w = self.edge[i]</span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            x = self.find_parent(parent, u)</span><br><span class="line">            y = self.find_parent(parent, v)</span><br><span class="line"> </span><br><span class="line">            <span class="keyword">if</span> x != y: <span class="comment"># 说明没有环</span></span><br><span class="line">                e = e + <span class="number">1</span></span><br><span class="line">                result.append([u, v, w])</span><br><span class="line">                <span class="comment"># 合并</span></span><br><span class="line">                self.union(parent, rank, x, y)</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    g = Graph()</span><br><span class="line">    g.add_edge(<span class="number">0</span>, <span class="number">1</span>, <span class="number">10</span>)</span><br><span class="line">    g.add_edge(<span class="number">0</span>, <span class="number">2</span>, <span class="number">6</span>)</span><br><span class="line">    g.add_edge(<span class="number">0</span>, <span class="number">3</span>, <span class="number">5</span>)</span><br><span class="line">    g.add_edge(<span class="number">1</span>, <span class="number">3</span>, <span class="number">15</span>)</span><br><span class="line">    g.add_edge(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)    </span><br><span class="line"></span><br><span class="line">    mst = g.kruskal()</span><br><span class="line">    print(mst)</span><br></pre></td></tr></table></figure>
 <p>可以看到并查集实现的kruskal简单高效</p>
 
-          
-        
       
     </div>
     
@@ -377,195 +375,75 @@
     
 
     
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechat-qcode.jpg" alt="sean lee wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎关注我的公众号！</div>
+</div>
 
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>感谢支持！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="sean lee 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
     
 
     
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="sean lee">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="SeanLee - 明天探索者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/" itemprop="url">xmnlp — A Lightweight Chinese NLP Toolkit.</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-16T23:13:07+08:00">
-                2018-02-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
           
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/images/posts/xmnlp/slogan.png" alt="slogan"></p>
-<p>python下NLP工具有很多 jieba, nltk, ltp 等， 虽然他们很强大，但是提供的功能比较分散，而且通常模型比较大。为了方便平时的处理工作，我尝试找了一些集成工具包，发现snownlp还可以，它的分词是基于TnT的，总得来说分词效果逊色于基于词典的分词（比如jieba）。所以决定自己写一个包xmnlp，主打轻量快捷。</p>
-<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><ol>
-<li><p>中文分词 &amp; 词性标注： 基于词典构建DAG图，然后采用动态规划的思想求得最大概率路径（jieba分词采用了反向输出，我采用了正向加权反向输出的方式，使得正反向共同影响分词效果），对于未登录词采用HMM+Viterbi处理</p>
-</li>
-<li><p>文本纠错：采用了bi-gram + levenshtein实现</p>
-</li>
-<li><p>文本摘要 &amp; 关键词提取：textrank</p>
-</li>
-<li><p>情感分析：naive bayes</p>
-</li>
-<li><p>文本转拼音：Trie 树检索</p>
-</li>
-</ol>
-<p>以下展示xmnlp的功能效果，不同模块的原理之后的文章会补上。</p>
-<h2 id="分词-amp-词性标注"><a href="#分词-amp-词性标注" class="headerlink" title="分词&amp;词性标注"></a>分词&amp;词性标注</h2><p>[ doc ]</p>
-<p>自然语言处理: 是人工智能和语言学领域的分支学科。<br>在这此领域中探讨如何处理及运用自然语言；自然语言认知则是指让电脑“懂”人类的语言。<br>自然语言生成系统把计算机数据转化为自然语言。<br>自然语言理解系统把自然语言转化为计算机程序更易于处理的形式。</p>
-<p>[ 分词 ]</p>
-<p>自然语言处理 / : / 是 / 人工智能 / 和 / 语言学 / 领域 / 的 / 分支 / 学科 / 。 / 在 / 这此 / 领域 / 中 / 探讨 / 如何 / 处理 / 及 / 运用 / 自然 / 语言 / ； / 自然 / 语言 / 认知 / 则 / 是 / 指让 / 电脑 / “ / 懂 / ” / 人类 / 的 / 语言 / 。 / 自然 / 语言 / 生成 / 系统 / 把 / 计算机 / 数据 / 转化 / 为 / 自然 / 语言 / 。 / 自然 / 语言 / 理解 / 系统 / 把 / 自然 / 语言 / 转化 / 为 / 计算机程序 / 更 / 易于 / 处理 / 的 / 形式 / 。</p>
-<p>[ 标注 ]</p>
-<p>自然语言处理 un / : un / 是 v / 人工智能 nw / 和 c / 语言学 n / 领域 n / 的 uj / 分支 n / 学科 n / 。 un / 在 p / 这此 un / 领域 n / 中 f / 探讨 v / 如何 r / 处理 v / 及 c / 运用 vn / 自然 d / 语言 n / ； un / 自然 d / 语言 n / 认知 v / 则 d / 是 v / 指让 un / 电脑 n / “ un / 懂 v / ” un / 人类 n / 的 uj / 语言 n / 。 un / 自然 d / 语言 n / 生成 v / 系统 n / 把 p / 计算机 n / 数据 n / 转化 v / 为 p / 自然 d / 语言 n / 。 un / 自然 d / 语言 n / 理解 v / 系统 n / 把 p / 自然 d / 语言 n / 转化 v / 为 p / 计算机程序 n / 更 d / 易于 v / 处理 v / 的 uj / 形式 n / 。 un</p>
-<h2 id="文本纠错"><a href="#文本纠错" class="headerlink" title="文本纠错"></a>文本纠错</h2><p>[ doc ]</p>
-<p>这理风景绣丽，而且天汽不错，我的心情各外舒畅!</p>
-<p>[ 纠错 ]</p>
-<p>这里风景秀丽，而且天气不错，我的心情格外舒畅!</p>
-<h2 id="文本摘要-amp-关键词"><a href="#文本摘要-amp-关键词" class="headerlink" title="文本摘要&amp;关键词"></a>文本摘要&amp;关键词</h2><p>[ doc ]</p>
-<p>自然语言处理: 是人工智能和语言学领域的分支学科。<br>在这此领域中探讨如何处理及运用自然语言；自然语言认知则是指让电脑“懂”人类的语言。<br>自然语言生成系统把计算机数据转化为自然语言。<br>自然语言理解系统把自然语言转化为计算机程序更易于处理的形式。</p>
-<p> [ 关键词 ]</p>
-<p>(‘自然语言’, 2.2069266136741321), </p>
-<p>(‘处理’, 1.5572478858429686), </p>
-<p>(‘是’, 1.4182222157079281), </p>
-<p>(‘系统’, 1.2431338210535401), </p>
-<p>(‘转化’, 1.1532093387566391)</p>
-<p>[ 摘要 ]</p>
-<p>自然语言理解系统把自然语言转化为计算机程序更易于处理的形式</p>
-<h2 id="情感分析"><a href="#情感分析" class="headerlink" title="情感分析"></a>情感分析</h2><p>[ doc ]</p>
-<p>这件衣服的质量也太差了吧！一穿就烂！</p>
-<p>[ 分值 ]</p>
-<p>0.009959694621645698</p>
-<h2 id="文本转拼音"><a href="#文本转拼音" class="headerlink" title="文本转拼音"></a>文本转拼音</h2><p>[ doc ]</p>
-<p>面朝大海，春暖花开</p>
-<p>[ 拼音 ]</p>
-<p>[‘mian’, ‘zhao’, ‘da’, ‘hai’, ‘，’, ‘chun’, ‘nuan’, ‘hua’, ‘kai’]</p>
-<h2 id="项目地址"><a href="#项目地址" class="headerlink" title="项目地址"></a>项目地址</h2><p><a href="https://github.com/SeanLee97/xmnlp" target="_blank" rel="noopener">github</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
       
 
       
       
-        <div class="post-eof"></div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/" rel="next" title="xmnlp — A Lightweight Chinese NLP Toolkit.">
+                <i class="fa fa-chevron-left"></i> xmnlp — A Lightweight Chinese NLP Toolkit.
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
       
     </footer>
   </div>
@@ -575,10 +453,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -586,6 +465,20 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -606,8 +499,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -690,6 +592,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Kruskal-概述"><span class="nav-number">1.</span> <span class="nav-text">Kruskal 概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并查集（union-find-set）概述"><span class="nav-number">2.</span> <span class="nav-text">并查集（union-find set）概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并查集判断无向图是否有环"><span class="nav-number">3.</span> <span class="nav-text">并查集判断无向图是否有环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并查集实现Kruskal算法"><span class="nav-number">4.</span> <span class="nav-text">并查集实现Kruskal算法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -830,6 +748,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -847,6 +769,18 @@
       <script id="dsq-count-scr" src="https://seanlee97.disqus.com/count.js" async></script>
     
 
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://seanlee97.github.io/2018/03/22/Kruskal求解无向图的最小生成树-并查集实现/';
+          this.page.identifier = '2018/03/22/Kruskal求解无向图的最小生成树-并查集实现/';
+          this.page.title = 'Kruskal求解无向图的最小生成树(并查集实现)';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://seanlee97.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
     
 
   
