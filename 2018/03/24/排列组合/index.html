@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="sean lee`s blog" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="排列从 n 各不同元素中，任取 m (m &amp;lt;= n) 个元素，按照一定的顺序排列，叫做从 n 个不同元素中取出 m 个元素的一个排列 $${\color{Blue} A_{m}^{n} = \frac{n!}{(n-m)!}}$$ 组合从 n 个不同元素中，任取 m (m &amp;lt;= n) 个元素组成一组(不考虑顺序)，叫做从 n 个不同元素中取出 m 个不同元素的一个组合 $${\colo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="排列组合">
+<meta property="og:url" content="http://seanlee97.github.io/2018/03/24/排列组合/index.html">
+<meta property="og:site_name" content="SeanLee - 明天探索者">
+<meta property="og:description" content="排列从 n 各不同元素中，任取 m (m &amp;lt;= n) 个元素，按照一定的顺序排列，叫做从 n 个不同元素中取出 m 个元素的一个排列 $${\color{Blue} A_{m}^{n} = \frac{n!}{(n-m)!}}$$ 组合从 n 个不同元素中，任取 m (m &amp;lt;= n) 个元素组成一组(不考虑顺序)，叫做从 n 个不同元素中取出 m 个不同元素的一个组合 $${\colo">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/plzh/plzh-p1.png">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/plzh/plzh-p2.png">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/plzh/plzh-p3.png">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/plzh/plzh-p4.png">
+<meta property="og:updated_time" content="2018-03-24T11:24:24.239Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="排列组合">
+<meta name="twitter:description" content="排列从 n 各不同元素中，任取 m (m &amp;lt;= n) 个元素，按照一定的顺序排列，叫做从 n 个不同元素中取出 m 个元素的一个排列 $${\color{Blue} A_{m}^{n} = \frac{n!}{(n-m)!}}$$ 组合从 n 个不同元素中，任取 m (m &amp;lt;= n) 个元素组成一组(不考虑顺序)，叫做从 n 个不同元素中取出 m 个不同元素的一个组合 $${\colo">
+<meta name="twitter:image" content="http://seanlee97.github.io/images/posts/plzh/plzh-p1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://seanlee97.github.io/2018/03/24/排列组合/"/>
+
+
+
+
+
+  <title>排列组合 | SeanLee - 明天探索者</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SeanLee - 明天探索者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/03/24/排列组合/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SeanLee - 明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">排列组合</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-24T16:53:42+08:00">
+                2018-03-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/03/24/排列组合/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/03/24/排列组合/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="排列"><a href="#排列" class="headerlink" title="排列"></a>排列</h2><p>从 <code>n</code> 各不同元素中，任取 <code>m</code> (m &lt;= n) 个元素，按照一定的顺序排列，叫做从 <code>n</code> 个不同元素中<br>取出 <code>m</code> 个元素的一个排列</p>
+<p>$${\color{Blue} A_{m}^{n} = \frac{n!}{(n-m)!}}$$</p>
+<h2 id="组合"><a href="#组合" class="headerlink" title="组合"></a>组合</h2><p>从 <code>n</code> 个不同元素中，任取 <code>m</code> (m &lt;= n) 个元素组成一组(不考虑顺序)，叫做从 <code>n</code> 个不同元素中<br>取出 <code>m</code> 个不同元素的一个组合</p>
+<p>$${\color{Blue} C_{m}^{n} = \frac{n!}{(n-m)!*m!}}$$</p>
+<h2 id="常见的排列组合问题-——-涂色"><a href="#常见的排列组合问题-——-涂色" class="headerlink" title="常见的排列组合问题 —— 涂色"></a>常见的排列组合问题 —— 涂色</h2><h3 id="1-区域涂色问题"><a href="#1-区域涂色问题" class="headerlink" title="1. 区域涂色问题"></a>1. 区域涂色问题</h3><p><img src="/images/posts/plzh/plzh-p1.png" alt="图1"></p>
+<p><center>图1</center><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如图，用5种不同的颜色给图中标①、②、③、④的各部分涂色，每部分只涂一种颜色，相</span><br><span class="line">邻部分涂不同颜色，则有多少种不同涂色方案？</span><br></pre></td></tr></table></figure></p>
+<p>利用分步计数原理有：</p>
+<ol>
+<li>先给①涂色有 ${\color{Blue} C_{5}^{1} = 5}$ 种方法</li>
+<li>再给②涂色有 ${\color{Blue} C_{4}^{1} = 4}$ 种方法</li>
+<li>③有 ${\color{Blue} C_{3}^{1} = 3}$ 种</li>
+<li>④有 ${\color{Blue} C_{2}^{1} = 2}$ 种</li>
+</ol>
+<p>故总共有 5 x 4 x 3 x 2 = 240 种方法</p>
+<h3 id="2-扇形上色问题"><a href="#2-扇形上色问题" class="headerlink" title="2. 扇形上色问题"></a>2. 扇形上色问题</h3><p><img src="/images/posts/plzh/plzh-p2.png" alt="图2"></p>
+<p><center>图2</center><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如图，6个扇形区域A、B、C、D、E，现给这6个区域着色，要求同一区域涂同一种颜色，相邻的两个</span><br><span class="line">区域不能使用同一种颜色，先有4种不同的颜色，求有多少种涂色方案？</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>当A、C、E着同一种颜色时，有 ${\color{Blue} C_{4}^{1} = 4}$ 种着色方案<br>，此时，B、D、F各有 ${\color{Blue} C_{3}^{1} = 3}$ 种着色方案。故此时有<br><code>4x3x3x3=108</code> 种方法</li>
+<li>当A、C、E着两种不同颜色时，有 ${\color{Blue} C_{4}^{2} A_{3}^{3} = 36}$ 种方法，此时，<br>B、D、F有 <code>3x2x2=12</code> 方法。故此时有<br><code>36x12=432</code> 种方法</li>
+<li>当A、C、E着三种不同颜色时，有 ${\color{Blue} A_{4}^{3} = 24}$ 种方法，此时，<br>B、D、F各有2种方法。故此时有<br><code>24x2x2x2=192</code> 种方法</li>
+</ol>
+<p>故此时总共有 108 + 432 + 192 = 732 种方法</p>
+<p><strong> 延伸 </strong><br><img src="/images/posts/plzh/plzh-p3.png" alt="图3"></p>
+<p><center>图3</center><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如图3， 把一个圆分成 n (n&gt;=2) 个扇形，现在使用m种不同的颜色去给扇形上色，要求相邻扇形</span><br><span class="line">颜色不一样，则有多少种方法？</span><br></pre></td></tr></table></figure></p>
+<p>解：设有 ${\color{Blue} a_{n}}$ 种</p>
+<ol>
+<li>当n=2时，${\color{Blue} A_{1}}$ 、 ${\color{Blue} A_{2}}$ 有 ${\color{Blue} A_{m}^2}$ 种</li>
+<li>当分成n个扇形时，${\color{Blue} A_{1}}$ 与 ${\color{Blue} A_{2}}$ 不同色，${\color{Blue} A_{2}}$ 与 ${\color{Blue} A_{3}}$ 不同色… ${\color{Blue} A_{n-1}}$ 与 ${\color{Blue} A_{n}}$ 不同色，共有 ${\color{Blue} m *3^{n-1}}$ 种方法，但由于 ${\color{Blue} A_{1}}$ 与 ${\color{Blue} A_{n}}$ 相邻，所以要排除 ${\color{Blue} A_{1}}$ 与 ${\color{Blue} A_{n}}$ 同色的情况： ${\color{Blue} A_{1}}$ 与 ${\color{Blue} A_{n}}$ 同色时，可把 ${\color{Blue} A_{1}}$ 、 ${\color{Blue} A_{n}}$ 看成一个扇形，与前 $n-2$ 个扇形加在一起为 $n-1$ 个扇形，此时有 ${\color{Blue} a_{n-1}}$ 种情况，故有如下关系</li>
+</ol>
+<p>$${\color{Blue} a_{n}} = {\color{Blue} m *3^{n-1} - a_{n-1}}$$</p>
+<p>python代码实现：</p>
+<ol>
+<li><p>递归的方式</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># m, 颜色数</span></span><br><span class="line"><span class="comment"># n, 分块数</span></span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(m, n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> n &lt; <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> m</span><br><span class="line">    <span class="keyword">return</span> m*math.pow(<span class="number">3</span>, n<span class="number">-1</span>) - f(m, n<span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>虽然递归的方式比较直观，但是递归往往是低效的方式，由于${\color{Blue} a_{n}}$是递推式，是天然的动态规划，所以这里推荐用动态规划实现</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(m, n)</span>:</span></span><br><span class="line">    dp = [<span class="number">0</span>] * (n+<span class="number">1</span>)</span><br><span class="line">    dp[<span class="number">0</span>] = m</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n+<span class="number">1</span>):</span><br><span class="line">        dp[i] = m*math.pow(<span class="number">3</span>, i<span class="number">-1</span>) - dp[i<span class="number">-1</span>]</span><br><span class="line">    <span class="keyword">return</span> int(dp[n])</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="3-走格子-棋盘问题"><a href="#3-走格子-棋盘问题" class="headerlink" title="3. 走格子/棋盘问题"></a>3. 走格子/棋盘问题</h2><p><img src="/images/posts/plzh/plzh-p4.png" alt="图4"></p>
+<p><center>图4</center><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">如图4， 在4*5的矩阵中</span><br><span class="line">1. 请计算从A移动到B一共多少种走法？</span><br><span class="line">2. 在1. 上添加不能经过P的条件，此时有多少种走法？</span><br><span class="line">(要求每次只能向上或向右移动一格)</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>从A到B必须要向上走3步，向右走4步，所以从A到B，一共有 ${\color{Blue} C_{4+3}^{3} = 35}$ 种走法</li>
+<li>若不经过P， 则要排除所有经过P的情况，从A到P有 ${\color{Blue} C_{2+2}^{2} = 6}$ 种走法，从P到B总共有${\color{Blue} C_{1+2}^{1} = 3}$ 种走法，故不经过P有 ${\color{Blue} C_{4+3}^{3} - C_{2+2}^{2} * C_{1+2}^{2} = 17}$ 种走法</li>
+</ol>
+<p>对于问题1. 可以用代码实现：</p>
+<ol>
+<li><p>递归方式</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(m, n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> m &lt; <span class="number">0</span> <span class="keyword">or</span> n &lt; <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">if</span> m == <span class="number">1</span> <span class="keyword">or</span> n == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> f(m<span class="number">-1</span>, n) + f(m, n<span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>动态规划</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(m, n)</span>:</span></span><br><span class="line">    dp = [[<span class="number">0</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(n+<span class="number">1</span>)] <span class="keyword">for</span> i <span class="keyword">in</span> range(m+<span class="number">1</span>)]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># init</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(m+<span class="number">1</span>):</span><br><span class="line">        dp[i][<span class="number">0</span>] = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(n+<span class="number">1</span>):</span><br><span class="line">        dp[<span class="number">0</span>][j] = <span class="number">1</span></span><br><span class="line">    <span class="comment"># bottom-up</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, m+<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, n+<span class="number">1</span>):</span><br><span class="line">            dp[i][j] = dp[i<span class="number">-1</span>][j] + dp[i][j<span class="number">-1</span>]</span><br><span class="line">    <span class="keyword">return</span> dp[m<span class="number">-1</span>][n<span class="number">-1</span>]</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechat-qcode.jpg" alt="sean lee wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎关注我的公众号！</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>感谢支持！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="sean lee 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/22/Kruskal求解无向图的最小生成树-并查集实现/" rel="next" title="Kruskal求解无向图的最小生成树(并查集实现)">
+                <i class="fa fa-chevron-left"></i> Kruskal求解无向图的最小生成树(并查集实现)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="sean lee" />
+            
+              <p class="site-author-name" itemprop="name">sean lee</p>
+              <p class="site-description motion-element" itemprop="description">interests in NLP / NLU / DL / ML</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/SeanLee97" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:xmlee97@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://plus.google.com/u/0/114423502510761945752" target="_blank" title="Google">
+                      
+                        <i class="fa fa-fw fa-google"></i>Google</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/SeanLee_xm" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#排列"><span class="nav-number">1.</span> <span class="nav-text">排列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合"><span class="nav-number">2.</span> <span class="nav-text">组合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见的排列组合问题-——-涂色"><span class="nav-number">3.</span> <span class="nav-text">常见的排列组合问题 —— 涂色</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-区域涂色问题"><span class="nav-number">3.1.</span> <span class="nav-text">1. 区域涂色问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-扇形上色问题"><span class="nav-number">3.2.</span> <span class="nav-text">2. 扇形上色问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-走格子-棋盘问题"><span class="nav-number">4.</span> <span class="nav-text">3. 走格子/棋盘问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sean lee</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://seanlee97.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://seanlee97.github.io/2018/03/24/排列组合/';
+          this.page.identifier = '2018/03/24/排列组合/';
+          this.page.title = '排列组合';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://seanlee97.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
