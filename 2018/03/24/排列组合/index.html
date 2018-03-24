@@ -91,7 +91,7 @@
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/plzh/plzh-p2.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/plzh/plzh-p3.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/plzh/plzh-p4.png">
-<meta property="og:updated_time" content="2018-03-24T13:59:47.966Z">
+<meta property="og:updated_time" content="2018-03-24T14:05:57.842Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="排列组合">
 <meta name="twitter:description" content="排列从 n 各不同元素中，任取 m (m &amp;lt;= n) 个元素，按照一定的顺序排列，叫做从 n 个不同元素中取出 m 个元素的一个排列 $${\color{Blue} A_{m}^{n} = \frac{n!}{(n-m)!}}$$ 组合从 n 个不同元素中，任取 m (m &amp;lt;= n) 个元素组成一组(不考虑顺序)，叫做从 n 个不同元素中取出 m 个不同元素的一个组合 $${\colo">
@@ -320,7 +320,7 @@
 <p>$${\color{Blue} A_{m}^{n} = \frac{n!}{(n-m)!}}$$</p>
 <h2 id="组合"><a href="#组合" class="headerlink" title="组合"></a>组合</h2><p>从 <code>n</code> 个不同元素中，任取 <code>m</code> (m &lt;= n) 个元素组成一组(不考虑顺序)，叫做从 <code>n</code> 个不同元素中<br>取出 <code>m</code> 个不同元素的一个组合</p>
 <p>$${\color{Blue} C_{m}^{n} = \frac{n!}{(n-m)!*m!}}$$</p>
-<h2 id="常见的排列组合问题-——-涂色"><a href="#常见的排列组合问题-——-涂色" class="headerlink" title="常见的排列组合问题 —— 涂色"></a>常见的排列组合问题 —— 涂色</h2><h3 id="1-区域涂色问题"><a href="#1-区域涂色问题" class="headerlink" title="1. 区域涂色问题"></a>1. 区域涂色问题</h3><p><img src="/images/posts/plzh/plzh-p1.png" alt="图1"></p>
+<h2 id="涂色问题"><a href="#涂色问题" class="headerlink" title="涂色问题"></a>涂色问题</h2><h3 id="1-区域涂色问题"><a href="#1-区域涂色问题" class="headerlink" title="1. 区域涂色问题"></a>1. 区域涂色问题</h3><p><img src="/images/posts/plzh/plzh-p1.png" alt="图1"></p>
 <p><center>图1</center><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如图，用5种不同的颜色给图中标①、②、③、④的各部分涂色，每部分只涂一种颜色，相</span><br><span class="line">邻部分涂不同颜色，则有多少种不同涂色方案？</span><br></pre></td></tr></table></figure></p>
 <p>利用分步计数原理有：</p>
 <ol>
@@ -355,7 +355,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(m, n)</span>:</span></span><br><span class="line">    dp = [<span class="number">0</span>] * (n+<span class="number">1</span>)</span><br><span class="line">    dp[<span class="number">0</span>] = m</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n+<span class="number">1</span>):</span><br><span class="line">        dp[i] = m*math.pow(m<span class="number">-1</span>, i<span class="number">-1</span>) - dp[i<span class="number">-1</span>]</span><br><span class="line">    <span class="keyword">return</span> int(dp[n])</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<h3 id="3-走格子-棋盘问题"><a href="#3-走格子-棋盘问题" class="headerlink" title="3. 走格子/棋盘问题"></a>3. 走格子/棋盘问题</h3><p><img src="/images/posts/plzh/plzh-p4.png" alt="图4"></p>
+<h2 id="走格子-棋盘问题"><a href="#走格子-棋盘问题" class="headerlink" title="走格子/棋盘问题"></a>走格子/棋盘问题</h2><p><img src="/images/posts/plzh/plzh-p4.png" alt="图4"></p>
 <p><center>图4</center><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">如图4， 在4*5的矩阵中</span><br><span class="line">1. 请计算从A移动到B一共多少种走法？</span><br><span class="line">2. 在1. 上添加不能经过P的条件，此时有多少种走法？</span><br><span class="line">(要求每次只能向上或向右移动一格)</span><br></pre></td></tr></table></figure></p>
 <ol>
 <li>从A到B必须要向上走3步，向右走4步，所以从A到B，一共有 ${\color{Blue} C_{4+3}^{3} = 35}$ 种走法</li>
@@ -604,7 +604,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#排列"><span class="nav-number">1.</span> <span class="nav-text">排列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合"><span class="nav-number">2.</span> <span class="nav-text">组合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见的排列组合问题-——-涂色"><span class="nav-number">3.</span> <span class="nav-text">常见的排列组合问题 —— 涂色</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-区域涂色问题"><span class="nav-number">3.1.</span> <span class="nav-text">1. 区域涂色问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-扇形上色问题"><span class="nav-number">3.2.</span> <span class="nav-text">2. 扇形上色问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-走格子-棋盘问题"><span class="nav-number">3.3.</span> <span class="nav-text">3. 走格子/棋盘问题</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#排列"><span class="nav-number">1.</span> <span class="nav-text">排列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合"><span class="nav-number">2.</span> <span class="nav-text">组合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#涂色问题"><span class="nav-number">3.</span> <span class="nav-text">涂色问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-区域涂色问题"><span class="nav-number">3.1.</span> <span class="nav-text">1. 区域涂色问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-扇形上色问题"><span class="nav-number">3.2.</span> <span class="nav-text">2. 扇形上色问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#走格子-棋盘问题"><span class="nav-number">4.</span> <span class="nav-text">走格子/棋盘问题</span></a></li></ol></div>
             
 
           </div>
