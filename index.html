@@ -232,163 +232,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/05/01/SVM从入门到代码实现/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="sean lee">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="SeanLee - 明天探索者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/01/SVM从入门到代码实现/" itemprop="url">SVM从入门到代码实现</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-01T22:09:05+08:00">
-                2018-05-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/05/01/SVM从入门到代码实现/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/05/01/SVM从入门到代码实现/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本学期选修了数据挖掘课程，发现课本很多内容和李航博士的《统计学习方法》相同，所以我还是从复习《统计学习方法》开始，再结合老师课堂讲的，尽量做到温故而知新。<br>这篇博文主要记录我对SVM的理解，逐渐深入，到代码实现三个过程。<br>相信大多数人和我一样，觉得SVM (support vector machine，支持向量机)很高大上，是一个牛逼的算法。但是当看到有关SVM的讲解，推导时，相信大多数人也和我一样，草草略过，抱着：“会用就行了，原理之后再说吧”的思想，因为初一看SVM真的挺复杂的。<br>由于课程需要，不得不狠下心来去啃这块骨头。</p>
-<h1 id="SVM的简单理解"><a href="#SVM的简单理解" class="headerlink" title="SVM的简单理解"></a>SVM的简单理解</h1><p>对SVM的理解，我是看了知乎一篇文章才对SVM有了初步的理解，<a href="https://www.zhihu.com/question/21094489" target="_blank" rel="noopener">原文章地址</a>，在这里我简述一下文章主要内容。<br>文章是以一个故事来讲述SVM的：<br>在很久以前的情人节，大侠要去救他的爱人，但魔鬼和他玩了一个游戏。<br>魔鬼在桌子上似乎有规律放了两种颜色的球，说：“你用一根棍分开它们？要求：尽量在放更多球之后，仍然适用。”<br><img src="/images/posts/svm/intro-1.jpg" alt="pic 1"><br>于是大侠这样放，没问题，棍子确实分开了两种颜色的球。<br><img src="/images/posts/svm/intro-2.jpg" alt="pic 2"><br>接着魔鬼，又在桌上放了更多的球，这下麻烦了，按照大侠的分法有一个球分错了。<br><img src="/images/posts/svm/intro-3.jpg" alt="pic 3"><br><strong>SVM就是试图把棍放在最佳位置，好让在棍的两边有尽可能大的间隙。</strong><br><img src="/images/posts/svm/intro-4.jpg" alt="pic 4"><br>现在即使魔鬼放了更多的球，棍仍然是一个好的分界线。<br><img src="/images/posts/svm/intro-5.jpg" alt="pic 5"><br>刚刚的问题可以用一条棍（线性的）来划分，而且通过学习，大侠已经找到了最佳分界线，魔鬼开始加大了难度，给大侠新的挑战。<br><img src="/images/posts/svm/intro-6.jpg" alt="pic 6"><br>大侠没有棍可以很好帮他分开两种球了，现在怎么办呢？当然像所有武侠片中一样大侠桌子一拍，球飞到空中。然后，凭借大侠的轻功，大侠抓起一张纸，插到了两种球的中间。<br><img src="/images/posts/svm/intro-7.jpg" alt="pic 7"><br>从魔鬼的角度看这些球，这些球看起来像是被一条曲线(非线性)分开了。<br><img src="/images/posts/svm/intro-8.jpg" alt="pic 8"><br>把这些球叫做 「data」，把棍子叫做 「classifier」, 最大间隙叫做「optimization」， 拍桌子叫做「kernelling」, 那张纸叫做「hyperplane」。<br>好了，简单的说SVM就是这样了，再加之有libsvm，sklearn等优秀的工具包已经封装好了SVM，使用已经不是问题了。</p>
-<p>如果你想更加理解svm的原理，可继续看下文。</p>
-<h1 id="逐渐深入"><a href="#逐渐深入" class="headerlink" title="逐渐深入"></a>逐渐深入</h1><h2 id="知识储备"><a href="#知识储备" class="headerlink" title="知识储备"></a>知识储备</h2><h3 id="凸集凸函数"><a href="#凸集凸函数" class="headerlink" title="凸集凸函数"></a>凸集凸函数</h3><p>凸优化、凸集、凸函数等本身就是一个体系，在机器学习，以及深度学习的优化函数部分很有作用，为了帮助理解SVM，我尝试学习了些皮毛，首先推荐斯坦佛大学的教程<a href="http://cs229.stanford.edu/section/cs229-cvxopt.pdf" target="_blank" rel="noopener">Convex Optimization Overview</a>（链接是pdf文件）,以及博文<a href="https://www.52ml.net/20845.html" target="_blank" rel="noopener">凸优化－凸集和凸函数</a>，在这里仅简单介绍一下。</p>
-<p>凸集为$ (C \subseteq \mathbb{R}^n)$，使得$(x,y \in C \rightarrow tx+(1-t)y \in C)$，其中$(0 \leq t \leq 1)$<br><img src="/images/posts/svm/learn-1.jpg" alt="learn 1"><br>如上图，左边第一个为凸集，第二个则不是凸集。<br>可知空集、点、线、球体、超平面均为凸集。且<strong>任何凸集的线性组合仍为凸集</strong>。</p>
-<h4 id="凸集的性质"><a href="#凸集的性质" class="headerlink" title="凸集的性质"></a>凸集的性质</h4><p>凸集有两个重要的性质，这对SVM的算法理论起着重要的支撑作用。</p>
-<ol>
-<li>Separating hyperplane理论：两个不相交的凸集之间必然存在一个分割超平面，使得两个凸集可以分开。即如果$(C$和$D)$都是非空凸集，且$(C \cap D =\emptyset)$，则必然存在$(a,b)$使得$(C \subseteq {x:a^T \leq b})$ 和 $(D \subseteq {x:a^Tx \geq b})$<br>如下图：<br><img src="/images/posts/svm/learn-2.jpg" alt="learn 2"></li>
-<li>Supporting hyperplane理论：凸集边界上的一点必然存在一个支撑超平面穿过该点，即如果$(C)$都是非空凸集，$(x_0 \in bd(C))$，那么必然存在一个超平面$(a)$，使得$(C \subseteq {x:a^Tx \leq a^Tx_0})$<br>如下图：<br><img src="/images/posts/svm/learn-3.jpg" alt="learn 3"></li>
-</ol>
-<h4 id="凸函数"><a href="#凸函数" class="headerlink" title="凸函数"></a>凸函数</h4><p>若函数$(f)$为凸函数，如果满足$(f: \mathbb{R} \rightarrow \mathbb{R})$，使得函数$(f)$的定义域为凸集，$(dom(f) \subseteq \mathbb{R}^n)$，且$(f(tx+(1-t)y) \leq tf(x)+(1-t)f(y))$, 其中$(0 \leq t \leq 1)$。<br>也就是说凸函数上任意两点的连线都在两点区间的函数之上。如图：<br><img src="/images/posts/svm/learn-0.jpg" alt="learn 0"></p>
-<h3 id="拉格朗日乘子法"><a href="#拉格朗日乘子法" class="headerlink" title="拉格朗日乘子法"></a>拉格朗日乘子法</h3><p>这部分知识，主要来源于<a href="https://baike.baidu.com/item/拉格朗日乘子法/1946079?fr=aladdin" target="_blank" rel="noopener">百度百科</a><br>基本的拉格朗日乘子法就是求函数 $f(x_1,x_2,…)$ 在约束条件$g(x_1,x_2,…)=0$ 下的极值的方法。其主要思想是将约束条件函数与原函数联立，从而求出使原函数取得极值的各个变量的解。</p>
-<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>对于具有$l$个等式约束的$n$维优化问题<br>$$\begin{cases}<br>min f(x_1, x_2, …, x_n) \\<br>s.t.\ h_k(x_1, x_2, …, x_n)  &amp; k=1, 2, …, l<br>\end{cases}$$</p>
-<p>(注： $s.t.$ 是一个很常用的符号，它是 $subject\ to$ 的缩写, 中文意思是受限于)<br>把原目标函数 $f(x)$ 变成的新的目标函数 $F(x)$<br>$$F(x, \lambda) = f(x) + \sum_{k=1}^{l} \lambda _k h_k(x)$$<br>式中的 $h_k(x)$ 就是原目标函数 $f(x)$ 的等式约束条件，待定系数 $\lambda _k$ 称为<strong>拉格朗日乘子</strong>。这种方法称为<strong>拉格朗日乘子法</strong>。<br>在极值点处有：$\frac{\partial F}{\partial x_i} = 0\  ,\ (i=1, 2, …, n)$ 和 $\frac{\partial F}{\partial \lambda _k} = 0\  ,\ (k=1, 2, …, l)$ 共有 $n+l$ 个方程，联立可以算出这 $n+l$ 个变量，求出了这些变量代入即可得到目标函数的极值。</p>
-<h3 id="二次规划"><a href="#二次规划" class="headerlink" title="二次规划"></a>二次规划</h3><p>二次规划是非线性规划中的一类特殊数学规划问题，在很多方面都有应用，如投资组合、约束最小二乘问题的求解、序列二次规划在非线性优化问题中应用等。<br>这部分内容涉及的体系庞大，而且已经是超纲内容，没有足够的能力去涉猎了。所以就简单的介绍一下大致思路以及介绍一下 <code>python</code>的<code>cvxopt</code>库（这个库会用在SVM代码实现上）。</p>
-<h4 id="二次规划问题的标准形式"><a href="#二次规划问题的标准形式" class="headerlink" title="二次规划问题的标准形式"></a>二次规划问题的标准形式</h4><p>$$\begin{cases}<br>min\ \frac{1}{2}x^{T}Px + q^{T}x \\<br>s.t.\ Gx \leqslant h \\<br>\ \ \ \ \ \  \ Ax = b<br>\end{cases}$$<br>上式中，$x$ 为所要求解的列向量, $x^{T}$ 表示 $x$ 的转置。</p>
-<ul>
-<li>上式表明，任何二次规划问题都可以转化为上式的结构，用<code>cvxopt</code>的第一步就是将实际的二次规划问题转换为上式的结构，找出对应的$P、q、G、h、A、b$，然后使用封装好的函数即可求出最优解</li>
-<li>目标函数若为求 $max$，可以通过乘以 −1，将最大化问题转换为最小化问题</li>
-<li>$Gx\leqslant h$ 表示的是所有的不等式约束，同样，若存在诸如 $x\geqslant 0$ 的限制条件，也可以通过乘以−1转换为 $\leqslant$ 的形式</li>
-<li>$Ax=b$ 表示所有的等式约束</li>
-</ul>
-<h2 id="SVM原理"><a href="#SVM原理" class="headerlink" title="SVM原理"></a>SVM原理</h2><h3 id="支持向量机"><a href="#支持向量机" class="headerlink" title="支持向量机"></a>支持向量机</h3><p>SVM (support vector machine, 支持向量机)是一种二元分类模型，它的基本模型是定义在特征空间上的<strong>间隔最大</strong>的线性分类器，支持向量机的学习策略就是<strong>间隔最大化</strong>。<br>看了上文SVM简单理解部分，我们已经知道了什么是间隔最大化。间隔最大的好处是比较小间隔的决策边界具有更好的泛化误差。</p>
-<h3 id="从线性开始"><a href="#从线性开始" class="headerlink" title="从线性开始"></a>从线性开始</h3><p>分析应该从简单情况开始，我们先考虑线性可分条件。<br>假设一个包含N个训练样本的二元分类问题。每个样本可以表示成 $(X_i, y_i)\ (i=1, 2, …, N)$ , $X_i = (x_i_1, x_i_2, …, x_i_d) ^{T}$，$y_i \in {-1, +1}$ 表示类别，一个线性分类器的决策边界可以写成：<br>$$\omega  \cdot X + b = 0$$<br>$\omega$ 和 $b$ 是模型的参数。<br>假设 $X^{+}$ 和 $X^{-}$ 是两个位于决策边界上的点，如图：<br><img src="/images/posts/svm/learn-4.jpg" alt="learn 4"><br>可知有：<br>$$\begin{cases}<br>\omega \cdot X^{+} + b = +1 \\<br>\omega \cdot X^{-} + b = -1<br>\end{cases}$$<br>联立两式有<br>$$\omega \cdot (X^{+} - X^{-}) = 2$$<br>又有:<br>$$X^{+} = X^{-} + \lambda \omega \ \Rightarrow \ \lambda = \frac{2}{\omega \cdot \omega}$$<br>所以间距和为：<br>$$ d = \left | X^{+} - X^{-} \right | = \left | \lambda \omega \right | = \frac{2}{\omega \cdot \omega} \left | \omega \right | = \frac{2}{\left | \omega \right |} \ \ \ \ (1)$$<br>我们要做的就是最大化 $d$ 了。<br>为什么叫支持向量这个奇怪的名字呢？这个图可以直观的反应了最大间隔分离超平面完全由离该超平面最近的点定义，其它点可以从数据集中删除掉，因为它们对最优超平面的选择没有影响。这些决定最大间隔分离超平面的点通常被称为<strong>支持向量</strong>，因此SVM的意思就是使用这些支持向量来学习出最优的超平面，也即是SVM使用了训练实例的一个子集来表示决策边界，这个子集就称作支持向量。<br>SVM的训练阶段包括从训练数据中估计决策边界的参数 $\omega$ 和 $b$。选择的参数必须满足：<br>$$\begin{cases}<br>\omega  \cdot X_i + b \geqslant 1  &amp; \text{ if } y_i=1 \\<br>\omega  \cdot X_i + b \leqslant -1 &amp; \text{ if } y_i = -1<br>\end{cases}<br>\ \ \ \ (2)$$<br>也即是：<br>$$y_i (\omega^{T} \cdot + b) \geqslant 1\ ,\ i=1, 2, …, N \ \ \ \ (3)$$<br>我们换个思路，最大间隔 $d$ 等价于最优化下面的目标函数：<br>$$f (\omega) = \frac{\left | \omega ^{2} \right |}{2} \ \ \ \ (4)$$<br>加上受限条件得到优化问题：<br>$$\begin{cases}<br>\underset{\omega}{min} \frac{\left | \omega ^{2} \right |}{2} \\<br>s.t.\ y_i(\omega^{T}X + b) \geqslant 1<br>\end{cases}<br>\ \ \ \ (5)$$<br>可知目标函数是二次的，而约束是线性的，因此这个问题是凸优化问题。<br>看到这个形式是不是觉得有点熟悉？好了接下来我们要用拉格朗日乘子法了</p>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>这里仅截取部分代码片段，完整项目可查看我的<a href="">Github:simple_svm</a></p>
-<p>好了，终于写完了，虽然以后还是会直接用第三方封装好的库函数，但是从原理上终于对SVM有了一定的理解。</p>
-<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p>[0] <a href="https://www.zhihu.com/question/21094489" target="_blank" rel="noopener">https://www.zhihu.com/question/21094489</a><br>[1] <a href="https://www.52ml.net/20845.html" target="_blank" rel="noopener">https://www.52ml.net/20845.html</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/04/16/超参数的调整技巧/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1749,7 +1592,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1762,7 +1605,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
