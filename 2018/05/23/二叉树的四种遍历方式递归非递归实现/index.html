@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="sean lee`s blog" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文主要实现了二叉树的前序、中序、后序、层序以及求树的深度。每一种方式都使用了递归和非递归实现。 递归非递归的转化一般来说递归函数算法简洁，代码量比较小，但是往往时间复杂度、空间复杂度一般较差，因为处理递归的过程系统内部需要反复进栈出栈，故对于一些常驻内存或对资源紧张的程序，需要把递归转为非递归算法实现。转换过程一般要用到栈。 下文中大部分都用到了栈，除了层序遍历用到了队列外。 先给出二叉树的数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二叉树的四种遍历方式递归非递归实现">
+<meta property="og:url" content="http://seanlee97.github.io/2018/05/23/二叉树的四种遍历方式递归非递归实现/index.html">
+<meta property="og:site_name" content="SeanLee - 明天探索者">
+<meta property="og:description" content="本文主要实现了二叉树的前序、中序、后序、层序以及求树的深度。每一种方式都使用了递归和非递归实现。 递归非递归的转化一般来说递归函数算法简洁，代码量比较小，但是往往时间复杂度、空间复杂度一般较差，因为处理递归的过程系统内部需要反复进栈出栈，故对于一些常驻内存或对资源紧张的程序，需要把递归转为非递归算法实现。转换过程一般要用到栈。 下文中大部分都用到了栈，除了层序遍历用到了队列外。 先给出二叉树的数据">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-22T16:21:09.602Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="二叉树的四种遍历方式递归非递归实现">
+<meta name="twitter:description" content="本文主要实现了二叉树的前序、中序、后序、层序以及求树的深度。每一种方式都使用了递归和非递归实现。 递归非递归的转化一般来说递归函数算法简洁，代码量比较小，但是往往时间复杂度、空间复杂度一般较差，因为处理递归的过程系统内部需要反复进栈出栈，故对于一些常驻内存或对资源紧张的程序，需要把递归转为非递归算法实现。转换过程一般要用到栈。 下文中大部分都用到了栈，除了层序遍历用到了队列外。 先给出二叉树的数据">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://seanlee97.github.io/2018/05/23/二叉树的四种遍历方式递归非递归实现/"/>
+
+
+
+
+
+  <title>二叉树的四种遍历方式递归非递归实现 | SeanLee - 明天探索者</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SeanLee - 明天探索者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/05/23/二叉树的四种遍历方式递归非递归实现/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SeanLee - 明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">二叉树的四种遍历方式递归非递归实现</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-23T00:18:14+08:00">
+                2018-05-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/23/二叉树的四种遍历方式递归非递归实现/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/05/23/二叉树的四种遍历方式递归非递归实现/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文主要实现了二叉树的前序、中序、后序、层序以及求树的深度。每一种方式都使用了递归和非递归实现。</p>
+<h2 id="递归非递归的转化"><a href="#递归非递归的转化" class="headerlink" title="递归非递归的转化"></a>递归非递归的转化</h2><p>一般来说递归函数算法简洁，代码量比较小，但是往往时间复杂度、空间复杂度一般较差，因为处理递归的过程系统内部需要反复进栈出栈，故对于一些常驻内存或对资源紧张的程序，需要把递归转为非递归算法实现。转换过程一般要用到栈。</p>
+<p>下文中大部分都用到了栈，除了层序遍历用到了队列外。</p>
+<p>先给出二叉树的数据结构</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> datatype;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">BTNode</span>&#123;</span></span><br><span class="line">    datatype data;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">BTNode</span>* <span class="title">left</span>, *<span class="title">right</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>注意本文的代码均为C++编写，请注意与C的区别</p>
+<h2 id="求树的深度"><a href="#求树的深度" class="headerlink" title="求树的深度"></a>求树的深度</h2><p>递归方式</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">depth</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> left = depth(pRoot-&gt;left);</span><br><span class="line">    <span class="keyword">int</span> right = depth(pRoot-&gt;right);</span><br><span class="line">    <span class="keyword">return</span> left &gt; right ? left +<span class="number">1</span> : right + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>非递归方式, 使用中序遍历非递归方式实现<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">depth_iter</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> curr_depth = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> max_depth = <span class="number">-1</span>;</span><br><span class="line">    <span class="built_in">stack</span>&lt;BTNode* &gt;S1;</span><br><span class="line">    <span class="built_in">stack</span>&lt;<span class="keyword">int</span>&gt;S2;</span><br><span class="line">    BTNode* p;</span><br><span class="line">    p = pRoot;</span><br><span class="line">    <span class="keyword">while</span> (p!=<span class="literal">NULL</span> || !S1.empty())&#123;</span><br><span class="line">        <span class="keyword">while</span> (p!=<span class="literal">NULL</span>)&#123;</span><br><span class="line">            S1.push(p);</span><br><span class="line">            S2.push(curr_depth);</span><br><span class="line">            p = p-&gt;left;</span><br><span class="line">            curr_depth++;</span><br><span class="line">        &#125;</span><br><span class="line">        p = S1.top();</span><br><span class="line">        S1.pop();</span><br><span class="line">        curr_depth = S2.top();</span><br><span class="line">        S2.pop();</span><br><span class="line">        <span class="keyword">if</span> (p-&gt;left == <span class="literal">NULL</span> &amp;&amp; p-&gt;right == <span class="literal">NULL</span>)&#123;</span><br><span class="line">            <span class="comment">// 叶子结点的时候更新</span></span><br><span class="line">            max_depth = curr_depth &gt; max_depth ? curr_depth : max_depth;</span><br><span class="line">        &#125;</span><br><span class="line">        p = p-&gt;right;</span><br><span class="line">        curr_depth++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> max_depth;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="前序遍历"><a href="#前序遍历" class="headerlink" title="前序遍历"></a>前序遍历</h2><p>访问过程如下：</p>
+<ul>
+<li>访问根结点</li>
+<li>遍历左子树</li>
+<li>遍历右子树</li>
+</ul>
+<p>递归实现：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">preorder</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;pRoot-&gt;data&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">        preorder(pRoot-&gt;left);</span><br><span class="line">        preorder(pRoot-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>递归形式简单明了，非递归方式需要借助辅辅助栈实现</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">preorder_iter</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        BTNode* p;</span><br><span class="line">        p = pRoot;</span><br><span class="line">        <span class="built_in">stack</span>&lt;BTNode *&gt; S;</span><br><span class="line">        S.push(p);</span><br><span class="line">        <span class="keyword">while</span> (! S.empty())&#123;</span><br><span class="line">            p = S.top();</span><br><span class="line">            S.pop();</span><br><span class="line">            <span class="keyword">while</span> (p != <span class="literal">NULL</span>)&#123;</span><br><span class="line">                <span class="built_in">cout</span>&lt;&lt;p-&gt;data&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">                <span class="keyword">if</span> (p-&gt;right != <span class="literal">NULL</span>)&#123;</span><br><span class="line">                    S.push(p-&gt;right);</span><br><span class="line">                &#125;</span><br><span class="line">                p = p-&gt;left;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="中序遍历"><a href="#中序遍历" class="headerlink" title="中序遍历"></a>中序遍历</h2><p>遍历规则：</p>
+<ul>
+<li>遍历左子树</li>
+<li>访问根结点</li>
+<li>遍历右子树</li>
+</ul>
+<p>递归方式</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">inorder</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        inorder(pRoot-&gt;left);</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;pRoot-&gt;data&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">        inorder(pRoot-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>非递归方式</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">inorder_iter</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        BTNode* p;</span><br><span class="line">        p = pRoot;</span><br><span class="line">        <span class="built_in">stack</span>&lt;BTNode *&gt;S;</span><br><span class="line">        <span class="keyword">while</span> (p || !S.empty())&#123;</span><br><span class="line">            <span class="keyword">while</span> (p)&#123;</span><br><span class="line">               S.push(p);</span><br><span class="line">               p = p-&gt;left;</span><br><span class="line">            &#125;</span><br><span class="line">            p = S.top();</span><br><span class="line">            S.pop();</span><br><span class="line">            <span class="built_in">cout</span>&lt;&lt;p-&gt;data&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">            p = p-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="后序遍历"><a href="#后序遍历" class="headerlink" title="后序遍历"></a>后序遍历</h2><p>遍历规则：</p>
+<ul>
+<li>遍历左子树</li>
+<li>遍历右子树</li>
+<li>访问根结点</li>
+</ul>
+<p>递归方式</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">postorder</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        postorder(pRoot-&gt;left);</span><br><span class="line">        postorder(pRoot-&gt;right);</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;pRoot-&gt;data&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>非递归方式较前两种方式复杂，需要添加标志位</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sdata</span>&#123;</span></span><br><span class="line">    BTNode* q;</span><br><span class="line">    <span class="keyword">int</span> tag;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">postorder_iter</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        BTNode* p;</span><br><span class="line">        p = pRoot;</span><br><span class="line">        sdata* sd;</span><br><span class="line">        <span class="keyword">int</span> tag;</span><br><span class="line">        <span class="built_in">stack</span>&lt;sdata*&gt;S;</span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (p != <span class="literal">NULL</span>)&#123;</span><br><span class="line">                sd = <span class="keyword">new</span> sdata;</span><br><span class="line">                sd-&gt;q = p;</span><br><span class="line">                sd-&gt;tag = <span class="number">0</span>;</span><br><span class="line">                S.push(sd);</span><br><span class="line">                p = p-&gt;left;</span><br><span class="line">            &#125;</span><br><span class="line">            sd = S.top();</span><br><span class="line">            S.pop();</span><br><span class="line">            p = sd-&gt;q;</span><br><span class="line">            tag = sd-&gt;tag;</span><br><span class="line">            <span class="keyword">if</span> (tag == <span class="number">0</span>)&#123;</span><br><span class="line">                sd-&gt;q = p;</span><br><span class="line">                sd-&gt;tag = <span class="number">1</span>;</span><br><span class="line">                S.push(sd);</span><br><span class="line">                p = p-&gt;right;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="built_in">cout</span>&lt;&lt;p-&gt;data&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">                p = <span class="literal">NULL</span>; <span class="comment">// 访问后必须置NULL，否则将陷入死循环</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">while</span> (p != <span class="literal">NULL</span> || !S.empty());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="层序遍历"><a href="#层序遍历" class="headerlink" title="层序遍历"></a>层序遍历</h2><p>递归方式，层序遍历的递归方式较非递归方式复杂，本文的实现方式还有待优化。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> _layerorder(BTNode* pRoot, <span class="keyword">int</span> level)&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot == <span class="literal">NULL</span> || level &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">if</span> (level == <span class="number">1</span>)</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;pRoot-&gt;data&lt;&lt;<span class="string">" "</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pRoot-&gt;left)</span><br><span class="line">        _layerorder(pRoot-&gt;left, level<span class="number">-1</span>);</span><br><span class="line">    <span class="keyword">if</span> (pRoot-&gt;right)</span><br><span class="line">        _layerorder(pRoot-&gt;right, level<span class="number">-1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">layerorder</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">int</span> d = depth_iter(pRoot);   <span class="comment">// 求树的深度</span></span><br><span class="line">    <span class="comment">// 逐层输出</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> level=<span class="number">1</span>; level&lt;=d; level++)&#123;</span><br><span class="line">        _layerorder(pRoot, level);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>非递归方式，使用队列很快搞定</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">layerorder_iter</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        BTNode* p;</span><br><span class="line">        p = pRoot;</span><br><span class="line">        <span class="built_in">queue</span>&lt;BTNode*&gt;Q;</span><br><span class="line">        Q.push(p);</span><br><span class="line">        <span class="keyword">while</span> (! Q.empty())&#123;</span><br><span class="line">            p = Q.front();</span><br><span class="line">            <span class="built_in">cout</span>&lt;&lt;p-&gt;data&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">            Q.pop();</span><br><span class="line">            <span class="keyword">if</span> (p-&gt;left != <span class="literal">NULL</span>)</span><br><span class="line">                Q.push(p-&gt;left);</span><br><span class="line">            <span class="keyword">if</span> (p-&gt;right != <span class="literal">NULL</span>)</span><br><span class="line">                Q.push(p-&gt;right);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://github.com/SeanLee97/datastruct_and_algorithms/blob/cpp/bitree.cpp" target="_blank" rel="noopener">完整代码地址GitHub</a> 欢迎查阅</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechat-qcode.jpg" alt="sean lee wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎关注我的公众号！</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>感谢支持！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="sean lee 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/16/超参数的调整技巧/" rel="next" title="超参数的调整技巧">
+                <i class="fa fa-chevron-left"></i> 超参数的调整技巧
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="sean lee" />
+            
+              <p class="site-author-name" itemprop="name">sean lee</p>
+              <p class="site-description motion-element" itemprop="description">interests in NLP / NLU / DL / ML</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/SeanLee97" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:xmlee97@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://plus.google.com/u/0/114423502510761945752" target="_blank" title="Google">
+                      
+                        <i class="fa fa-fw fa-google"></i>Google</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/SeanLee_xm" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#递归非递归的转化"><span class="nav-number">1.</span> <span class="nav-text">递归非递归的转化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#求树的深度"><span class="nav-number">2.</span> <span class="nav-text">求树的深度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前序遍历"><span class="nav-number">3.</span> <span class="nav-text">前序遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#中序遍历"><span class="nav-number">4.</span> <span class="nav-text">中序遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后序遍历"><span class="nav-number">5.</span> <span class="nav-text">后序遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#层序遍历"><span class="nav-number">6.</span> <span class="nav-text">层序遍历</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sean lee</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://seanlee97.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://seanlee97.github.io/2018/05/23/二叉树的四种遍历方式递归非递归实现/';
+          this.page.identifier = '2018/05/23/二叉树的四种遍历方式递归非递归实现/';
+          this.page.title = '二叉树的四种遍历方式递归非递归实现';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://seanlee97.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
