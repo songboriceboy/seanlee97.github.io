@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="数据结构," />
+  <meta name="keywords" content="数据结构,排序," />
 
 
 
@@ -80,14 +80,14 @@
 
 
 <meta name="description" content="本文主要实现了二叉树的前序、中序、后序、层序以及求树的深度。每一种方式都使用了递归和非递归实现。 递归非递归的转化一般来说递归函数算法简洁，代码量比较小，但是往往时间复杂度、空间复杂度一般较差，因为处理递归的过程系统内部需要反复进栈出栈，故对于一些常驻内存或对资源紧张的程序，需要把递归转为非递归算法实现。转换过程一般要用到栈。 下文中大部分都用到了栈，除了层序遍历用到了队列外。 先给出二叉树的数据">
-<meta name="keywords" content="数据结构">
+<meta name="keywords" content="数据结构,排序">
 <meta property="og:type" content="article">
 <meta property="og:title" content="二叉树的四种遍历方式递归非递归实现">
 <meta property="og:url" content="http://seanlee97.github.io/2018/05/23/二叉树的四种遍历方式递归非递归实现/index.html">
 <meta property="og:site_name" content="SeanLee - 明天探索者">
 <meta property="og:description" content="本文主要实现了二叉树的前序、中序、后序、层序以及求树的深度。每一种方式都使用了递归和非递归实现。 递归非递归的转化一般来说递归函数算法简洁，代码量比较小，但是往往时间复杂度、空间复杂度一般较差，因为处理递归的过程系统内部需要反复进栈出栈，故对于一些常驻内存或对资源紧张的程序，需要把递归转为非递归算法实现。转换过程一般要用到栈。 下文中大部分都用到了栈，除了层序遍历用到了队列外。 先给出二叉树的数据">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-23T13:46:51.363Z">
+<meta property="og:updated_time" content="2018-05-23T15:25:13.547Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二叉树的四种遍历方式递归非递归实现">
 <meta name="twitter:description" content="本文主要实现了二叉树的前序、中序、后序、层序以及求树的深度。每一种方式都使用了递归和非递归实现。 递归非递归的转化一般来说递归函数算法简洁，代码量比较小，但是往往时间复杂度、空间复杂度一般较差，因为处理递归的过程系统内部需要反复进栈出栈，故对于一些常驻内存或对资源紧张的程序，需要把递归转为非递归算法实现。转换过程一般要用到栈。 下文中大部分都用到了栈，除了层序遍历用到了队列外。 先给出二叉树的数据">
@@ -191,12 +191,42 @@
         </li>
       
         
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
             归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
           </a>
         </li>
       
@@ -272,6 +302,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术日志/" itemprop="url" rel="index">
+                    <span itemprop="name">技术日志</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -405,6 +457,8 @@
           
             <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
           
+            <a href="/tags/排序/" rel="tag"># 排序</a>
+          
         </div>
       
 
@@ -526,13 +580,22 @@
             
 
             
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
 
             
               
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
