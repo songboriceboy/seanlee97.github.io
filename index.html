@@ -262,6 +262,164 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/05/24/Python调用C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SeanLee - 明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/24/Python调用C/" itemprop="url">Python调用C++</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-24T14:21:50+08:00">
+                2018-05-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术日志/" itemprop="url" rel="index">
+                    <span itemprop="name">技术日志</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/24/Python调用C/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/05/24/Python调用C/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Python是一门及其优雅的语言，而C++是一门非常强大高效的语言。如何做到高效又不失优雅呢？最好的方式就是将二者结合。<br>Python是通过<a href="https://docs.python.org/3/library/ctypes.html" target="_blank" rel="noopener">ctypes模块</a>来调用C++的（严格地说是调用C的）, 当然Python不止如此它还可以通过<a href="http://www.swig.org/tutorial.html" target="_blank" rel="noopener">SWIG</a> 调用其他语言, Java, Go … 都不在话下。而且通过<a href="https://docs.python.org/3/c-api/" target="_blank" rel="noopener">Python/C API</a> 在C++/C中也可以直接操作Python对象。<br>本文记录了Python调用C++实现整数排序的过程。</p>
+<h2 id="C-代码块"><a href="#C-代码块" class="headerlink" title="C++ 代码块"></a>C++ 代码块</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cbacken</span>&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">void</span> _swap(<span class="keyword">int</span> *, <span class="keyword">int</span>, <span class="keyword">int</span>);</span><br><span class="line">    <span class="keyword">int</span> _partition(<span class="keyword">int</span> *, <span class="keyword">int</span>, <span class="keyword">int</span>);</span><br><span class="line">    <span class="keyword">void</span> _quick_sort(<span class="keyword">int</span> *, <span class="keyword">int</span>, <span class="keyword">int</span>);</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 排序</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span> *arr, <span class="keyword">int</span> n)</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Cbacken::_swap(<span class="keyword">int</span> *arr, <span class="keyword">int</span> i, <span class="keyword">int</span> j)&#123;</span><br><span class="line">    <span class="keyword">int</span> t;</span><br><span class="line">    t = *(arr+j);</span><br><span class="line">    *(arr+j) = *(arr+i);</span><br><span class="line">    *(arr+i) = t;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> Cbacken::_partition(<span class="keyword">int</span> *arr, <span class="keyword">int</span> low, <span class="keyword">int</span> high)&#123;</span><br><span class="line">    <span class="keyword">int</span> randint = rand()%high + low;</span><br><span class="line">    <span class="keyword">this</span>-&gt;_swap(arr, randint, high);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> store_idx=low, i, j, privot= *(arr+high);</span><br><span class="line">    <span class="keyword">for</span> (i=low; i&lt;high; i++)&#123;</span><br><span class="line">        <span class="keyword">if</span> (*(arr+i) &lt; privot)&#123;</span><br><span class="line">            <span class="keyword">this</span>-&gt;_swap(arr, i, store_idx);</span><br><span class="line">            store_idx++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>-&gt;_swap(arr, store_idx, high);</span><br><span class="line">    <span class="keyword">return</span> store_idx;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Cbacken::_quick_sort(<span class="keyword">int</span> *arr, <span class="keyword">int</span> low, <span class="keyword">int</span> high)&#123;</span><br><span class="line">    <span class="keyword">if</span> (low &lt; high)&#123;</span><br><span class="line">        <span class="keyword">int</span> mid = <span class="keyword">this</span>-&gt;_partition(arr, low, high);</span><br><span class="line">        <span class="keyword">this</span>-&gt;_quick_sort(arr, low, mid<span class="number">-1</span>);</span><br><span class="line">        <span class="keyword">this</span>-&gt;_quick_sort(arr, mid+<span class="number">1</span>, high);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Cbacken::sort(<span class="keyword">int</span> *arr, <span class="keyword">int</span> n)&#123;</span><br><span class="line">    <span class="keyword">this</span>-&gt;_quick_sort(arr, <span class="number">0</span>, n<span class="number">-1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 封装C接口</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span>&#123;</span><br><span class="line">    <span class="comment">// 创建对象</span></span><br><span class="line">    <span class="function">Cbacken* <span class="title">cbacken_new</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Cbacken;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">cbacken_sort</span><span class="params">(Cbacken* cb, <span class="keyword">int</span> *arr, <span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">        cb-&gt;sort(arr, n);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码中使用了快速排序来作为排序接口，由于ctypes接口仅支持C，故使用了extern “C” 告诉编译器修饰的变量和函数是按照C语言方式编译和连接的。</p>
+<h2 id="生成动态链接库"><a href="#生成动态链接库" class="headerlink" title="生成动态链接库"></a>生成动态链接库</h2><p>Windows下的<code>.DLL</code>， Linux下常用 <code>.so</code> 后缀标示的文件是动态链接文件。<br><img src="/images/posts/python_cpp/dllink.jpg" alt="pic"></p>
+<p>在此以Linux为例，以下语句生成动态链接库<br><strong>For Linux</strong><br>$ g++ -shared -Wl,-soname,cbacken -o cbacken.so -fPIC cbacken.cpp<br><strong>For Mac</strong><br>$ g++ -shared -Wl,-install_name,cbacken.so -o cbacken.so -fPIC cbacken.cpp</p>
+<h2 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> ctypes</span><br><span class="line"><span class="comment"># 指定动态链接库</span></span><br><span class="line">lib = ctypes.cdll.LoadLibrary(<span class="string">'./cbacken.so'</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Wrapper</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># 动态链接对象</span></span><br><span class="line">        self.obj = lib.cbacken_new()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sort</span><span class="params">(self, lst)</span>:</span></span><br><span class="line">        n = len(lst)</span><br><span class="line">        <span class="comment"># init arr</span></span><br><span class="line">        cb_ARR = ctypes.c_int * n</span><br><span class="line">        cb_arr = cb_ARR()</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> isinstance(lst[i], int):</span><br><span class="line">                <span class="keyword">raise</span> ValueError(<span class="string">"Only support Integer Array"</span>)</span><br><span class="line"></span><br><span class="line">            cb_arr[i] = lst[i]</span><br><span class="line">        <span class="comment"># init int</span></span><br><span class="line">        cb_N = ctypes.c_int</span><br><span class="line">        cb_n = cb_N()</span><br><span class="line">        cb_n = n</span><br><span class="line">        <span class="comment"># sort</span></span><br><span class="line">        lib.cbacken_sort(self.obj, cb_arr, cb_n)</span><br><span class="line">        nlst = [x <span class="keyword">for</span> x <span class="keyword">in</span> cb_arr]</span><br><span class="line">        <span class="keyword">return</span> nlst</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    wp = Wrapper()</span><br><span class="line">    print(wp.sort([<span class="number">2</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">3</span>]))</span><br><span class="line">    <span class="comment"># output [1, 2, 3, 4]</span></span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/05/23/常用排序算法实现合集/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1972,183 +2130,13 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="sean lee">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="SeanLee - 明天探索者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/" itemprop="url">xmnlp — A Lightweight Chinese NLP Toolkit.</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-16T23:13:07+08:00">
-                2018-02-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/images/posts/xmnlp/slogan.png" alt="slogan"></p>
-<p>python下NLP工具有很多 jieba, nltk, ltp 等， 虽然他们很强大，但是提供的功能比较分散，而且通常模型比较大。为了方便平时的处理工作，我尝试找了一些集成工具包，发现snownlp还可以，它的分词是基于TnT的，总得来说分词效果逊色于基于词典的分词（比如jieba）。所以决定自己写一个包xmnlp，主打轻量快捷。</p>
-<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><ol>
-<li><p>中文分词 &amp; 词性标注： 基于词典构建DAG图，然后采用动态规划的思想求得最大概率路径（jieba分词采用了反向输出，我采用了正向加权反向输出的方式，使得正反向共同影响分词效果），对于未登录词采用HMM+Viterbi处理</p>
-</li>
-<li><p>文本纠错：采用了bi-gram + levenshtein实现</p>
-</li>
-<li><p>文本摘要 &amp; 关键词提取：textrank</p>
-</li>
-<li><p>情感分析：naive bayes</p>
-</li>
-<li><p>文本转拼音：Trie 树检索</p>
-</li>
-</ol>
-<p>以下展示xmnlp的功能效果，不同模块的原理之后的文章会补上。</p>
-<h2 id="分词-amp-词性标注"><a href="#分词-amp-词性标注" class="headerlink" title="分词&amp;词性标注"></a>分词&amp;词性标注</h2><p>[ doc ]</p>
-<p>自然语言处理: 是人工智能和语言学领域的分支学科。<br>在这此领域中探讨如何处理及运用自然语言；自然语言认知则是指让电脑“懂”人类的语言。<br>自然语言生成系统把计算机数据转化为自然语言。<br>自然语言理解系统把自然语言转化为计算机程序更易于处理的形式。</p>
-<p>[ 分词 ]</p>
-<p>自然语言处理 / : / 是 / 人工智能 / 和 / 语言学 / 领域 / 的 / 分支 / 学科 / 。 / 在 / 这此 / 领域 / 中 / 探讨 / 如何 / 处理 / 及 / 运用 / 自然 / 语言 / ； / 自然 / 语言 / 认知 / 则 / 是 / 指让 / 电脑 / “ / 懂 / ” / 人类 / 的 / 语言 / 。 / 自然 / 语言 / 生成 / 系统 / 把 / 计算机 / 数据 / 转化 / 为 / 自然 / 语言 / 。 / 自然 / 语言 / 理解 / 系统 / 把 / 自然 / 语言 / 转化 / 为 / 计算机程序 / 更 / 易于 / 处理 / 的 / 形式 / 。</p>
-<p>[ 标注 ]</p>
-<p>自然语言处理 un / : un / 是 v / 人工智能 nw / 和 c / 语言学 n / 领域 n / 的 uj / 分支 n / 学科 n / 。 un / 在 p / 这此 un / 领域 n / 中 f / 探讨 v / 如何 r / 处理 v / 及 c / 运用 vn / 自然 d / 语言 n / ； un / 自然 d / 语言 n / 认知 v / 则 d / 是 v / 指让 un / 电脑 n / “ un / 懂 v / ” un / 人类 n / 的 uj / 语言 n / 。 un / 自然 d / 语言 n / 生成 v / 系统 n / 把 p / 计算机 n / 数据 n / 转化 v / 为 p / 自然 d / 语言 n / 。 un / 自然 d / 语言 n / 理解 v / 系统 n / 把 p / 自然 d / 语言 n / 转化 v / 为 p / 计算机程序 n / 更 d / 易于 v / 处理 v / 的 uj / 形式 n / 。 un</p>
-<h2 id="文本纠错"><a href="#文本纠错" class="headerlink" title="文本纠错"></a>文本纠错</h2><p>[ doc ]</p>
-<p>这理风景绣丽，而且天汽不错，我的心情各外舒畅!</p>
-<p>[ 纠错 ]</p>
-<p>这里风景秀丽，而且天气不错，我的心情格外舒畅!</p>
-<h2 id="文本摘要-amp-关键词"><a href="#文本摘要-amp-关键词" class="headerlink" title="文本摘要&amp;关键词"></a>文本摘要&amp;关键词</h2><p>[ doc ]</p>
-<p>自然语言处理: 是人工智能和语言学领域的分支学科。<br>在这此领域中探讨如何处理及运用自然语言；自然语言认知则是指让电脑“懂”人类的语言。<br>自然语言生成系统把计算机数据转化为自然语言。<br>自然语言理解系统把自然语言转化为计算机程序更易于处理的形式。</p>
-<p> [ 关键词 ]</p>
-<p>(‘自然语言’, 2.2069266136741321), </p>
-<p>(‘处理’, 1.5572478858429686), </p>
-<p>(‘是’, 1.4182222157079281), </p>
-<p>(‘系统’, 1.2431338210535401), </p>
-<p>(‘转化’, 1.1532093387566391)</p>
-<p>[ 摘要 ]</p>
-<p>自然语言理解系统把自然语言转化为计算机程序更易于处理的形式</p>
-<h2 id="情感分析"><a href="#情感分析" class="headerlink" title="情感分析"></a>情感分析</h2><p>[ doc ]</p>
-<p>这件衣服的质量也太差了吧！一穿就烂！</p>
-<p>[ 分值 ]</p>
-<p>0.009959694621645698</p>
-<h2 id="文本转拼音"><a href="#文本转拼音" class="headerlink" title="文本转拼音"></a>文本转拼音</h2><p>[ doc ]</p>
-<p>面朝大海，春暖花开</p>
-<p>[ 拼音 ]</p>
-<p>[‘mian’, ‘zhao’, ‘da’, ‘hai’, ‘，’, ‘chun’, ‘nuan’, ‘hua’, ‘kai’]</p>
-<h2 id="项目地址"><a href="#项目地址" class="headerlink" title="项目地址"></a>项目地址</h2><p><a href="https://github.com/SeanLee97/xmnlp" target="_blank" rel="noopener">github</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -2196,7 +2184,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2218,7 +2206,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
