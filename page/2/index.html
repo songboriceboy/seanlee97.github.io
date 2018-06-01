@@ -262,6 +262,189 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/03/22/Kruskal求解无向图的最小生成树-并查集实现/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SeanLee - 明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/22/Kruskal求解无向图的最小生成树-并查集实现/" itemprop="url">Kruskal求解无向图的最小生成树(并查集实现)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-22T13:07:03+08:00">
+                2018-03-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/03/22/Kruskal求解无向图的最小生成树-并查集实现/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/03/22/Kruskal求解无向图的最小生成树-并查集实现/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Kruskal-概述"><a href="#Kruskal-概述" class="headerlink" title="Kruskal 概述"></a>Kruskal 概述</h2><p>Kruskal算法，是用来求加权连通图的最小生成树的算法。 </p>
+<p>它的基本思想是：按照权值从小到大的顺序选择n-1条边，并保证这n-1条边不构成回路（环）。</p>
+<p>具体做法是：首先构造一个只含n个顶点的森林，<br>然后依权值从小到大从连通网中选择边加入到森林中，<br>并使森林中不产生回路，直至森林变成一棵树为止。</p>
+<p>更多关于kruskal的知识欢迎查看<a href="https://en.wikipedia.org/wiki/Kruskal%27s_algorithm" target="_blank" rel="noopener">维基百科-Kruskal’s algorithm</a><br>，本文主要是记录并查集这个数据结构怎么用在Kruskal求解最小生成树的问题上。</p>
+<h2 id="并查集（union-find-set）概述"><a href="#并查集（union-find-set）概述" class="headerlink" title="并查集（union-find set）概述"></a>并查集（union-find set）概述</h2><p>union-find set 翻译成中文就是并查集,<br>并查集是一种树型的数据结构，用于处理一些不相交集合（disjoint sets）的合并及查询问题。</p>
+<p>并查集的主要操作：</p>
+<p><strong>1. 初始化</strong>：把每个点所在集合初始化为其自身。</p>
+<p><strong>2. 查找</strong>：查找元素所在的集合，即根节点。</p>
+<p><strong>3. 合并</strong>：将两个元素所在的集合合并为一个集合。</p>
+<p>举个例子吧，<br>假设有一组数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1， 2， 3， 4， 5， 6</span><br></pre></td></tr></table></figure></p>
+<p>首先我们把其中每一个数字当成一个单独的集合，也即是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;1&#125;， &#123;2&#125;， &#123;3&#125;， &#123;4&#125;， &#123;5&#125;， &#123;6&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接下来我们对上面的集合进行合并，使其成为一个大集合，我们用树的表示形式，<br>但是我们不创建树的节点，而是用一个parent数字来表示当前索引为index的元素的祖先。</p>
+<p>可知，上述初始化的集合parent[index] = index, 即等于本身。接下来开始遍历数组，构建并查集:</p>
+<ol>
+<li>对于1, 2有parent[1] = 1, parent[2] = 2,祖先不一样说明他们属于不同的集合，那么可以合并,即{1, 2}</li>
+</ol>
+<p><img src="/images/posts/unionfind/union-find.png" alt="union-find"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">合并后选择谁作为祖先呢？当然可以自由选择，但是从效率上来说应该选择大集合的根作为祖先，</span><br><span class="line">如果把小的集合的根当做合并后集合的根的话，那么并查集最后用树的形式表示出来的时候就是像链表的形式，</span><br><span class="line">这样就失去了快速查找的能力</span><br><span class="line">如上图：如果把小集合的根作为合并后的集合那么可能得到(a)的结果</span><br></pre></td></tr></table></figure>
+<p>由于两个集合的大小是相等的，故可以任意选择，在这里选择1作为合并后的祖先，即parent[2] = 1</p>
+<ol>
+<li><p>对于{1, 2}和3，同理对其进行合并{1, 2, 3}, 选择大集合{1, 2}的根作为合并后集合的根，即parent[3] = 1,</p>
+</li>
+<li><p>依次进行，直到{1, 2, 3, 4, 5, 6}合并完毕</p>
+</li>
+</ol>
+<p>上述的查找、合并的代码在python中可以是:</p>
+<p><strong> 1. find_parent 查找当前索引的根结点</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_parent</span><span class="params">(self, parent, i)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> parent[i] == i:</span><br><span class="line">        <span class="keyword">return</span> i</span><br><span class="line">    <span class="keyword">return</span> self.find_parent(parent, parent[i])</span><br></pre></td></tr></table></figure>
+<p>上面是递归方式，也可用循环来查找<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_parent</span><span class="params">(self, parent, i)</span>:</span></span><br><span class="line">    j = i </span><br><span class="line">    <span class="keyword">while</span> parent[j] != j:</span><br><span class="line">        j = parent[j]</span><br><span class="line">    x = i</span><br><span class="line">    <span class="keyword">while</span> x != j:</span><br><span class="line">        y = parent[x]</span><br><span class="line">        parent[x] = j</span><br><span class="line">        x = y</span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure></p>
+<p><strong> 2. union 合并操作</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(self, parent, rank, x, y)</span>:</span></span><br><span class="line">    x_set_flag = self.find_parent(parent, x)</span><br><span class="line">    y_set_flag = self.find_parent(parent, y)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> rank[x_set_flag] &lt; rank[y_set_flag]:</span><br><span class="line">        <span class="comment"># y_set_flag是大集合的代表</span></span><br><span class="line">        <span class="comment"># 小集合往大集合并,可知y_set_flag是大集合的代表,故小集合的代表应该换成大集合的代表</span></span><br><span class="line">        parent[x_set_flag] = y_set_flag</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># x_set_flag是大集合的代表</span></span><br><span class="line">        <span class="keyword">if</span> rank[x_set_flag] == rank[y_set_flag]:</span><br><span class="line">            <span class="comment"># 如果集合大小相等，因为选择了x_set_flag作为代表,则x_set_flag大表的值应该+1</span></span><br><span class="line">            rank[x_set_flag] += <span class="number">1</span></span><br><span class="line">        <span class="comment"># x_set_flag是大集合的代表，故y_set_flag的代表值为x_set_flag</span></span><br><span class="line">        parent[y_set_flag] = x_set_flag</span><br></pre></td></tr></table></figure></p>
+<p>由于笔者水平有限，加之其他博主已经有很好的文章介绍并查集故不再详述了，<br>以下是推荐阅读的文章，希望对大家有帮助：</p>
+<ol>
+<li><a href="http://blog.csdn.net/niushuai666/article/details/6662911" target="_blank" rel="noopener">超有爱的并查集~</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Disjoint-set_data_structure" target="_blank" rel="noopener">Disjoint-set data structure</a></li>
+</ol>
+<h2 id="并查集判断无向图是否有环"><a href="#并查集判断无向图是否有环" class="headerlink" title="并查集判断无向图是否有环"></a>并查集判断无向图是否有环</h2><p><img src="/images/posts/unionfind/cycle-graph.png" alt="cycle-graph"></p>
+<p>如上图, 如何判断该图是否有环呢？首先你可能会想到用递归的方式去做所以你用了DFS，<br>没错DFS确实可以做到，但是复杂度过高，那么能否用并查集来判断无向图是否有环呢？<br>答案是肯定的。</p>
+<p>首先规定如果两个点之间有边相连，如果这两个点不属于同一个集合，那就将他们合并成一个集合</p>
+<ol>
+<li>我们把每个点看成独立的集合{0} ，{1}， {2}</li>
+<li>对于边0-1，直接将这两个点代表的集合合并{0， 1}, 让1来当父节点</li>
+<li>对于边1-2， 它们分别属于不同的集合，合并集合之后是{1，2}，让2来当父节点，<br>这时候有0-&gt;1-&gt;2 即 0的祖先节点是2</li>
+<li>对于边0-2，他们属于一个集合，因为他们有着共同的祖先2，<br>这就说明0-2之间在没有0-2这条边之前已经连通了，<br>如果加上这条边的话那从0到2就有两条路径可达，就说明存在环了</li>
+</ol>
+<p>代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检测一个图是否有环</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Graph</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.vertex = set()</span><br><span class="line">        self.edge = defaultdict(list)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_edge</span><span class="params">(self, u, v)</span>:</span></span><br><span class="line">        self.vertex.add(u)</span><br><span class="line">        self.vertex.add(v)</span><br><span class="line">        self.edge[u].append(v)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_parent</span><span class="params">(self, parent, i)</span>:</span></span><br><span class="line">        j = i </span><br><span class="line">        <span class="keyword">while</span> parent[j] != j:</span><br><span class="line">            j = parent[j]</span><br><span class="line">        x = i</span><br><span class="line">        <span class="keyword">while</span> x != j:</span><br><span class="line">            y = parent[x]</span><br><span class="line">            parent[x] = j</span><br><span class="line">            x = y</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    def find_parent(self, parent, i):</span></span><br><span class="line"><span class="string">        if parent[i] == -1:</span></span><br><span class="line"><span class="string">            return i</span></span><br><span class="line"><span class="string">        else:</span></span><br><span class="line"><span class="string">            return self.find_parent(parent, parent[i])</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(self, parent, rank, x, y)</span>:</span></span><br><span class="line">        x_set_flag = self.find_parent(parent, x)</span><br><span class="line">        y_set_flag = self.find_parent(parent, y)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> rank[x_set_flag] &lt; rank[y_set_flag]:</span><br><span class="line">            parent[x_set_flag] = y_set_flag</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">        	parent[y_set_flag] = x_set_flag</span><br><span class="line">        	<span class="keyword">if</span> rank[x_set_flag] == rank[y_set_flag]:</span><br><span class="line">        		rank[x_set_flag] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 判断无向图是否有环</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">detect_cycle</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># init</span></span><br><span class="line">        parent = []</span><br><span class="line">        rank = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(self.vertex)):</span><br><span class="line">        	parent.append(i)</span><br><span class="line">        	rank.append(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> self.edge:</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> self.edge[i]:</span><br><span class="line">                x = self.find_parent(parent, i)</span><br><span class="line">                y = self.find_parent(parent, j)</span><br><span class="line">                <span class="keyword">if</span> x == y:</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">                self.union(parent, rank, x, y)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    g = Graph()</span><br><span class="line">    g.add_edge(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">    g.add_edge(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    g.add_edge(<span class="number">0</span>, <span class="number">2</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> g.detect_cycle():</span><br><span class="line">        print(<span class="string">"Graph contains cycle"</span>)</span><br><span class="line">    <span class="keyword">else</span> :</span><br><span class="line">        print(<span class="string">"Graph does not contain cycle "</span>)</span><br></pre></td></tr></table></figure></p>
+<h2 id="并查集实现Kruskal算法"><a href="#并查集实现Kruskal算法" class="headerlink" title="并查集实现Kruskal算法"></a>并查集实现Kruskal算法</h2><p>有了上述的知识，现在可以实现Kruskal算法了，总得来Kruskal主要有两个工作：</p>
+<ol>
+<li>权值的排序</li>
+<li>判断是否有环</li>
+</ol>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">Kruskal解决无向图最小生成树(并查集作为主要数据结构)</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Graph</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.vertex = set()</span><br><span class="line">        self.edge = []</span><br><span class="line"></span><br><span class="line">    <span class="comment"># u - source vertex</span></span><br><span class="line">    <span class="comment"># v - target vertex</span></span><br><span class="line">    <span class="comment"># w - weight</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_edge</span><span class="params">(self, u, v, w=<span class="number">0</span>)</span>:</span></span><br><span class="line">        self.vertex.add(u)</span><br><span class="line">        self.vertex.add(v)</span><br><span class="line">        self.edge.append([u, v, w])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_parent</span><span class="params">(self, parent, i)</span>:</span></span><br><span class="line">        j = i </span><br><span class="line">        <span class="keyword">while</span> parent[j] != j:</span><br><span class="line">            j = parent[j]</span><br><span class="line">        x = i</span><br><span class="line">        <span class="keyword">while</span> x != j:</span><br><span class="line">            y = parent[x]</span><br><span class="line">            parent[x] = j</span><br><span class="line">            x = y</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    def find_parent(self, parent, i):</span></span><br><span class="line"><span class="string">        if parent[i] == i:</span></span><br><span class="line"><span class="string">            return i</span></span><br><span class="line"><span class="string">        return self.find_parent(parent, parent[i])</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(self, parent, rank, x, y)</span>:</span></span><br><span class="line">        x_set_flag = self.find_parent(parent, x)</span><br><span class="line">        y_set_flag = self.find_parent(parent, y)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> rank[x_set_flag] &lt; rank[y_set_flag]:</span><br><span class="line">            <span class="comment"># y_set_flag是大集合的代表</span></span><br><span class="line">            <span class="comment"># 小集合往大集合并,可知y_set_flag是大集合的代表,故小集合的代表应该换成大集合的代表</span></span><br><span class="line">            parent[x_set_flag] = y_set_flag</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># x_set_flag是大集合的代表</span></span><br><span class="line">            <span class="keyword">if</span> rank[x_set_flag] == rank[y_set_flag]:</span><br><span class="line">                <span class="comment"># 如果集合大小相等，因为选择了x_set_flag作为代表,则x_set_flag大表的值应该+1</span></span><br><span class="line">                rank[x_set_flag] += <span class="number">1</span></span><br><span class="line">            <span class="comment"># x_set_flag是大集合的代表，故y_set_flag的代表值为x_set_flag</span></span><br><span class="line">            parent[y_set_flag] = x_set_flag            </span><br><span class="line"></span><br><span class="line">    <span class="comment"># kruskal求最小生成树</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">kruskal</span><span class="params">(self)</span>:</span></span><br><span class="line">        result = []</span><br><span class="line">        i = <span class="number">0</span></span><br><span class="line">        e = <span class="number">0</span></span><br><span class="line">        <span class="comment"># sorted(asc) by weight</span></span><br><span class="line">        self.edge = sorted(self.edge, key=<span class="keyword">lambda</span> x: x[<span class="number">2</span>])</span><br><span class="line">        <span class="comment">#print(self.edge)</span></span><br><span class="line">        parent = []</span><br><span class="line">        rank = []</span><br><span class="line">        <span class="keyword">for</span> v <span class="keyword">in</span> range(len(self.vertex)):</span><br><span class="line">            parent.append(v)</span><br><span class="line">            rank.append(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> e &lt; len(self.vertex) - <span class="number">1</span>:</span><br><span class="line">            u, v, w = self.edge[i]</span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            x = self.find_parent(parent, u)</span><br><span class="line">            y = self.find_parent(parent, v)</span><br><span class="line"> </span><br><span class="line">            <span class="keyword">if</span> x != y: <span class="comment"># 说明没有环</span></span><br><span class="line">                e = e + <span class="number">1</span></span><br><span class="line">                result.append([u, v, w])</span><br><span class="line">                <span class="comment"># 合并</span></span><br><span class="line">                self.union(parent, rank, x, y)</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    g = Graph()</span><br><span class="line">    g.add_edge(<span class="number">0</span>, <span class="number">1</span>, <span class="number">10</span>)</span><br><span class="line">    g.add_edge(<span class="number">0</span>, <span class="number">2</span>, <span class="number">6</span>)</span><br><span class="line">    g.add_edge(<span class="number">0</span>, <span class="number">3</span>, <span class="number">5</span>)</span><br><span class="line">    g.add_edge(<span class="number">1</span>, <span class="number">3</span>, <span class="number">15</span>)</span><br><span class="line">    g.add_edge(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)    </span><br><span class="line"></span><br><span class="line">    mst = g.kruskal()</span><br><span class="line">    print(mst)</span><br></pre></td></tr></table></figure>
+<p>可以看到并查集实现的kruskal简单高效</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -477,7 +660,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -499,7 +682,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>

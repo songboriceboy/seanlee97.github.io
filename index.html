@@ -262,6 +262,221 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/06/01/SVM从入门到代码实现/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SeanLee - 明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/01/SVM从入门到代码实现/" itemprop="url">SVM从入门到代码实现</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-01T22:09:05+08:00">
+                2018-06-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术日志/" itemprop="url" rel="index">
+                    <span itemprop="name">技术日志</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/01/SVM从入门到代码实现/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/06/01/SVM从入门到代码实现/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本学期选修了数据挖掘课程，发现课本很多内容和李航博士的《统计学习方法》相同，所以我还是从复习《统计学习方法》开始，再结合老师课堂讲的，尽量做到温故而知新。<br>这篇博文主要记录我对SVM的理解，逐渐深入，到代码实现三个过程。<br>相信大多数人和我一样，觉得SVM (support vector machine，支持向量机)很高大上，是一个牛逼的算法。但是当看到有关SVM的讲解，推导时，相信大多数人也和我一样，草草略过，抱着：“会用就行了，原理之后再说吧”的思想，因为初一看SVM真的挺复杂的。<br>由于课程需要，不得不狠下心来去啃这块骨头。</p>
+<h1 id="SVM的简单理解"><a href="#SVM的简单理解" class="headerlink" title="SVM的简单理解"></a>SVM的简单理解</h1><p>对SVM的理解，我是看了知乎一篇文章才对SVM有了初步的理解，<a href="https://www.zhihu.com/question/21094489" target="_blank" rel="noopener">原文章地址</a>，在这里我简述一下文章主要内容。<br>文章是以一个故事来讲述SVM的：<br>在很久以前的情人节，大侠要去救他的爱人，但魔鬼和他玩了一个游戏。<br>魔鬼在桌子上似乎有规律放了两种颜色的球，说：“你用一根棍分开它们？要求：尽量在放更多球之后，仍然适用。”<br><img src="/images/posts/svm/intro-1.jpg" alt="pic 1"><br>于是大侠这样放，没问题，棍子确实分开了两种颜色的球。<br><img src="/images/posts/svm/intro-2.jpg" alt="pic 2"><br>接着魔鬼，又在桌上放了更多的球，这下麻烦了，按照大侠的分法有一个球分错了。<br><img src="/images/posts/svm/intro-3.jpg" alt="pic 3"><br><strong>SVM就是试图把棍放在最佳位置，好让在棍的两边有尽可能大的间隙。</strong><br><img src="/images/posts/svm/intro-4.jpg" alt="pic 4"><br>现在即使魔鬼放了更多的球，棍仍然是一个好的分界线。<br><img src="/images/posts/svm/intro-5.jpg" alt="pic 5"><br>刚刚的问题可以用一条棍（线性的）来划分，而且通过学习，大侠已经找到了最佳分界线，魔鬼开始加大了难度，给大侠新的挑战。<br><img src="/images/posts/svm/intro-6.jpg" alt="pic 6"><br>大侠没有棍可以很好帮他分开两种球了，现在怎么办呢？当然像所有武侠片中一样大侠桌子一拍，球飞到空中。然后，凭借大侠的轻功，大侠抓起一张纸，插到了两种球的中间。<br><img src="/images/posts/svm/intro-7.jpg" alt="pic 7"><br>从魔鬼的角度看这些球，这些球看起来像是被一条曲线(非线性)分开了。<br><img src="/images/posts/svm/intro-8.jpg" alt="pic 8"><br>把这些球叫做 「data」，把棍子叫做 「classifier」, 最大间隙叫做「optimization」， 拍桌子叫做「kernelling」, 那张纸叫做「hyperplane」。<br>好了，简单的说SVM就是这样了，再加之有libsvm，sklearn等优秀的工具包已经封装好了SVM，使用已经不是问题了。</p>
+<p>如果你想更加理解svm的原理，可继续看下文。</p>
+<h1 id="逐渐深入"><a href="#逐渐深入" class="headerlink" title="逐渐深入"></a>逐渐深入</h1><h2 id="知识储备"><a href="#知识储备" class="headerlink" title="知识储备"></a>知识储备</h2><h3 id="凸集凸函数"><a href="#凸集凸函数" class="headerlink" title="凸集凸函数"></a>凸集凸函数</h3><p>凸优化、凸集、凸函数等本身就是一个体系，在机器学习，以及深度学习的优化函数部分很有作用，为了帮助理解SVM，我尝试学习了些皮毛，首先推荐斯坦佛大学的教程<a href="http://cs229.stanford.edu/section/cs229-cvxopt.pdf" target="_blank" rel="noopener">Convex Optimization Overview</a>（链接是pdf文件）,以及博文<a href="https://www.52ml.net/20845.html" target="_blank" rel="noopener">凸优化－凸集和凸函数</a>，在这里仅简单介绍一下。</p>
+<p>凸集为$ (C \subseteq \mathbb{R}^n)$，使得$(x,y \in C \rightarrow tx+(1-t)y \in C)$，其中$(0 \leq t \leq 1)$<br><img src="/images/posts/svm/learn-1.jpg" alt="learn 1"><br>如上图，左边第一个为凸集，第二个则不是凸集。<br>可知空集、点、线、球体、超平面均为凸集。且<strong>任何凸集的线性组合仍为凸集</strong>。</p>
+<h4 id="凸集的性质"><a href="#凸集的性质" class="headerlink" title="凸集的性质"></a>凸集的性质</h4><p>凸集有两个重要的性质，这对SVM的算法理论起着重要的支撑作用。</p>
+<ol>
+<li>Separating hyperplane理论：两个不相交的凸集之间必然存在一个分割超平面，使得两个凸集可以分开。即如果$(C$和$D)$都是非空凸集，且$(C \cap D =\emptyset)$，则必然存在$(a,b)$使得$(C \subseteq {x:a^T \leq b})$ 和 $(D \subseteq {x:a^Tx \geq b})$<br>如下图：<br><img src="/images/posts/svm/learn-2.jpg" alt="learn 2"></li>
+<li>Supporting hyperplane理论：凸集边界上的一点必然存在一个支撑超平面穿过该点，即如果$(C)$都是非空凸集，$(x_0 \in bd(C))$，那么必然存在一个超平面$(a)$，使得$(C \subseteq {x:a^Tx \leq a^Tx_0})$<br>如下图：<br><img src="/images/posts/svm/learn-3.jpg" alt="learn 3"></li>
+</ol>
+<h4 id="凸函数"><a href="#凸函数" class="headerlink" title="凸函数"></a>凸函数</h4><p>若函数$(f)$为凸函数，如果满足$(f: \mathbb{R} \rightarrow \mathbb{R})$，使得函数$(f)$的定义域为凸集，$(dom(f) \subseteq \mathbb{R}^n)$，且$(f(tx+(1-t)y) \leq tf(x)+(1-t)f(y))$, 其中$(0 \leq t \leq 1)$。<br>也就是说凸函数上任意两点的连线都在两点区间的函数之上。如图：<br><img src="/images/posts/svm/learn-0.jpg" alt="learn 0"></p>
+<h3 id="拉格朗日乘子法"><a href="#拉格朗日乘子法" class="headerlink" title="拉格朗日乘子法"></a>拉格朗日乘子法</h3><p>这部分知识，主要来源于<a href="https://baike.baidu.com/item/拉格朗日乘子法/1946079?fr=aladdin" target="_blank" rel="noopener">百度百科</a><br>基本的拉格朗日乘子法就是求函数 $f(x_1,x_2,…)$ 在约束条件$g(x_1,x_2,…)=0$ 下的极值的方法。其主要思想是将约束条件函数与原函数联立，从而求出使原函数取得极值的各个变量的解。</p>
+<h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>对于具有$l$个等式约束的$n$维优化问题<br>$$\begin{cases}<br>min f(x_1, x_2, …, x_n) \\<br>s.t.\ h_k(x_1, x_2, …, x_n)  &amp; k=1, 2, …, l<br>\end{cases}$$</p>
+<p>(注： $s.t.$ 是一个很常用的符号，它是 $subject\ to$ 的缩写, 中文意思是受限于)<br>把原目标函数 $f(x)$ 变成的新的目标函数 $F(x)$<br>$$F(x, \lambda) = f(x) + \sum_{k=1}^{l} \lambda_k h_k(x)$$<br>式中的 $h_k(x)$ 就是原目标函数 $f(x)$ 的等式约束条件，待定系数 $\lambda_k$ 称为<strong>拉格朗日乘子</strong>。这种方法称为<strong>拉格朗日乘子法</strong>。<br>在极值点处有：$\frac{\partial F}{\partial x_i} = 0\  ,\ (i=1, 2, …, n)$ 和 $\frac{\partial F}{\partial \lambda_k} = 0\  ,\ (k=1, 2, …, l)$ 共有 $n+l$ 个方程，联立可以算出这 $n+l$ 个变量，求出了这些变量代入即可得到目标函数的极值。</p>
+<h3 id="二次规划"><a href="#二次规划" class="headerlink" title="二次规划"></a>二次规划</h3><p>二次规划是非线性规划中的一类特殊数学规划问题，在很多方面都有应用，如投资组合、约束最小二乘问题的求解、序列二次规划在非线性优化问题中应用等。<br>这部分内容涉及的体系庞大，而且已经是超纲内容，没有足够的能力去涉猎了。所以就简单的介绍一下大致思路以及介绍一下 <code>python</code>的<code>cvxopt</code>库（这个库会用在SVM代码实现上）。</p>
+<h4 id="二次规划问题的标准形式"><a href="#二次规划问题的标准形式" class="headerlink" title="二次规划问题的标准形式"></a>二次规划问题的标准形式</h4><p>$$\begin{cases}<br>min\ \frac{1}{2}x^{T}Px + q^{T}x \\<br>s.t.\ Gx \leqslant h \\<br>\ \ \ \ \ \  \ Ax = b<br>\end{cases}$$<br>上式中，$x$ 为所要求解的列向量, $x^{T}$ 表示 $x$ 的转置。</p>
+<ul>
+<li>上式表明，任何二次规划问题都可以转化为上式的结构，用<code>cvxopt</code>的第一步就是将实际的二次规划问题转换为上式的结构，找出对应的$P、q、G、h、A、b$，然后使用封装好的函数即可求出最优解</li>
+<li>目标函数若为求 $max$，可以通过乘以 −1，将最大化问题转换为最小化问题</li>
+<li>$Gx\leqslant h$ 表示的是所有的不等式约束，同样，若存在诸如 $x\geqslant 0$ 的限制条件，也可以通过乘以−1转换为 $\leqslant$ 的形式</li>
+<li>$Ax=b$ 表示所有的等式约束</li>
+</ul>
+<h2 id="SVM原理"><a href="#SVM原理" class="headerlink" title="SVM原理"></a>SVM原理</h2><h3 id="支持向量机"><a href="#支持向量机" class="headerlink" title="支持向量机"></a>支持向量机</h3><p>SVM (support vector machine, 支持向量机)是一种二元分类模型，它的基本模型是定义在特征空间上的<strong>间隔最大</strong>的线性分类器，支持向量机的学习策略就是<strong>间隔最大化</strong>。<br>看了上文SVM简单理解部分，我们已经知道了什么是间隔最大化。间隔最大的好处是比较小间隔的决策边界具有更好的泛化误差。</p>
+<h3 id="从线性可分开始"><a href="#从线性可分开始" class="headerlink" title="从线性可分开始"></a>从线性可分开始</h3><p>分析应该从简单情况开始，我们先考虑线性可分条件。<br>假设一个包含N个训练样本的二元分类问题。每个样本可以表示成 $(X_i, y_i)\ (i=1, 2, …, N)$ , $X_i = (x_{i1}, x_{i2}, …, x_{id}) ^{T}$，$y_i \in {-1, +1}$ 表示类别，一个线性分类器的决策边界可以写成：<br>$$W   \cdot  X + b = 0$$<br>$W$ 和 $b$ 是模型的参数。<br>假设 $X^{+}$ 和 $X^{-}$ 是两个位于决策边界上的点，如图：<br><img src="/images/posts/svm/learn-4.jpg" alt="learn 4"><br>可知有：<br>$$\begin{cases}<br>W  \cdot  X^{+} + b = +1 \\<br>W  \cdot  X^{-} + b = -1<br>\end{cases}$$<br>联立两式有<br>$$W  \cdot  (X^{+} - X^{-}) = 2$$<br>又有:<br>$$X^{+} = X^{-} + \lambda W \ \Rightarrow \ \lambda = \frac{2}{W  \cdot  W}$$<br>所以间距和为：<br>$$ d = \left | X^{+} - X^{-} \right | = \left | \lambda W \right | = \frac{2}{W  \cdot  W} \left | W \right | = \frac{2}{\left | W \right |} \ \ \ \ (1)$$<br>我们要做的就是最大化 $d$ 了。<br>为什么叫支持向量这个奇怪的名字呢？这个图可以直观的反应了最大间隔分离超平面完全由离该超平面最近的点定义，其它点可以从数据集中删除掉，因为它们对最优超平面的选择没有影响。这些决定最大间隔分离超平面的点通常被称为<strong>支持向量</strong>，因此SVM的意思就是使用这些支持向量来学习出最优的超平面，也即是SVM使用了训练实例的一个子集来表示决策边界，这个子集就称作支持向量。<br>SVM的训练阶段包括从训练数据中估计决策边界的参数 $W$ 和 $b$。选择的参数必须满足：<br>$$\begin{cases}<br>W   \cdot  X_i + b \geqslant 1  &amp; \text{ if } y_i=1 \\<br>W   \cdot  X_i + b \leqslant -1 &amp; \text{ if } y_i = -1<br>\end{cases}<br>\ \ \ \ (2)$$<br>也即是：<br>$$y_i (W  \cdot  x + b) \geqslant 1\ ,\ i=1, 2, …, N \ \ \ \ (3)$$<br>我们换个思路，最大间隔 $d$ 等价于最优化下面的目标函数：<br>$$f (W) = \frac{\left | W ^{2} \right |}{2} \ \ \ \ (4)$$<br>加上受限条件得到优化问题：<br>$$\begin{cases}<br>\underset{W}{min} \frac{\left | W ^{2} \right |}{2} \\<br>s.t.\ y_i(W  \cdot  X + b) \geqslant 1<br>\end{cases}<br>\ \ \ \ (5)$$<br>可知目标函数是二次的，而约束是线性的，因此这个问题是凸优化问题。<br>看到这个形式是不是觉得有点熟悉？好了接下来我们要用拉格朗日乘子法了。<br>通过拉格朗日乘子法可得到新的目标函数<br>$$L_P = \frac{1}{2}\ {\left | W \right |}^{2} - \sum_{i=1}^{N}\lambda_i(y_i(W  \cdot  X + b) - 1) \ \ \ \ (6)$$<br><strong>看到$L_p$ 我是很惊喜的，SVM太强大了，它竟然自带L2正则 $\frac{1}{2}\ {\left | W \right |}^{2}$，这也在一方面说明了SVM为什么能最小化结构化风险吧？我们都知道正则化手段是抑制过拟合的一种方法，因为发生过拟合时参数 $W$ 一般是较大的值，而正则化主要是对 $W$ 进行惩罚，从而降低模型的复杂性。</strong><br>接下来要做得工作是最小化新目标函数，我们对 $L_p$ 关于 $W$ 和 $b$ 求偏导，并令它们等于零，即<br>$$\frac{\partial L_P}{\partial W} = 0 \Rightarrow W = \sum_{i=1}^{N}\lambda_i y_i X_i  \ \ \ \ (7)$$<br>$$\frac{\partial L_P}{\partial b} = 0 \Rightarrow \sum_{i=1}^{N}\lambda_i y_i = 0 \ \ \ \ (8)$$<br>处理不等式约束的一种方法就是将其变为一组等式约束。只要限制拉格朗日乘子非负这种变换就可行。这种变换导致如下拉格朗日乘子约束，称作KTT条件。<br>$$\lambda_{i} \geqslant 0$$<br>$$ \lambda_{i} [y_{i}(W \cdot X_i+b)-1] = 0 $$<br>该约束表明，除非 $y_{i}(W \cdot X_i+b)-1=0$ 否则 $\lambda_i$ 必须为0，那些 $\lambda_i &gt; 0$ 称为支持向量，而 $W$ 和 $b$ 的确定仅依赖这些支持向量。因此KTT条件解释了为什么SVM仅由支持向量决定。</p>
+<p>拉格朗日乘子 $\lambda_i$ 现在是未知的，我们无法直接求得 $W$ 、$b$，为了减少变量将 (7) (8) 式代入(6)得到</p>
+<p>$$L_D = \sum_{i=1}^{N} \lambda_i - \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N} \lambda_i \lambda_j y_i y_j X_i X_j \ \ \ \ (9)$$</p>
+<p>根据拉格朗日对偶性，原始问题的对偶问题是极大化极小化原始问题<br>$$\underset{\lambda }{max}\ \underset{W,b }{min}L(W, b, \lambda )$$</p>
+<p>$L_D$ 是 $L_P$ 的对偶问题, 所以最小化 $L_P$ 等价于最大化 $L_D$</p>
+<p>二次规划一般求最小值，我们改一下 $L_D$  得到</p>
+<p>$${L_D}’ =  \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N} \lambda_i \lambda_j y_i y_j X_i X_j - \sum_{i=1}^{N} \lambda_i \ \ \ \ (10)$$</p>
+<p>现在问题变成了最小化 ${L_D}’$<br>也就是现在的优化问题是</p>
+<p>$$\begin{cases}<br>\underset{\lambda }{min} \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N} \lambda_i \lambda_j y_i y_j X_i X_j - \sum_{i=1}^{N} \lambda_i  \\<br>s.t.\ \sum_{i=1}^{N} \lambda_iy_i = 0, \lambda_i \geq 0<br>\end{cases}<br>\ \ \ \ (11)$$</p>
+<p>接下来我们可以用二次规划去优化</p>
+<h3 id="线性不可分的情况"><a href="#线性不可分的情况" class="headerlink" title="线性不可分的情况"></a>线性不可分的情况</h3><p>线性可分是一种理想的情况，现实数据集不可能没有噪声，如下图</p>
+<p><img src="/images/posts/svm/learn-5.jpg" alt="learn 5"></p>
+<p>就是线性不可分的例子，通俗的说不能用一根棍子完全分开红点和蓝点。<br>为此我们需要用一种软边缘的方式去学习允许一定训练错误的决策边界，加入松弛因子是一种方法，再加入松弛因子后(2)式就变为了</p>
+<p>$$\begin{cases}<br>W   \cdot  X_i + b \geqslant 1 - \S_i  &amp; \text{ if } y_i=1 \\<br>W   \cdot  X_i + b \leqslant -1 + \S_i &amp; \text{ if } y_i = -1<br>\end{cases}<br>\ \ \ \ (12)$$</p>
+<p>用式子(12)替换(2)再走一遍上述过程，可以得到目标函数，但是如果仅仅加入松弛因子，由于在决策边界误分类样本的数量上没有限制，学习算法可能会找到边缘很宽的边界，但是却分错了很多的训练实例，为了避免这个问题，必须修改目标函数用来惩罚那些松弛因子很大的决策边界。加入了惩罚因子的原始目标函数为</p>
+<p>$$f(W) = \frac{ {\left | W \right |}^{2} }{2} + C{(\sum_{i=1}^{N}\S_i)}^{k}\ \ \ \ (13)$$</p>
+<p>C就是惩罚因子了，C和k都是超参，为了简化运算令k=1，加入了惩罚因子和松弛因子后得到的拉格朗日函数为</p>
+<p>$$L = \frac{1}{2}\ {\left | W \right | }^{2} + C \sum_{i=1}^{N} \S_i - \sum_{i=1}^{N}\lambda_i(y_i(W  \cdot  X + b) - 1 + \S_i) \ \ \ \ (14)$$</p>
+<p>利用如下KTT条件可以将不等式约束转为等式约束</p>
+<p>$$\S_i \geqslant 0,\ \lambda_i \geqslant 0,\ \mu_i \geqslant 0$$</p>
+<p>$$\lambda_i { y_i(W  \cdot  X_i + b) - 1 + \S_i } = 0$$</p>
+<p>$$\mu_i \S_i = 0$$</p>
+<p>令 $L$ 关于 $W$、$b$ 和 $\S_i$的一阶导数为0得</p>
+<p>$$\frac{\partial L}{\partial W_j} = 0 \Rightarrow W_j = \sum_{i=1}^{N}\lambda_i y_i X_{ij}  \ \ \ \ (15)$$<br>$$\frac{\partial L}{\partial b} = 0 \Rightarrow \sum_{i=1}^{N}\lambda_i y_i = 0 \ \ \ \ (16)$$<br>$$\frac{\partial L}{\partial \S_i} = 0 \Rightarrow \lambda_i + \mu_i = C \ \ \ \ (17)$$</p>
+<p>和之前的步骤一样，最后得到的最终目标函数为</p>
+<p>$${L_D}^{‘’} =  \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N} \lambda_i \lambda_j y_i y_j X_i X_j - \sum_{i=1}^{N} \lambda_i \ \ \ \ (18)$$</p>
+<p>可以看到目标函数和线性可分的一样，但是约束条件已经不一样了，现在优化问题为</p>
+<p>$$\begin{cases}<br>\underset{\lambda }{min} \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N} \lambda_i \lambda_j y_i y_j X_i X_j - \sum_{i=1}^{N} \lambda_i  \\<br>s.t.\ \sum_{i=1}^{N} \lambda_iy_i = 0, \lambda_i \geq 0, 0 \leqslant \lambda_i \leqslant C<br>\end{cases}<br>\ \ \ \ (19)$$</p>
+<p>还是用二次规划求解</p>
+<h3 id="非线性"><a href="#非线性" class="headerlink" title="非线性"></a>非线性</h3><p>开头已经叙述了非线性下往往要把当前空间映射到高维空间上，高维空间下按照线性的方式去处理当前问题。既然要映射就要有映射函数（核函数）,我们假设核函数为 $\phi (X)$ , 现在决策边界就变成了：$W\phi (X) + b$，接下来就和上述的步骤一样求解目标函数了<br>当然核函数不是随便来的，必须要满足Mercer定理，大致要求如下：必须存在一个相应的变化，使得计算一对向量的核函数等价于在变换后的空间中计算这对向量的点积（空间中计算点积的意义是可以理解为求相似度）。</p>
+<h3 id="SVM的优点"><a href="#SVM的优点" class="headerlink" title="SVM的优点"></a>SVM的优点</h3><ul>
+<li>凸优化问题，可以找到全局最优</li>
+<li>自带正则</li>
+</ul>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>这里仅截取部分代码片段，完整项目可查看我的<a href="https://github.com/SeanLee97/simple_svm" target="_blank" rel="noopener">Github:simple_svm</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> cvxopt</span><br><span class="line"><span class="keyword">import</span> cvxopt.solvers</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SVC</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, kernel=<span class="string">'linear'</span>, C=<span class="number">1.0</span>, sigma=<span class="number">1.0</span>, **kwargs)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> kernel <span class="keyword">not</span> <span class="keyword">in</span> [<span class="string">'linear'</span>, <span class="string">'gaussian'</span>]:</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">"Now only support linear and gaussian kernel"</span>)</span><br><span class="line">        <span class="keyword">elif</span> kernel == <span class="string">'linear'</span>:</span><br><span class="line">            kernel_fn = Kernel.linear()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            kernel_fn = Kernel.gaussian(sigma)</span><br><span class="line"></span><br><span class="line">        self.kernel = kernel_fn  <span class="comment"># kernel func</span></span><br><span class="line">        self.C = C</span><br><span class="line">        self._predictor = <span class="keyword">None</span></span><br><span class="line">        </span><br><span class="line">    <span class="comment"># 训练</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fit</span><span class="params">(self, X, y)</span>:</span></span><br><span class="line">        lagr = self._lagr_multiplier(X, y)   <span class="comment"># 获取拉格朗日乘子</span></span><br><span class="line">        self._predictor = self._fit(X, y, lagr)</span><br><span class="line">    <span class="comment"># 预测</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, X)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self._predictor.predict(X)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_fit</span><span class="params">(self, X, y, lagr, support_vector_threhold=<span class="number">1e-5</span>)</span>:</span></span><br><span class="line">        <span class="comment"># 计算支持向量</span></span><br><span class="line">        support_vectors_id = lagr &gt; support_vector_threhold</span><br><span class="line">        support_lagr = lagr[support_vectors_id]</span><br><span class="line">        support_vectors = X[support_vectors_id]</span><br><span class="line">        support_vector_tags = y[support_vectors_id]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 计算偏差</span></span><br><span class="line">        bias = np.mean([y_k - Predictor(kernel=self.kernel,</span><br><span class="line">                                        bias=<span class="number">0.0</span>,</span><br><span class="line">                                        W=support_lagr,</span><br><span class="line">                                        support_vectors=support_vectors,</span><br><span class="line">                                        support_vector_tags=support_vector_tags).predict(x_k) <span class="keyword">for</span> (y_k, x_k) <span class="keyword">in</span> zip(support_vector_tags, support_vectors)])</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Predictor(kernel=self.kernel,</span><br><span class="line">                         bias=bias,</span><br><span class="line">                         W=support_lagr,</span><br><span class="line">                         support_vectors=support_vectors,</span><br><span class="line">                         support_vector_tags=support_vector_tags)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_lagr_multiplier</span><span class="params">(self, X, y)</span>:</span></span><br><span class="line">        samples, features = X.shape</span><br><span class="line"></span><br><span class="line">        k = self._mapping(X)</span><br><span class="line">        <span class="comment"># 二次规划求最优解</span></span><br><span class="line">        P = cvxopt.matrix(np.outer(y, y)*k)</span><br><span class="line">        q = cvxopt.matrix(<span class="number">-1</span> * np.ones(samples))</span><br><span class="line">        </span><br><span class="line">        G_std = cvxopt.matrix(np.diag(np.ones(samples)*<span class="number">-1</span>))</span><br><span class="line">        h_std = cvxopt.matrix(np.zeros(samples))</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># a_i \leq C</span></span><br><span class="line">        G_slack = cvxopt.matrix(np.diag(np.ones(samples)))</span><br><span class="line">        h_slack = cvxopt.matrix(np.ones(samples) * self.C)</span><br><span class="line">        </span><br><span class="line">        G = cvxopt.matrix(np.vstack((G_std, G_slack)))</span><br><span class="line">        h = cvxopt.matrix(np.vstack((h_std, h_slack)))</span><br><span class="line">       </span><br><span class="line">        <span class="comment">#y = y.reshape((1, y.shape[0]))</span></span><br><span class="line">        A = cvxopt.matrix(y, (<span class="number">1</span>, samples))</span><br><span class="line">        b = cvxopt.matrix(<span class="number">0.0</span>)</span><br><span class="line">    </span><br><span class="line">        solution = cvxopt.solvers.qp(P, q, G, h, A, b)</span><br><span class="line">        <span class="comment"># lagr multiplier</span></span><br><span class="line">        <span class="keyword">return</span> np.ravel(solution[<span class="string">'x'</span>])</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_mapping</span><span class="params">(self, X)</span>:</span></span><br><span class="line">        samples, features = X.shape</span><br><span class="line">        k = np.zeros((samples, samples))</span><br><span class="line">        <span class="comment"># 空间映射</span></span><br><span class="line">        <span class="keyword">for</span> i, xi <span class="keyword">in</span> enumerate(X):</span><br><span class="line">            <span class="keyword">for</span> j, xj <span class="keyword">in</span> enumerate(X):</span><br><span class="line">                k[i, j] = self.kernel(xi, xj)</span><br><span class="line">        <span class="keyword">return</span> k</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Predictor</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,</span></span></span><br><span class="line"><span class="function"><span class="params">                 kernel,</span></span></span><br><span class="line"><span class="function"><span class="params">                 bias,</span></span></span><br><span class="line"><span class="function"><span class="params">                 W,</span></span></span><br><span class="line"><span class="function"><span class="params">                 support_vectors,</span></span></span><br><span class="line"><span class="function"><span class="params">                 support_vector_tags)</span>:</span></span><br><span class="line">        self._kernel = kernel</span><br><span class="line">        self._bias = bias</span><br><span class="line">        self._W = W</span><br><span class="line">        self._support_vectors = support_vectors</span><br><span class="line">        self._support_vector_tags = support_vector_tags</span><br><span class="line">        <span class="keyword">assert</span> len(support_vectors) == len(support_vector_tags)</span><br><span class="line">        <span class="keyword">assert</span> len(W) == len(support_vector_tags)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">softmax</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="string">"""Compute softmax values for each sets of scores in x."""</span></span><br><span class="line">        x = np.array(x)</span><br><span class="line">        x = np.exp(x)</span><br><span class="line">        x.astype(<span class="string">'float32'</span>)</span><br><span class="line">        <span class="keyword">if</span> x.ndim == <span class="number">1</span>:</span><br><span class="line">            sumcol = sum(x)</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(x.size):</span><br><span class="line">                x[i] = x[i]/float(sumcol)</span><br><span class="line">        <span class="keyword">if</span> x.ndim &gt; <span class="number">1</span>:</span><br><span class="line">            sumcol = x.sum(axis = <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">for</span> row <span class="keyword">in</span> x:</span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> range(row.size):</span><br><span class="line">                    row[i] = row[i]/float(sumcol[i])</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        result = self._bias</span><br><span class="line">        <span class="keyword">for</span> z_i, x_i, y_i <span class="keyword">in</span> zip(self._W,</span><br><span class="line">                                 self._support_vectors,</span><br><span class="line">                                 self._support_vector_tags):</span><br><span class="line">            result += z_i * y_i * self._kernel(x_i, x)</span><br><span class="line">        <span class="keyword">return</span> np.sign(result).item()</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Kernel</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="comment"># 线性核</span></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">linear</span><span class="params">()</span>:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">lambda</span> X, y: np.inner(X, y)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 高斯核</span></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">gaussian</span><span class="params">(sigma)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">lambda</span> X, y: np.exp(-np.sqrt(np.linalg.norm(X-y) ** <span class="number">2</span> / (<span class="number">2</span> * sigma ** <span class="number">2</span>)))</span><br></pre></td></tr></table></figure>
+<p>代码仅支持二分类，以下是玩具样例<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> svm <span class="keyword">import</span> SVC</span><br><span class="line">samples = <span class="number">10</span></span><br><span class="line">features = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">X = np.matrix(np.random.normal(size=samples * features).reshape(samples, features))  <span class="comment"># gausian distributed</span></span><br><span class="line">y = <span class="number">2</span> * (X.sum(axis=<span class="number">1</span>) &gt; <span class="number">0</span>) - <span class="number">1.0</span></span><br><span class="line">clf = SVC(kernel=<span class="string">"linear"</span>, C=<span class="number">1.0</span>)</span><br><span class="line">clf.fit(X, y)</span><br><span class="line">pred = clf.predict(np.array([<span class="number">-2.76</span> ,<span class="number">-3.05</span>]).reshape(<span class="number">1</span>, <span class="number">2</span>))</span><br><span class="line">print(pred)</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/posts/svm/result.jpg" alt="result"></p>
+<p>好了，终于写完了，就当做个记录，虽然以后还是会直接用第三方封装好的库函数，但是从原理上终于对SVM有了一定的理解。<br>欢迎指正！</p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p>[0] <a href="https://www.zhihu.com/question/21094489" target="_blank" rel="noopener">https://www.zhihu.com/question/21094489</a><br>[1] <a href="https://www.52ml.net/20845.html" target="_blank" rel="noopener">https://www.52ml.net/20845.html</a><br>[2] 《统计学习方法》<br>[3] 《数据挖掘导论》<br>[4] <a href="https://github.com/ajtulloch/svmpy" target="_blank" rel="noopener">https://github.com/ajtulloch/svmpy</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/05/24/Python调用C/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1969,189 +2184,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/03/22/Kruskal求解无向图的最小生成树-并查集实现/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="sean lee">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="SeanLee - 明天探索者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/22/Kruskal求解无向图的最小生成树-并查集实现/" itemprop="url">Kruskal求解无向图的最小生成树(并查集实现)</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-22T13:07:03+08:00">
-                2018-03-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/03/22/Kruskal求解无向图的最小生成树-并查集实现/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/03/22/Kruskal求解无向图的最小生成树-并查集实现/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Kruskal-概述"><a href="#Kruskal-概述" class="headerlink" title="Kruskal 概述"></a>Kruskal 概述</h2><p>Kruskal算法，是用来求加权连通图的最小生成树的算法。 </p>
-<p>它的基本思想是：按照权值从小到大的顺序选择n-1条边，并保证这n-1条边不构成回路（环）。</p>
-<p>具体做法是：首先构造一个只含n个顶点的森林，<br>然后依权值从小到大从连通网中选择边加入到森林中，<br>并使森林中不产生回路，直至森林变成一棵树为止。</p>
-<p>更多关于kruskal的知识欢迎查看<a href="https://en.wikipedia.org/wiki/Kruskal%27s_algorithm" target="_blank" rel="noopener">维基百科-Kruskal’s algorithm</a><br>，本文主要是记录并查集这个数据结构怎么用在Kruskal求解最小生成树的问题上。</p>
-<h2 id="并查集（union-find-set）概述"><a href="#并查集（union-find-set）概述" class="headerlink" title="并查集（union-find set）概述"></a>并查集（union-find set）概述</h2><p>union-find set 翻译成中文就是并查集,<br>并查集是一种树型的数据结构，用于处理一些不相交集合（disjoint sets）的合并及查询问题。</p>
-<p>并查集的主要操作：</p>
-<p><strong>1. 初始化</strong>：把每个点所在集合初始化为其自身。</p>
-<p><strong>2. 查找</strong>：查找元素所在的集合，即根节点。</p>
-<p><strong>3. 合并</strong>：将两个元素所在的集合合并为一个集合。</p>
-<p>举个例子吧，<br>假设有一组数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1， 2， 3， 4， 5， 6</span><br></pre></td></tr></table></figure></p>
-<p>首先我们把其中每一个数字当成一个单独的集合，也即是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;1&#125;， &#123;2&#125;， &#123;3&#125;， &#123;4&#125;， &#123;5&#125;， &#123;6&#125;</span><br></pre></td></tr></table></figure></p>
-<p>接下来我们对上面的集合进行合并，使其成为一个大集合，我们用树的表示形式，<br>但是我们不创建树的节点，而是用一个parent数字来表示当前索引为index的元素的祖先。</p>
-<p>可知，上述初始化的集合parent[index] = index, 即等于本身。接下来开始遍历数组，构建并查集:</p>
-<ol>
-<li>对于1, 2有parent[1] = 1, parent[2] = 2,祖先不一样说明他们属于不同的集合，那么可以合并,即{1, 2}</li>
-</ol>
-<p><img src="/images/posts/unionfind/union-find.png" alt="union-find"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">合并后选择谁作为祖先呢？当然可以自由选择，但是从效率上来说应该选择大集合的根作为祖先，</span><br><span class="line">如果把小的集合的根当做合并后集合的根的话，那么并查集最后用树的形式表示出来的时候就是像链表的形式，</span><br><span class="line">这样就失去了快速查找的能力</span><br><span class="line">如上图：如果把小集合的根作为合并后的集合那么可能得到(a)的结果</span><br></pre></td></tr></table></figure>
-<p>由于两个集合的大小是相等的，故可以任意选择，在这里选择1作为合并后的祖先，即parent[2] = 1</p>
-<ol>
-<li><p>对于{1, 2}和3，同理对其进行合并{1, 2, 3}, 选择大集合{1, 2}的根作为合并后集合的根，即parent[3] = 1,</p>
-</li>
-<li><p>依次进行，直到{1, 2, 3, 4, 5, 6}合并完毕</p>
-</li>
-</ol>
-<p>上述的查找、合并的代码在python中可以是:</p>
-<p><strong> 1. find_parent 查找当前索引的根结点</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_parent</span><span class="params">(self, parent, i)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> parent[i] == i:</span><br><span class="line">        <span class="keyword">return</span> i</span><br><span class="line">    <span class="keyword">return</span> self.find_parent(parent, parent[i])</span><br></pre></td></tr></table></figure>
-<p>上面是递归方式，也可用循环来查找<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_parent</span><span class="params">(self, parent, i)</span>:</span></span><br><span class="line">    j = i </span><br><span class="line">    <span class="keyword">while</span> parent[j] != j:</span><br><span class="line">        j = parent[j]</span><br><span class="line">    x = i</span><br><span class="line">    <span class="keyword">while</span> x != j:</span><br><span class="line">        y = parent[x]</span><br><span class="line">        parent[x] = j</span><br><span class="line">        x = y</span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure></p>
-<p><strong> 2. union 合并操作</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(self, parent, rank, x, y)</span>:</span></span><br><span class="line">    x_set_flag = self.find_parent(parent, x)</span><br><span class="line">    y_set_flag = self.find_parent(parent, y)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> rank[x_set_flag] &lt; rank[y_set_flag]:</span><br><span class="line">        <span class="comment"># y_set_flag是大集合的代表</span></span><br><span class="line">        <span class="comment"># 小集合往大集合并,可知y_set_flag是大集合的代表,故小集合的代表应该换成大集合的代表</span></span><br><span class="line">        parent[x_set_flag] = y_set_flag</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># x_set_flag是大集合的代表</span></span><br><span class="line">        <span class="keyword">if</span> rank[x_set_flag] == rank[y_set_flag]:</span><br><span class="line">            <span class="comment"># 如果集合大小相等，因为选择了x_set_flag作为代表,则x_set_flag大表的值应该+1</span></span><br><span class="line">            rank[x_set_flag] += <span class="number">1</span></span><br><span class="line">        <span class="comment"># x_set_flag是大集合的代表，故y_set_flag的代表值为x_set_flag</span></span><br><span class="line">        parent[y_set_flag] = x_set_flag</span><br></pre></td></tr></table></figure></p>
-<p>由于笔者水平有限，加之其他博主已经有很好的文章介绍并查集故不再详述了，<br>以下是推荐阅读的文章，希望对大家有帮助：</p>
-<ol>
-<li><a href="http://blog.csdn.net/niushuai666/article/details/6662911" target="_blank" rel="noopener">超有爱的并查集~</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Disjoint-set_data_structure" target="_blank" rel="noopener">Disjoint-set data structure</a></li>
-</ol>
-<h2 id="并查集判断无向图是否有环"><a href="#并查集判断无向图是否有环" class="headerlink" title="并查集判断无向图是否有环"></a>并查集判断无向图是否有环</h2><p><img src="/images/posts/unionfind/cycle-graph.png" alt="cycle-graph"></p>
-<p>如上图, 如何判断该图是否有环呢？首先你可能会想到用递归的方式去做所以你用了DFS，<br>没错DFS确实可以做到，但是复杂度过高，那么能否用并查集来判断无向图是否有环呢？<br>答案是肯定的。</p>
-<p>首先规定如果两个点之间有边相连，如果这两个点不属于同一个集合，那就将他们合并成一个集合</p>
-<ol>
-<li>我们把每个点看成独立的集合{0} ，{1}， {2}</li>
-<li>对于边0-1，直接将这两个点代表的集合合并{0， 1}, 让1来当父节点</li>
-<li>对于边1-2， 它们分别属于不同的集合，合并集合之后是{1，2}，让2来当父节点，<br>这时候有0-&gt;1-&gt;2 即 0的祖先节点是2</li>
-<li>对于边0-2，他们属于一个集合，因为他们有着共同的祖先2，<br>这就说明0-2之间在没有0-2这条边之前已经连通了，<br>如果加上这条边的话那从0到2就有两条路径可达，就说明存在环了</li>
-</ol>
-<p>代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检测一个图是否有环</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Graph</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.vertex = set()</span><br><span class="line">        self.edge = defaultdict(list)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_edge</span><span class="params">(self, u, v)</span>:</span></span><br><span class="line">        self.vertex.add(u)</span><br><span class="line">        self.vertex.add(v)</span><br><span class="line">        self.edge[u].append(v)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_parent</span><span class="params">(self, parent, i)</span>:</span></span><br><span class="line">        j = i </span><br><span class="line">        <span class="keyword">while</span> parent[j] != j:</span><br><span class="line">            j = parent[j]</span><br><span class="line">        x = i</span><br><span class="line">        <span class="keyword">while</span> x != j:</span><br><span class="line">            y = parent[x]</span><br><span class="line">            parent[x] = j</span><br><span class="line">            x = y</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    def find_parent(self, parent, i):</span></span><br><span class="line"><span class="string">        if parent[i] == -1:</span></span><br><span class="line"><span class="string">            return i</span></span><br><span class="line"><span class="string">        else:</span></span><br><span class="line"><span class="string">            return self.find_parent(parent, parent[i])</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(self, parent, rank, x, y)</span>:</span></span><br><span class="line">        x_set_flag = self.find_parent(parent, x)</span><br><span class="line">        y_set_flag = self.find_parent(parent, y)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> rank[x_set_flag] &lt; rank[y_set_flag]:</span><br><span class="line">            parent[x_set_flag] = y_set_flag</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">        	parent[y_set_flag] = x_set_flag</span><br><span class="line">        	<span class="keyword">if</span> rank[x_set_flag] == rank[y_set_flag]:</span><br><span class="line">        		rank[x_set_flag] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 判断无向图是否有环</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">detect_cycle</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># init</span></span><br><span class="line">        parent = []</span><br><span class="line">        rank = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(self.vertex)):</span><br><span class="line">        	parent.append(i)</span><br><span class="line">        	rank.append(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> self.edge:</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> self.edge[i]:</span><br><span class="line">                x = self.find_parent(parent, i)</span><br><span class="line">                y = self.find_parent(parent, j)</span><br><span class="line">                <span class="keyword">if</span> x == y:</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">                self.union(parent, rank, x, y)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    g = Graph()</span><br><span class="line">    g.add_edge(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">    g.add_edge(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    g.add_edge(<span class="number">0</span>, <span class="number">2</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> g.detect_cycle():</span><br><span class="line">        print(<span class="string">"Graph contains cycle"</span>)</span><br><span class="line">    <span class="keyword">else</span> :</span><br><span class="line">        print(<span class="string">"Graph does not contain cycle "</span>)</span><br></pre></td></tr></table></figure></p>
-<h2 id="并查集实现Kruskal算法"><a href="#并查集实现Kruskal算法" class="headerlink" title="并查集实现Kruskal算法"></a>并查集实现Kruskal算法</h2><p>有了上述的知识，现在可以实现Kruskal算法了，总得来Kruskal主要有两个工作：</p>
-<ol>
-<li>权值的排序</li>
-<li>判断是否有环</li>
-</ol>
-<p>代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">Kruskal解决无向图最小生成树(并查集作为主要数据结构)</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Graph</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.vertex = set()</span><br><span class="line">        self.edge = []</span><br><span class="line"></span><br><span class="line">    <span class="comment"># u - source vertex</span></span><br><span class="line">    <span class="comment"># v - target vertex</span></span><br><span class="line">    <span class="comment"># w - weight</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_edge</span><span class="params">(self, u, v, w=<span class="number">0</span>)</span>:</span></span><br><span class="line">        self.vertex.add(u)</span><br><span class="line">        self.vertex.add(v)</span><br><span class="line">        self.edge.append([u, v, w])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_parent</span><span class="params">(self, parent, i)</span>:</span></span><br><span class="line">        j = i </span><br><span class="line">        <span class="keyword">while</span> parent[j] != j:</span><br><span class="line">            j = parent[j]</span><br><span class="line">        x = i</span><br><span class="line">        <span class="keyword">while</span> x != j:</span><br><span class="line">            y = parent[x]</span><br><span class="line">            parent[x] = j</span><br><span class="line">            x = y</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    def find_parent(self, parent, i):</span></span><br><span class="line"><span class="string">        if parent[i] == i:</span></span><br><span class="line"><span class="string">            return i</span></span><br><span class="line"><span class="string">        return self.find_parent(parent, parent[i])</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(self, parent, rank, x, y)</span>:</span></span><br><span class="line">        x_set_flag = self.find_parent(parent, x)</span><br><span class="line">        y_set_flag = self.find_parent(parent, y)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> rank[x_set_flag] &lt; rank[y_set_flag]:</span><br><span class="line">            <span class="comment"># y_set_flag是大集合的代表</span></span><br><span class="line">            <span class="comment"># 小集合往大集合并,可知y_set_flag是大集合的代表,故小集合的代表应该换成大集合的代表</span></span><br><span class="line">            parent[x_set_flag] = y_set_flag</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># x_set_flag是大集合的代表</span></span><br><span class="line">            <span class="keyword">if</span> rank[x_set_flag] == rank[y_set_flag]:</span><br><span class="line">                <span class="comment"># 如果集合大小相等，因为选择了x_set_flag作为代表,则x_set_flag大表的值应该+1</span></span><br><span class="line">                rank[x_set_flag] += <span class="number">1</span></span><br><span class="line">            <span class="comment"># x_set_flag是大集合的代表，故y_set_flag的代表值为x_set_flag</span></span><br><span class="line">            parent[y_set_flag] = x_set_flag            </span><br><span class="line"></span><br><span class="line">    <span class="comment"># kruskal求最小生成树</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">kruskal</span><span class="params">(self)</span>:</span></span><br><span class="line">        result = []</span><br><span class="line">        i = <span class="number">0</span></span><br><span class="line">        e = <span class="number">0</span></span><br><span class="line">        <span class="comment"># sorted(asc) by weight</span></span><br><span class="line">        self.edge = sorted(self.edge, key=<span class="keyword">lambda</span> x: x[<span class="number">2</span>])</span><br><span class="line">        <span class="comment">#print(self.edge)</span></span><br><span class="line">        parent = []</span><br><span class="line">        rank = []</span><br><span class="line">        <span class="keyword">for</span> v <span class="keyword">in</span> range(len(self.vertex)):</span><br><span class="line">            parent.append(v)</span><br><span class="line">            rank.append(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> e &lt; len(self.vertex) - <span class="number">1</span>:</span><br><span class="line">            u, v, w = self.edge[i]</span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            x = self.find_parent(parent, u)</span><br><span class="line">            y = self.find_parent(parent, v)</span><br><span class="line"> </span><br><span class="line">            <span class="keyword">if</span> x != y: <span class="comment"># 说明没有环</span></span><br><span class="line">                e = e + <span class="number">1</span></span><br><span class="line">                result.append([u, v, w])</span><br><span class="line">                <span class="comment"># 合并</span></span><br><span class="line">                self.union(parent, rank, x, y)</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    g = Graph()</span><br><span class="line">    g.add_edge(<span class="number">0</span>, <span class="number">1</span>, <span class="number">10</span>)</span><br><span class="line">    g.add_edge(<span class="number">0</span>, <span class="number">2</span>, <span class="number">6</span>)</span><br><span class="line">    g.add_edge(<span class="number">0</span>, <span class="number">3</span>, <span class="number">5</span>)</span><br><span class="line">    g.add_edge(<span class="number">1</span>, <span class="number">3</span>, <span class="number">15</span>)</span><br><span class="line">    g.add_edge(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)    </span><br><span class="line"></span><br><span class="line">    mst = g.kruskal()</span><br><span class="line">    print(mst)</span><br></pre></td></tr></table></figure>
-<p>可以看到并查集实现的kruskal简单高效</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2206,7 +2238,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2228,7 +2260,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
