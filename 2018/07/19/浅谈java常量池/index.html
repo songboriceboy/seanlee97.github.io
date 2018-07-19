@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="nlp," />
+  <meta name="keywords" content="java," />
 
 
 
@@ -79,20 +79,21 @@
 
 
 
-<meta name="description" content="python下NLP工具有很多 jieba, nltk, ltp 等， 虽然他们很强大，但是提供的功能比较分散，而且通常模型比较大。为了方便平时的处理工作，我尝试找了一些集成工具包，发现snownlp还可以，它的分词是基于TnT的，总得来说分词效果逊色于基于词典的分词（比如jieba）。所以决定自己写一个包xmnlp，主打轻量快捷。 功能 中文分词 &amp;amp; 词性标注： 基于词典构建DAG图，">
-<meta name="keywords" content="nlp">
+<meta name="description" content="示例代码12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758public class ConstPool &amp;#123;    static void test() &amp;#123;        String s1 = &quot;hello&quot;;">
+<meta name="keywords" content="java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="xmnlp — A Lightweight Chinese NLP Toolkit.">
-<meta property="og:url" content="http://seanlee97.github.io/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/index.html">
+<meta property="og:title" content="浅谈java常量池">
+<meta property="og:url" content="http://seanlee97.github.io/2018/07/19/浅谈java常量池/index.html">
 <meta property="og:site_name" content="SeanLee - 明天探索者">
-<meta property="og:description" content="python下NLP工具有很多 jieba, nltk, ltp 等， 虽然他们很强大，但是提供的功能比较分散，而且通常模型比较大。为了方便平时的处理工作，我尝试找了一些集成工具包，发现snownlp还可以，它的分词是基于TnT的，总得来说分词效果逊色于基于词典的分词（比如jieba）。所以决定自己写一个包xmnlp，主打轻量快捷。 功能 中文分词 &amp;amp; 词性标注： 基于词典构建DAG图，">
+<meta property="og:description" content="示例代码12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758public class ConstPool &amp;#123;    static void test() &amp;#123;        String s1 = &quot;hello&quot;;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://seanlee97.github.io/images/posts/xmnlp/slogan.png">
-<meta property="og:updated_time" content="2018-02-16T15:58:14.791Z">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/java/string_pool_jdk6.png">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/java/string_pool_jdk7.png">
+<meta property="og:updated_time" content="2018-07-19T15:23:27.348Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="xmnlp — A Lightweight Chinese NLP Toolkit.">
-<meta name="twitter:description" content="python下NLP工具有很多 jieba, nltk, ltp 等， 虽然他们很强大，但是提供的功能比较分散，而且通常模型比较大。为了方便平时的处理工作，我尝试找了一些集成工具包，发现snownlp还可以，它的分词是基于TnT的，总得来说分词效果逊色于基于词典的分词（比如jieba）。所以决定自己写一个包xmnlp，主打轻量快捷。 功能 中文分词 &amp;amp; 词性标注： 基于词典构建DAG图，">
-<meta name="twitter:image" content="http://seanlee97.github.io/images/posts/xmnlp/slogan.png">
+<meta name="twitter:title" content="浅谈java常量池">
+<meta name="twitter:description" content="示例代码12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758public class ConstPool &amp;#123;    static void test() &amp;#123;        String s1 = &quot;hello&quot;;">
+<meta name="twitter:image" content="http://seanlee97.github.io/images/posts/java/string_pool_jdk6.png">
 
 
 
@@ -122,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://seanlee97.github.io/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/"/>
+  <link rel="canonical" href="http://seanlee97.github.io/2018/07/19/浅谈java常量池/"/>
 
 
 
 
 
-  <title>xmnlp — A Lightweight Chinese NLP Toolkit. | SeanLee - 明天探索者</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>浅谈java常量池 | SeanLee - 明天探索者</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -265,7 +266,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/07/19/浅谈java常量池/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="sean lee">
@@ -282,7 +283,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">xmnlp — A Lightweight Chinese NLP Toolkit.</h1>
+          <h1 class="post-title" itemprop="name headline">浅谈java常量池</h1>
         
 
         <div class="post-meta">
@@ -294,8 +295,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-16T23:13:07+08:00">
-                2018-02-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-19T22:31:16+08:00">
+                2018-07-19
               </time>
             
 
@@ -305,6 +306,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术日志/" itemprop="url" rel="index">
+                    <span itemprop="name">技术日志</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -313,9 +336,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/#comments" itemprop="discussionUrl">
+                <a href="/2018/07/19/浅谈java常量池/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/07/19/浅谈java常量池/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -343,50 +366,13 @@
       
 
       
-        <p><img src="/images/posts/xmnlp/slogan.png" alt="slogan"></p>
-<p>python下NLP工具有很多 jieba, nltk, ltp 等， 虽然他们很强大，但是提供的功能比较分散，而且通常模型比较大。为了方便平时的处理工作，我尝试找了一些集成工具包，发现snownlp还可以，它的分词是基于TnT的，总得来说分词效果逊色于基于词典的分词（比如jieba）。所以决定自己写一个包xmnlp，主打轻量快捷。</p>
-<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><ol>
-<li><p>中文分词 &amp; 词性标注： 基于词典构建DAG图，然后采用动态规划的思想求得最大概率路径（jieba分词采用了反向输出，我采用了正向加权反向输出的方式，使得正反向共同影响分词效果），对于未登录词采用HMM+Viterbi处理</p>
-</li>
-<li><p>文本纠错：采用了bi-gram + levenshtein实现</p>
-</li>
-<li><p>文本摘要 &amp; 关键词提取：textrank</p>
-</li>
-<li><p>情感分析：naive bayes</p>
-</li>
-<li><p>文本转拼音：Trie 树检索</p>
-</li>
-</ol>
-<p>以下展示xmnlp的功能效果，不同模块的原理之后的文章会补上。</p>
-<h2 id="分词-amp-词性标注"><a href="#分词-amp-词性标注" class="headerlink" title="分词&amp;词性标注"></a>分词&amp;词性标注</h2><p>[ doc ]</p>
-<p>自然语言处理: 是人工智能和语言学领域的分支学科。<br>在这此领域中探讨如何处理及运用自然语言；自然语言认知则是指让电脑“懂”人类的语言。<br>自然语言生成系统把计算机数据转化为自然语言。<br>自然语言理解系统把自然语言转化为计算机程序更易于处理的形式。</p>
-<p>[ 分词 ]</p>
-<p>自然语言处理 / : / 是 / 人工智能 / 和 / 语言学 / 领域 / 的 / 分支 / 学科 / 。 / 在 / 这此 / 领域 / 中 / 探讨 / 如何 / 处理 / 及 / 运用 / 自然 / 语言 / ； / 自然 / 语言 / 认知 / 则 / 是 / 指让 / 电脑 / “ / 懂 / ” / 人类 / 的 / 语言 / 。 / 自然 / 语言 / 生成 / 系统 / 把 / 计算机 / 数据 / 转化 / 为 / 自然 / 语言 / 。 / 自然 / 语言 / 理解 / 系统 / 把 / 自然 / 语言 / 转化 / 为 / 计算机程序 / 更 / 易于 / 处理 / 的 / 形式 / 。</p>
-<p>[ 标注 ]</p>
-<p>自然语言处理 un / : un / 是 v / 人工智能 nw / 和 c / 语言学 n / 领域 n / 的 uj / 分支 n / 学科 n / 。 un / 在 p / 这此 un / 领域 n / 中 f / 探讨 v / 如何 r / 处理 v / 及 c / 运用 vn / 自然 d / 语言 n / ； un / 自然 d / 语言 n / 认知 v / 则 d / 是 v / 指让 un / 电脑 n / “ un / 懂 v / ” un / 人类 n / 的 uj / 语言 n / 。 un / 自然 d / 语言 n / 生成 v / 系统 n / 把 p / 计算机 n / 数据 n / 转化 v / 为 p / 自然 d / 语言 n / 。 un / 自然 d / 语言 n / 理解 v / 系统 n / 把 p / 自然 d / 语言 n / 转化 v / 为 p / 计算机程序 n / 更 d / 易于 v / 处理 v / 的 uj / 形式 n / 。 un</p>
-<h2 id="文本纠错"><a href="#文本纠错" class="headerlink" title="文本纠错"></a>文本纠错</h2><p>[ doc ]</p>
-<p>这理风景绣丽，而且天汽不错，我的心情各外舒畅!</p>
-<p>[ 纠错 ]</p>
-<p>这里风景秀丽，而且天气不错，我的心情格外舒畅!</p>
-<h2 id="文本摘要-amp-关键词"><a href="#文本摘要-amp-关键词" class="headerlink" title="文本摘要&amp;关键词"></a>文本摘要&amp;关键词</h2><p>[ doc ]</p>
-<p>自然语言处理: 是人工智能和语言学领域的分支学科。<br>在这此领域中探讨如何处理及运用自然语言；自然语言认知则是指让电脑“懂”人类的语言。<br>自然语言生成系统把计算机数据转化为自然语言。<br>自然语言理解系统把自然语言转化为计算机程序更易于处理的形式。</p>
-<p> [ 关键词 ]</p>
-<p>(‘自然语言’, 2.2069266136741321), </p>
-<p>(‘处理’, 1.5572478858429686), </p>
-<p>(‘是’, 1.4182222157079281), </p>
-<p>(‘系统’, 1.2431338210535401), </p>
-<p>(‘转化’, 1.1532093387566391)</p>
-<p>[ 摘要 ]</p>
-<p>自然语言理解系统把自然语言转化为计算机程序更易于处理的形式</p>
-<h2 id="情感分析"><a href="#情感分析" class="headerlink" title="情感分析"></a>情感分析</h2><p>[ doc ]</p>
-<p>这件衣服的质量也太差了吧！一穿就烂！</p>
-<p>[ 分值 ]</p>
-<p>0.009959694621645698</p>
-<h2 id="文本转拼音"><a href="#文本转拼音" class="headerlink" title="文本转拼音"></a>文本转拼音</h2><p>[ doc ]</p>
-<p>面朝大海，春暖花开</p>
-<p>[ 拼音 ]</p>
-<p>[‘mian’, ‘zhao’, ‘da’, ‘hai’, ‘，’, ‘chun’, ‘nuan’, ‘hua’, ‘kai’]</p>
-<h2 id="项目地址"><a href="#项目地址" class="headerlink" title="项目地址"></a>项目地址</h2><p><a href="https://github.com/SeanLee97/xmnlp" target="_blank" rel="noopener">github</a></p>
+        <h1 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConstPool</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        String s1 = <span class="string">"hello"</span>;</span><br><span class="line">        String s2 = <span class="keyword">new</span> String(<span class="string">"hello"</span>);</span><br><span class="line">        String s3 = <span class="string">"hello"</span>;</span><br><span class="line">        <span class="comment">// 常量直接拼接</span></span><br><span class="line">        String s4 = <span class="string">"hel"</span> + <span class="string">"lo"</span>;    </span><br><span class="line">        String s5 = <span class="string">"hel"</span> + <span class="keyword">new</span> String(<span class="string">"lo"</span>);</span><br><span class="line">        String s6 = <span class="string">"hel"</span>;</span><br><span class="line">        String s7 = <span class="string">"lo"</span>;</span><br><span class="line">        <span class="keyword">final</span> String s8 = <span class="string">"hel"</span>;</span><br><span class="line">        <span class="keyword">final</span> String s9 = <span class="string">"lo"</span>;</span><br><span class="line">        <span class="comment">// s6+s7实际上是使用StringBuilder.append来完成，会生成不同的对象</span></span><br><span class="line">        String s10 = s6 + s7;    </span><br><span class="line">        <span class="comment">// s8 + s9 相当于两个常量拼接 和 s4类似</span></span><br><span class="line">        String s11 = s8 + s9;    </span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建两个对象，生成了常量池中的“world”和堆中的字符串对象，引用是堆中的地址</span></span><br><span class="line">        String s12 = <span class="keyword">new</span> String(<span class="string">"world"</span>);   </span><br><span class="line">        <span class="comment">// 这一行的作用是s12去常量池中寻找但“world”已经存在了,所以s12的引用没有变还是在堆中的地址</span></span><br><span class="line">        s12.intern();  </span><br><span class="line">        <span class="comment">// 先在常量池中寻找“world”，发现已经存在了故直接返回常量池中"world"的对象引用，若不存在则在常量池中生成</span></span><br><span class="line">        String s13 = <span class="string">"world"</span>;  </span><br><span class="line"></span><br><span class="line">        <span class="comment">// new String("ja") 会在常量池中生成"ja"对象，以及也在堆中创建对象且指向堆中的引用</span></span><br><span class="line">        <span class="comment">// new String("va") 会在常量池中生成"va"对象，以及也在堆中创建对象且指向堆中的引用</span></span><br><span class="line">        <span class="comment">// 因此s14为"java"且引用是来自堆空间的，"ja", "va"存在于常量池中但是"java"没有存在于常量池中</span></span><br><span class="line">        String s14 = <span class="keyword">new</span> String(<span class="string">"ja"</span>) + <span class="keyword">new</span> String(<span class="string">"va"</span>);</span><br><span class="line">        <span class="comment">// 由于常量池中没有 "java" 而堆中有java，但是在JDK1.7中，常量池中不需要再存储一份对象了，可以直接存储堆中的引用。</span></span><br><span class="line">        <span class="comment">// 故这份引用“java”直接指向 s14 堆空间的引用对象，也就是说s14.intern() == s14会返回true</span></span><br><span class="line">        s14.intern();       </span><br><span class="line">        <span class="comment">// 先寻找常量池发现存在"java"故直接返回会引用（在这里是指向堆空间的）</span></span><br><span class="line">        String s15 = <span class="string">"java"</span>; </span><br><span class="line"></span><br><span class="line">        <span class="comment">// 先寻找常量池，发现没有"python"故生成</span></span><br><span class="line">        String s16 = <span class="string">"python"</span>;  </span><br><span class="line">        <span class="comment">// 和s14差不多</span></span><br><span class="line">        String s17 = <span class="keyword">new</span> String(<span class="string">"pyt"</span>) + <span class="keyword">new</span> String(<span class="string">"hon"</span>);  </span><br><span class="line">        <span class="comment">// 发现常量池中已经有"python"指向的是s16，但是s17依然是指向堆空间的，</span></span><br><span class="line">        s17.intern();  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        System.out.println(s1 == s2);   <span class="comment">// #1 false, s3 还在堆区中</span></span><br><span class="line">        System.out.println(s1 == s3);   <span class="comment">// #2 true s2 从常量池中取得是s1的引用</span></span><br><span class="line">        System.out.println(s1 == s4);   <span class="comment">// #3 true java的优化先处理 'hel' + 'lo' -&gt; 'hello'</span></span><br><span class="line">        System.out.println(s1 == s5);   <span class="comment">// #4 false  'hel' = new String('lo') 还是会在堆区分配</span></span><br><span class="line">        System.out.println(s1 == s10);  <span class="comment">// #5 false</span></span><br><span class="line">        System.out.println(s1 == s11);  <span class="comment">// #6 true</span></span><br><span class="line">        System.out.println(s12 == s13); <span class="comment">// #7 false</span></span><br><span class="line">        System.out.println(s12.intern() == s13); <span class="comment">// #8 true</span></span><br><span class="line">        System.out.println(s14 == s15);  <span class="comment">// #9 true</span></span><br><span class="line">        System.out.println(s16 == s17);  <span class="comment">// #10 false</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        test();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>intern() 方法设计的初衷是重用String对象，以节省内存消耗。</p>
+<p>jdk6-（-代表当前及之前的版本） 和 jdk7+ 的常量池存放位置是有区别的。<br>jdk6- 版本中常量池是放在perm区（方法区中）的<br><img src="/images/posts/java/string_pool_jdk6.png" alt="jdk6"><br>也就是和堆区是完全分开的。使用双引号声明的字符串是会直接在字符常量池生成的，而new 出来的String对象是存放在堆区的，故jdk6中两者的内存地址肯定不一样，即使调用了intern()也是不受影响的</p>
+<p>jdk7+中常量池是在堆区中的，和jdk6-会很不一样<br><img src="/images/posts/java/string_pool_jdk7.png" alt="jdk7"><br>上面的代码就是jdk7+的效果，具体的注意点都在注释中</p>
+<p>在于JDK 1.7后，对于#19 返回true，但是调换了一下位置返回的结果#10 就变成了false。这个原因主要是从JDK 1.7后的intern方法在实现上发生了比较大的改变，JDK 1.7后，intern方法还是会先去查询常量池中是否有已经存在，<strong>如果存在，则返回常量池中的引用，这一点与之前没有区别，区别在于，如果在常量池找不到对应的字符串，则不会再将字符串拷贝到常量池，而只是在常量池中生成一个对原字符串的引用</strong>,如 #9 中直接返回堆区中的引用</p>
+<h1 id="其他常见面试题"><a href="#其他常见面试题" class="headerlink" title="其他常见面试题"></a>其他常见面试题</h1><p>Q：String s = new String(“xyz”) 创建了几个String Object?<br>A：两个，常量池中的”xyz”和堆中的对象</p>
+<h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><p>[1] <a href="https://blog.csdn.net/baidu_31657889/article/details/52315902" target="_blank" rel="noopener">https://blog.csdn.net/baidu_31657889/article/details/52315902</a><br>[2] <a href="http://www.importnew.com/21024.html" target="_blank" rel="noopener">http://www.importnew.com/21024.html</a></p>
 
       
     </div>
@@ -436,7 +422,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/nlp/" rel="tag"># nlp</a>
+            <a href="/tags/java/" rel="tag"># java</a>
           
         </div>
       
@@ -449,15 +435,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/06/01/SVM从入门到代码实现/" rel="next" title="SVM从入门到代码实现">
+                <i class="fa fa-chevron-left"></i> SVM从入门到代码实现
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/03/22/Kruskal求解无向图的最小生成树-并查集实现/" rel="prev" title="Kruskal求解无向图的最小生成树(并查集实现)">
-                Kruskal求解无向图的最小生成树(并查集实现) <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -631,7 +617,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#功能"><span class="nav-number">1.</span> <span class="nav-text">功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分词-amp-词性标注"><span class="nav-number">2.</span> <span class="nav-text">分词&amp;词性标注</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文本纠错"><span class="nav-number">3.</span> <span class="nav-text">文本纠错</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文本摘要-amp-关键词"><span class="nav-number">4.</span> <span class="nav-text">文本摘要&amp;关键词</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#情感分析"><span class="nav-number">5.</span> <span class="nav-text">情感分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文本转拼音"><span class="nav-number">6.</span> <span class="nav-text">文本转拼音</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目地址"><span class="nav-number">7.</span> <span class="nav-text">项目地址</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#示例代码"><span class="nav-number">1.</span> <span class="nav-text">示例代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原理"><span class="nav-number">2.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他常见面试题"><span class="nav-number">3.</span> <span class="nav-text">其他常见面试题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#reference"><span class="nav-number">4.</span> <span class="nav-text">reference</span></a></li></ol></div>
             
 
           </div>
@@ -801,9 +787,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://seanlee97.github.io/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/';
-          this.page.identifier = '2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/';
-          this.page.title = 'xmnlp — A Lightweight Chinese NLP Toolkit.';
+          this.page.url = 'http://seanlee97.github.io/2018/07/19/浅谈java常量池/';
+          this.page.identifier = '2018/07/19/浅谈java常量池/';
+          this.page.title = '浅谈java常量池';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://seanlee97.disqus.com/embed.js';
