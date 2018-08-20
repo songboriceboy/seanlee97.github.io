@@ -91,7 +91,7 @@
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/crf/hmm.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/crf/memm.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/crf/crf.png">
-<meta property="og:updated_time" content="2018-08-20T16:53:54.070Z">
+<meta property="og:updated_time" content="2018-08-20T17:11:30.860Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="谈谈序列标注三大模型HMM、MEMM、CRF">
 <meta name="twitter:description" content="很久之前曾经接触过CRF，但是觉得这东西太晦涩难懂了，看了很多科普博客但很多都是从概率图的层面上解释的，虽然图形能让你很快了解个大概，但是有些地方疑惑时是很难从图形中得到答案的，所以我更喜欢从公式出发。最近重拾CRF，顺便也回顾了HMM MEMM，这几个模型主要用在了序列标注上，故在此形成一个小型知识体系便于以后复习。 前情知识 生成模型 &amp;amp; 判别模型 生成模型 生成模型学习的是联合概率\">
@@ -381,13 +381,14 @@
 <img src="/images/posts/crf/models.png" alt="">
 </div>
 <h3 id="对数线性模型log-linear-model">对数线性模型（log-linear model）</h3>
-<p>对于有一系列输入数据$$，和一系列标签数据 $<span class="math inline">\(，如何通过这些标注数据来求解\)</span>p(y|x)$呢？ 一般可以用对数线性模型来求解，也就是判别模型一般可以通过对数线性模型来建模，常见的最大熵模型、softmax、<strong>MEMM、CRF都使用了对数线性模型</strong>。</p>
-<p>对数线性模型形如： <span class="math display">\[p(y|x;v) = \frac{exp(w\cdot f(x, y))}{\sum {y{}&#39;\epsilon \gamma exp(w\cdot f(x, y{}&#39;))}}\]</span></p>
+<p>对于有一系列输入数据 <span class="math inline">\(\chi\)</span> ，和一系列标签数据 <span class="math inline">\(\gamma\)</span> ，如何通过这些标注数据来求解 <span class="math inline">\(p(y|x)\)</span> 呢？ 一般可以用对数线性模型来求解，也就是判别模型一般可以通过对数线性模型来建模，常见的最大熵模型、softmax、<strong>MEMM、CRF都使用了对数线性模型</strong>。</p>
+<p>对数线性模型形如： <span class="math display">\[p(y|x;w) = \frac{exp(w\cdot f(x, y))}{\sum {y{}&#39;\epsilon \gamma exp(w\cdot f(x, y{}&#39;))}}\]</span></p>
 <p>其中有：</p>
 <ul>
 <li>输入集合 <span class="math inline">\(\chi\)</span></li>
 <li>标签集合 <span class="math inline">\(\gamma\)</span></li>
-<li><span class="math inline">\(w \epsilon \mathbb{R}^{d}\)</span>, $x $, <span class="math inline">\(y \epsilon \gamma\)</span></li>
+<li><span class="math inline">\(w \epsilon \mathbb{R}^{d}\)</span> 是模型的参数</li>
+<li>$x $, <span class="math inline">\(y \epsilon \gamma\)</span></li>
 <li>特征函数 <span class="math inline">\(f:\chi \times \gamma \rightarrow \mathbb{R}^{d}\)</span></li>
 <li><span class="math inline">\(f(x, y)\)</span> 可认为对输入输出同时抽取特征</li>
 </ul>
@@ -404,7 +405,11 @@
 <p>由图可知HMM是一个有向图。</p>
 <p>HMM的解码部分是求解：<span class="math inline">\(arg \underset{s_{1}...s_{n+1}}{max}p(x_{1}...x_{n}, s_{1}...s_{n})\)</span>, 通常采用Viterbi算法解码</p>
 <h3 id="hmm的特点">HMM的特点</h3>
-<p>HMM有两个独立性假设： - 观测序列之间是独立的 - 当前状态仅依赖于先前的状态</p>
+<p>HMM有两个独立性假设：</p>
+<ul>
+<li>观测序列之间是独立的</li>
+<li>当前状态仅依赖于先前的状态</li>
+</ul>
 <h2 id="memm">MEMM</h2>
 <p>Max Entropy Markov Model最大熵马尔可夫模型，在最大熵的基础上引入了一阶马尔科夫假设。 MEMM属于判别式模型，它要学习条件概率</p>
 <p><span class="math display">\[p(s_{1}...s_{m}|x_{1}...x_{m}) = \prod_{i=1}^{m}p(s_{i}|s_{1}...s_{i-1}, x_{1}...x_{m})\]</span></p>
@@ -641,7 +646,7 @@ arg \underset{s_{1}...s_{m}}{max}p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \und
               
               
               <div class="site-state-item site-state-categories">
-                <a href="/categories/index.html">
+                <a href="/categories/index-1.html">
                   <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
@@ -652,7 +657,7 @@ arg \underset{s_{1}...s_{m}}{max}p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \und
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
+                <a href="/tags/index-1.html">
                   <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
