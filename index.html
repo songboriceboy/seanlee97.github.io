@@ -262,6 +262,260 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/08/20/谈谈序列标注三大模型HMM、MEMM、CRF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/20/谈谈序列标注三大模型HMM、MEMM、CRF/" itemprop="url">谈谈序列标注三大模型HMM、MEMM、CRF</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-20T21:19:05+08:00">
+                2018-08-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">技术日志</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/20/谈谈序列标注三大模型HMM、MEMM、CRF/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/08/20/谈谈序列标注三大模型HMM、MEMM、CRF/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>很久之前曾经接触过CRF，但是觉得这东西太晦涩难懂了，看了很多科普博客但很多都是从概率图的层面上解释的，虽然图形能让你很快了解个大概，但是有些地方疑惑时是很难从图形中得到答案的，所以我更喜欢从公式出发。最近重拾CRF，顺便也回顾了<code>HMM</code> <code>MEMM</code>，这几个模型主要用在了序列标注上，故在此形成一个小型知识体系便于以后复习。</p>
+<h2 id="前情知识">前情知识</h2>
+<h3 id="生成模型-判别模型">生成模型 &amp; 判别模型</h3>
+<h4 id="生成模型">生成模型</h4>
+<p>生成模型学习的是联合概率<span class="math inline">\(p(x, y)= p(x|y) p(y)\)</span>，然后利用贝叶斯定理来求解后验概率<span class="math inline">\(p(y|x)\)</span> <span class="math display">\[p(y|x) = \frac{p(x|y)p(y)}{\sum_{y{}&#39; \epsilon \gamma} p(x|y{}&#39;)p(y{}&#39;)}\]</span></p>
+<p>常见的生成模型有：朴素贝叶斯（NB），HMM</p>
+<h4 id="判别式模型">判别式模型</h4>
+<p>直接学习<span class="math inline">\(p(y|x)\)</span>，判别式模型根据所提供的feature直接学习一个分类边界</p>
+<p>常见的判别式模型：神经网络，SVM，CRF</p>
+<div style="text-align: center">
+<img src="/images/posts/crf/models.png" alt="">
+</div>
+<h3 id="对数线性模型log-linear-model">对数线性模型（log-linear model）</h3>
+<p>对于有一系列输入数据$$，和一系列标签数据 $<span class="math inline">\(，如何通过这些标注数据来求解\)</span>p(y|x)$呢？ 一般可以用对数线性模型来求解，也就是判别模型一般可以通过对数线性模型来建模，常见的最大熵模型、softmax、<strong>MEMM、CRF都使用了对数线性模型</strong>。</p>
+<p>对数线性模型形如： <span class="math display">\[p(y|x;v) = \frac{exp(w\cdot f(x, y))}{\sum {y{}&#39;\epsilon \gamma exp(w\cdot f(x, y{}&#39;))}}\]</span></p>
+<p>其中有：</p>
+<ul>
+<li>输入集合 <span class="math inline">\(\chi\)</span></li>
+<li>标签集合 <span class="math inline">\(\gamma\)</span></li>
+<li><span class="math inline">\(w \epsilon \mathbb{R}^{d}\)</span>, $x $, <span class="math inline">\(y \epsilon \gamma\)</span></li>
+<li>特征函数 <span class="math inline">\(f:\chi \times \gamma \rightarrow \mathbb{R}^{d}\)</span></li>
+<li><span class="math inline">\(f(x, y)\)</span> 可认为对输入输出同时抽取特征</li>
+</ul>
+<p>对数线性模型表示的意义为：在条件<span class="math inline">\(x\)</span>以及参数<span class="math inline">\(w\)</span>下发生<span class="math inline">\(y\)</span>的概率，一般<span class="math inline">\(w\)</span>是要学习的参数</p>
+<h3 id="分类问题和序列标注问题">分类问题和序列标注问题</h3>
+<p>分类问题一般是对输入进行建模得到语义编码（如可以使用RNN，CNN进行编码）然后经过分类器将空间映射到分类空间上，最后可通过softmax将权重归一化得到映射到各个分类空间的概率，取概率最大的作为分类。 序列标注问题的重点在于学习序列位置之间的关系，然后解码出最大概率标签路径，比如有<span class="math inline">\(K\)</span>个标签，当输入序列长度为<span class="math inline">\(m\)</span>时，那么就有<span class="math inline">\(K^{m}\)</span>条概率路径，序列标注问题是要从<span class="math inline">\(K^m\)</span>条概率路径中寻找到概率最大的那条路径。</p>
+<h2 id="hmm">HMM</h2>
+<p>之前已经说了HMM是<strong>生成模型</strong>，它引入了<strong>一阶马尔科夫假设</strong>：当前状态只与上一状态有关。结合这两点可以得到联合概率</p>
+<p><span class="math display">\[p(x_{1}...x_{n}, s_{1}...s_{n}) = \prod_{t}p(s_{t}|s_{t-1})p(x_{t}|s_{t})\]</span></p>
+<span class="math inline">\(p(s_{t}|s_{t-1})\)</span>称为状态间的转移概率，<span class="math inline">\(p(x_{t}|s_{t})\)</span>称为发射概率（由隐状态发射成显状态的概率）
+<div style="text-align: center">
+<img src="/images/posts/crf/hmm.png" alt="">
+</div>
+<p>由图可知HMM是一个有向图。</p>
+<p>HMM的解码部分是求解：<span class="math inline">\(arg \underset{s_{1}...s_{n+1}}{max}p(x_{1}...x_{n}, s_{1}...s_{n})\)</span>, 通常采用Viterbi算法解码</p>
+<h3 id="hmm的特点">HMM的特点</h3>
+<p>HMM有两个独立性假设： - 观测序列之间是独立的 - 当前状态仅依赖于先前的状态</p>
+<h2 id="memm">MEMM</h2>
+<p>Max Entropy Markov Model最大熵马尔可夫模型，在最大熵的基础上引入了一阶马尔科夫假设。 MEMM属于判别式模型，它要学习条件概率</p>
+<p><span class="math display">\[p(s_{1}...s_{m}|x_{1}...x_{m}) = \prod_{i=1}^{m}p(s_{i}|s_{1}...s_{i-1}, x_{1}...x_{m})\]</span></p>
+<p>由于引入了一阶马尔科夫假设，故当前状态仅于前一状态有关</p>
+<p><span class="math display">\[p(s_{1}...s_{m}|x_{1}...x_{m}) = \prod_{i=1}^{m}p(s_{i}|s_{i-1}, x_{1}...x_{m})\]</span></p>
+<p>而最大熵模型是对数线性模型从而得到MEMM的模型表达式</p>
+<p><span class="math display">\[p(s_{i}|s_{i-1}, x_{1}...x_{m}; w) = \frac{exp(w \cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{ \sum _{s{}&#39; \epsilon S} exp(w \cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;) ) }\]</span></p>
+<p><span class="math inline">\(\phi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;)\)</span> 是一个特征函数，其中有：</p>
+<ul>
+<li><span class="math inline">\(i\)</span> 代表当前被标记的位置</li>
+<li><span class="math inline">\(s\)</span> 先前的状态</li>
+<li><span class="math inline">\(s{}&#39;\)</span> 当前的状态</li>
+</ul>
+<p>故有</p>
+<p><span class="math display">\[\begin{align*}
+p(s_{1}...s_{m}|x_{1}...x_{m}) &amp;= \prod_{i=1}^{m} p(s_{i}|s_{i-1}, x_{1}...x_{m}) \\
+&amp;= \prod_{i=1}^{m}\frac{exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))} \\
+&amp;= \frac{exp(\sum _{i} w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))} \tag{1}
+\end{align*}\]</span></p>
+<p>MEMM解码部分是计算 <span class="math inline">\(arg \underset{s_{1}...s_{m}}{max}p( s_{1}...s_{m}|x_{1}...x_{m})\)</span>，为了好理解我做了一步步简化</p>
+<p><span class="math display">\[\begin{align*}
+arg \underset{s_{1}...s_{m}}{max}p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \underset{s_{1}...s_{m}}{max}\prod_{i=1}^{m}p( s_{i}|s_{i-1} ,x_{1}...x_{n}) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max} p( s_{i}|s_{i-1}, x_{1}...x_{n} ) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max}\frac{exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))} \\
+&amp;= arg \underset{s_{1}...s_{m}}{max} exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i})) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max} w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}) \tag{2}
+\end{align*}\]</span></p>
+<p>也即是编码等价于求解公式<span class="math inline">\((2)\)</span>，通常用viterbi算法求解，如果不采用viterbi求解它的算法复杂度是<span class="math inline">\(O(K^{m})\)</span> ，采用了viterbi算法可以降到<span class="math inline">\(O(mK^{2})\)</span>，(<span class="math inline">\(K\)</span> 为隐状态数目, <span class="math inline">\(m\)</span>为观测序列长度)</p>
+<div style="text-align: center">
+<img src="/images/posts/crf/memm.png" alt="">
+</div>
+<p>如图，MEMM也是有向图模型。</p>
+<h3 id="memm的优点">MEMM的优点</h3>
+<p>克服了HMM输出独立性问题，通过引入特征函数使得模型比HMM拥有更多信息，而且最大熵则从全局角度来建模，它“保留尽可能多的不确定性，在没有更多的信息时，不擅自做假设”</p>
+<h3 id="memm的缺点">MEMM的缺点</h3>
+<p>标签偏置(labeling bias)问题，由于MEMM的当前状态只与当前观测以及上一状态有关，导致隐状态中有更少转移的状态拥有的转移概率普遍偏高（是不是一头雾水，再没有更好的解释之前只能继续一头雾水了）简单的说就是MEMM中概率最大路径更容易出现在转移少的状态中。 如何解决这个问题呢？引入全局化特征可以解决标签偏置问题，下文的CRF其实就在MEMM上加入全局化特征从而解决标签偏置问题</p>
+<h2 id="crf">CRF</h2>
+<p>Conditional Random Forest条件随机场，这里主要讲解线性链（linear-chain）,这里不会牵扯太多概率图的东西（因为我也不会啊:&lt;）还是从对数线性模型出发。 首先要明确的一点是CRF也属于判别模型，所以和MEMM一样需要对</p>
+<p><span class="math display">\[p(s_{1}...s_{m}|x_{1}...x_{m})\]</span></p>
+<p>建模，CRF也和MEMM一样做了一阶马尔科夫假设，即当前状态只与上一状态有关，但是区别在于CRF的特征采用了全局特征，它把观测序列当做整体来看所以它的特征函数是全局的，它的特征函数为：</p>
+<p><span class="math display">\[\varphi (x_{1}...x_{m}, s_{1}...s{m}) = \sum _{j=1}^{m} \phi (x_{1}...x_{m}, j, s_{j-1}, s_{j})\]</span></p>
+<p>其中 <span class="math inline">\(\phi\)</span> 和MEMM的特征函数是一致的，接下来的步骤和MEMM差不多了，只是特征函数变为了<span class="math inline">\(\varphi\)</span>，为了连续性在此再走一遍流程。</p>
+<p>CRF的模型表达式为：</p>
+<p><span class="math display">\[p(s_{i}|s_{i-1}, x_{1}...x_{m}; w) = \frac{exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))}\]</span></p>
+<p>CRF的解码部分是计算 <span class="math inline">\(arg \underset{s_{1}...s_{m}}{max}p( s_{1}...s_{m}|x_{1}...x_{m})\)</span>，一步步进行简化</p>
+<p><span class="math display">\[\begin{align*}
+arg \underset{s_{1}...s_{m}}{max}p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \underset{s_{1}...s_{m}}{max}\prod_{i=1}^{m}p( s_{i}|s_{i-1} ,x_{1}...x_{n}) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max} p( s_{i}|s_{i-1}, x_{1}...x_{n} ) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max}\frac{exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))} \\
+&amp;= arg \underset{s_{1}...s_{m}}{max} exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i})) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max} w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i}) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max} \sum _{j}^{m} w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}) \tag{3}
+\end{align*}\]</span></p>
+<p>对比一下(2)和(3)可知道CRF和MEMM的区别。和MEMM一样，一般采用viterbi算法来进行解码。</p>
+<div style="text-align: center">
+<img src="/images/posts/crf/crf.png" alt="">
+</div>
+<p>由图可知线性链CRF是无向图模型。</p>
+<h3 id="crf的优点">CRF的优点</h3>
+<p>克服了HMM的输出独立性假设问题以及MEMM的标注偏置问题。</p>
+<h2 id="refrence">Refrence</h2>
+<p>[1] http://www.cs.columbia.edu/~mcollins/hmms-spring2013.pdf</p>
+<p>[2] http://www.cs.columbia.edu/~mcollins/loglinear.pdf</p>
+<p>[3] http://www.cs.columbia.edu/~mcollins/crf.pdf</p>
+<p>[4] https://repository.upenn.edu/cgi/viewcontent.cgi?article=1162&amp;context=cis_papers</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/08/07/python常用魔术方法概览/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2023,226 +2277,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/04/14/排序-快速排序/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="sean lee">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="明天探索者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/14/排序-快速排序/" itemprop="url">排序|快速排序</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-14T11:09:18+08:00">
-                2018-04-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index">
-                    <span itemprop="name">技术日志</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/04/14/排序-快速排序/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/04/14/排序-快速排序/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="原理简介"><a href="#原理简介" class="headerlink" title="原理简介"></a>原理简介</h1><p>快速排序(quick sort)是一种高效的排序算法，它的复杂度、稳定性如下表。</p>
-<table>
-<thead>
-<tr>
-<th>item</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>平均时间复杂度</td>
-<td>$O(n \cdot logn)$</td>
-</tr>
-<tr>
-<td>最优时间复杂度</td>
-<td>$O(n \cdot logn)$</td>
-</tr>
-<tr>
-<td>最差时间复杂度</td>
-<td>$O(n^{2})$</td>
-</tr>
-<tr>
-<td>空间复杂度</td>
-<td>$O(log n)$ 和递归深度相同 </td>
-</tr>
-<tr>
-<td>稳定性</td>
-<td>不稳定</td>
-</tr>
-</tbody>
-</table>
-<p>它是采用<strong>分治策略</strong>实现的，那么什么是分治策略呢？</p>
-<blockquote>
-<p>分治策略：是一种分而治之的思想，就是把一个复杂的问题分成两个或更多的相同或相似的子问题，直到最后子问题可以简单的直接求解，原问题的解即子问题的解的合并。</p>
-</blockquote>
-<p>利用分治法实现快排的步骤：</p>
-<ul>
-<li>选基准：在数组中，选择一个元素作为”基准”（pivot），为了方便一般选择最后一个元素做为基准。</li>
-<li>比pivot小的放到pivot左边，比pivot大的放到pivot右边</li>
-<li>对”基准”左边和右边的两个子集，不断重复第一步和第二步，直到所有子集只剩下一个元素为止。</li>
-</ul>
-<p><img src="/images/posts/quick_sort/Sorting_quicksort_anim.gif" alt="快排原理图"></p>
-<center>(图片来自维基百科)</center>
-
-<h1 id="排序过程"><a href="#排序过程" class="headerlink" title="排序过程"></a>排序过程</h1><p>以 [7, 1, 5, 8] 为例，实现整个排序过程<br><strong>选择基准元素</strong><br>一般选择最后一个元素作为基准，在这里选8作为基准<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">                      pivot</span><br><span class="line">                        ↓</span><br><span class="line">7       1       5       8</span><br></pre></td></tr></table></figure></p>
-<p>在这里通过一个游标来实现元素的互换，从左到右遍历（除了最后的基准元素），当遍历的到的元素小于基准元素那么和游标所在位置的元素互换，游标自增，遍历结束后将pivot的值和游标所指的值互换，并返回游标 (游标所在位置左边的元素都不大于pivot，右边的元素都不小于pivot)。<br>以下是一次循环的流程：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">                    pivot</span><br><span class="line">                      ↓</span><br><span class="line">7     1       5       8</span><br><span class="line">↑</span><br><span class="line">pidx</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">                      pivot</span><br><span class="line">                        ↓</span><br><span class="line">  7     1       5       8</span><br><span class="line">  ↑     ↑ </span><br><span class="line">pidx    i</span><br></pre></td></tr></table></figure>
-<p>当 i 指向1时，由于 1 &lt; 8，所以需要将 i 指向的元素和 pidx 指向的元素替换，替换后 pidx 自增</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">  ┌─────┐             pivot</span><br><span class="line">  ↓     ↓               ↓</span><br><span class="line">  7     1       5       8</span><br><span class="line">  ↑     ↑ </span><br><span class="line">pidx    i</span><br><span class="line"></span><br><span class="line">交换后</span><br><span class="line"></span><br><span class="line">                       pivot</span><br><span class="line">                        ↓</span><br><span class="line">  1     7       5       8</span><br><span class="line">        ↑</span><br><span class="line">     pidx, i</span><br></pre></td></tr></table></figure>
-<p>i 继续向后移动</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">                    pivot</span><br><span class="line">                      ↓</span><br><span class="line">1     7       5       8</span><br><span class="line">      ↑       ↑   </span><br><span class="line">   pidx       i</span><br></pre></td></tr></table></figure>
-<p>当 i 指向5时，由于 5 &lt; 8，所以需要将 i 指向的元素和 pidx 指向的元素替换，替换后 pidx 自增</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">        ┌───────┐     pivot</span><br><span class="line">        ↓       ↓       ↓</span><br><span class="line">  1     7       5       8</span><br><span class="line">        ↑       ↑ </span><br><span class="line">       pidx     i</span><br><span class="line"></span><br><span class="line">交换后</span><br><span class="line"></span><br><span class="line">                       pivot</span><br><span class="line">                        ↓</span><br><span class="line">  1     5       7       8</span><br><span class="line">                ↑</span><br><span class="line">            pidx, i</span><br></pre></td></tr></table></figure>
-<p>此时结束本次循环，最后交换 pivot 和 pidx 指向的值，并返回pidx</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1     5       8       7</span><br><span class="line">              ↑</span><br><span class="line">            pidx</span><br></pre></td></tr></table></figure>
-<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>伪码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">QUICKSORT(A, p, r)</span><br><span class="line">    if p &lt; r    </span><br><span class="line">        q = PARTITION(A, p, r)</span><br><span class="line">        QUICKSORT(A, p, q-1)</span><br><span class="line">        QUICKSORT(A, q+1, r)</span><br><span class="line"></span><br><span class="line">// 分区</span><br><span class="line">PARTITION(A, p, r)</span><br><span class="line">    x = A[r]    // 以最后一个数为基准（pivot element）</span><br><span class="line">    i = p-1     </span><br><span class="line">    for j = p to r-1</span><br><span class="line">        if A[j] &lt;= x</span><br><span class="line">            i = i+1 </span><br><span class="line">            exchange A[i] with A[j] </span><br><span class="line">    exchange A[i+1] with A[r]  </span><br><span class="line">    return i + 1</span><br></pre></td></tr></table></figure></p>
-<p>python 实现<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">partition</span><span class="params">(lst, low, high)</span>:</span></span><br><span class="line">    pidx = low</span><br><span class="line">    pivot = lst[high]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(low, high):</span><br><span class="line">        <span class="keyword">if</span> lst[i] &lt;= pivot:</span><br><span class="line">            lst[i], lst[pidx] = lst[pidx], lst[i]</span><br><span class="line">            pidx += <span class="number">1</span></span><br><span class="line">    lst[high], lst[pidx] = lst[pidx], lst[high]</span><br><span class="line">    <span class="keyword">return</span> pidx</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">quick_sort</span><span class="params">(lst, low, high)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> low &lt; high:</span><br><span class="line">        pidx = partition(lst, low, high)</span><br><span class="line">        quick_sort(lst, low, pidx<span class="number">-1</span>)</span><br><span class="line">        quick_sort(lst, pidx+<span class="number">1</span>, high)</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    lst = [<span class="number">7</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">8</span>]</span><br><span class="line">    quick_sort(lst, <span class="number">0</span>, len(lst)<span class="number">-1</span>)</span><br><span class="line">    print(lst)</span><br></pre></td></tr></table></figure></p>
-<h1 id="随机算法避免最坏情况"><a href="#随机算法避免最坏情况" class="headerlink" title="随机算法避免最坏情况"></a>随机算法避免最坏情况</h1><p>简介中已经知道快排的最坏时间复杂度是$O(n^{2})$，那么什么情况下是最坏的呢？又如何预防呢？</p>
-<p><strong>最坏情况</strong><br>这个主要看基准（pivot）的选择策略。一般情况下为了方便编码选择最左面或是最右面的元素作为基准，如果出现下列情况，那么会出现最坏情况：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1） 在分解时每次选取的基准为最小元素</span><br><span class="line">2）在分解时每次选取的基准为最大元素</span><br></pre></td></tr></table></figure></p>
-<p>也可以这样理解</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1）数组是正序的</span><br><span class="line">2）数组是倒序的</span><br><span class="line">3）所有的元素都相同</span><br></pre></td></tr></table></figure>
-<p>那么如何预防最坏情况呢？预防方法主要有两种</p>
-<ol>
-<li>基准的选取随机化：随机使得基准元素是最小或最大元素的概率变小（但是还是可能发生）</li>
-<li>求序列的中值，选择中值作为基准<br>虽然 2. 可以避免最坏情况，但是找中值的过程需要$O(n)$的复杂度，所以一般采用 1. 来选取基准</li>
-</ol>
-<p>python 实现<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">partition</span><span class="params">(lst, low, high)</span>:</span></span><br><span class="line">    pidx = low</span><br><span class="line">    <span class="comment"># 随机选取pivot</span></span><br><span class="line">    rand_pivot_idx = random.randint(low, high)</span><br><span class="line">    lst[rand_pivot_idx], lst[high] = lst[high], lst[rand_pivot_idx]</span><br><span class="line">    pivot = lst[high]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(low, high):</span><br><span class="line">        <span class="keyword">if</span> lst[i] &lt;= pivot:</span><br><span class="line">            lst[i], lst[pidx] = lst[pidx], lst[i]</span><br><span class="line">            pidx += <span class="number">1</span></span><br><span class="line">    lst[high], lst[pidx] = lst[pidx], lst[high]</span><br><span class="line">    <span class="keyword">return</span> pidx</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">quick_sort</span><span class="params">(lst, low, high)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> low &lt; high:</span><br><span class="line">        pidx = partition(lst, low, high)</span><br><span class="line">        quick_sort(lst, low, pidx<span class="number">-1</span>)</span><br><span class="line">        quick_sort(lst, pidx+<span class="number">1</span>, high)</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    lst = [<span class="number">7</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">8</span>]</span><br><span class="line">    quick_sort(lst, <span class="number">0</span>, len(lst)<span class="number">-1</span>)</span><br><span class="line">    print(lst)</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2297,7 +2331,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2307,7 +2341,7 @@
               
               
               <div class="site-state-item site-state-categories">
-                <a href="/categories/index-1.html">
+                <a href="/categories/index.html">
                   <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">分类</span>
                 </a>

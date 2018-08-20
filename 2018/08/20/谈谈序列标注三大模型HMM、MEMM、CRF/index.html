@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="NLP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="很久之前曾经接触过CRF，但是觉得这东西太晦涩难懂了，看了很多科普博客但很多都是从概率图的层面上解释的，虽然图形能让你很快了解个大概，但是有些地方疑惑时是很难从图形中得到答案的，所以我更喜欢从公式出发。最近重拾CRF，顺便也回顾了HMM MEMM，这几个模型主要用在了序列标注上，故在此形成一个小型知识体系便于以后复习。 前情知识 生成模型 &amp;amp; 判别模型 生成模型 生成模型学习的是联合概率\">
+<meta name="keywords" content="NLP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="谈谈序列标注三大模型HMM、MEMM、CRF">
+<meta property="og:url" content="http://seanlee97.github.io/2018/08/20/谈谈序列标注三大模型HMM、MEMM、CRF/index.html">
+<meta property="og:site_name" content="明天探索者">
+<meta property="og:description" content="很久之前曾经接触过CRF，但是觉得这东西太晦涩难懂了，看了很多科普博客但很多都是从概率图的层面上解释的，虽然图形能让你很快了解个大概，但是有些地方疑惑时是很难从图形中得到答案的，所以我更喜欢从公式出发。最近重拾CRF，顺便也回顾了HMM MEMM，这几个模型主要用在了序列标注上，故在此形成一个小型知识体系便于以后复习。 前情知识 生成模型 &amp;amp; 判别模型 生成模型 生成模型学习的是联合概率\">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/crf/models.png">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/crf/hmm.png">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/crf/memm.png">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/crf/crf.png">
+<meta property="og:updated_time" content="2018-08-20T16:53:54.070Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="谈谈序列标注三大模型HMM、MEMM、CRF">
+<meta name="twitter:description" content="很久之前曾经接触过CRF，但是觉得这东西太晦涩难懂了，看了很多科普博客但很多都是从概率图的层面上解释的，虽然图形能让你很快了解个大概，但是有些地方疑惑时是很难从图形中得到答案的，所以我更喜欢从公式出发。最近重拾CRF，顺便也回顾了HMM MEMM，这几个模型主要用在了序列标注上，故在此形成一个小型知识体系便于以后复习。 前情知识 生成模型 &amp;amp; 判别模型 生成模型 生成模型学习的是联合概率\">
+<meta name="twitter:image" content="http://seanlee97.github.io/images/posts/crf/models.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://seanlee97.github.io/2018/08/20/谈谈序列标注三大模型HMM、MEMM、CRF/"/>
+
+
+
+
+
+  <title>谈谈序列标注三大模型HMM、MEMM、CRF | 明天探索者</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">明天探索者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/08/20/谈谈序列标注三大模型HMM、MEMM、CRF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">谈谈序列标注三大模型HMM、MEMM、CRF</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-20T21:19:05+08:00">
+                2018-08-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">技术日志</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/20/谈谈序列标注三大模型HMM、MEMM、CRF/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/08/20/谈谈序列标注三大模型HMM、MEMM、CRF/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>很久之前曾经接触过CRF，但是觉得这东西太晦涩难懂了，看了很多科普博客但很多都是从概率图的层面上解释的，虽然图形能让你很快了解个大概，但是有些地方疑惑时是很难从图形中得到答案的，所以我更喜欢从公式出发。最近重拾CRF，顺便也回顾了<code>HMM</code> <code>MEMM</code>，这几个模型主要用在了序列标注上，故在此形成一个小型知识体系便于以后复习。</p>
+<h2 id="前情知识">前情知识</h2>
+<h3 id="生成模型-判别模型">生成模型 &amp; 判别模型</h3>
+<h4 id="生成模型">生成模型</h4>
+<p>生成模型学习的是联合概率<span class="math inline">\(p(x, y)= p(x|y) p(y)\)</span>，然后利用贝叶斯定理来求解后验概率<span class="math inline">\(p(y|x)\)</span> <span class="math display">\[p(y|x) = \frac{p(x|y)p(y)}{\sum_{y{}&#39; \epsilon \gamma} p(x|y{}&#39;)p(y{}&#39;)}\]</span></p>
+<p>常见的生成模型有：朴素贝叶斯（NB），HMM</p>
+<h4 id="判别式模型">判别式模型</h4>
+<p>直接学习<span class="math inline">\(p(y|x)\)</span>，判别式模型根据所提供的feature直接学习一个分类边界</p>
+<p>常见的判别式模型：神经网络，SVM，CRF</p>
+<div style="text-align: center">
+<img src="/images/posts/crf/models.png" alt="">
+</div>
+<h3 id="对数线性模型log-linear-model">对数线性模型（log-linear model）</h3>
+<p>对于有一系列输入数据$$，和一系列标签数据 $<span class="math inline">\(，如何通过这些标注数据来求解\)</span>p(y|x)$呢？ 一般可以用对数线性模型来求解，也就是判别模型一般可以通过对数线性模型来建模，常见的最大熵模型、softmax、<strong>MEMM、CRF都使用了对数线性模型</strong>。</p>
+<p>对数线性模型形如： <span class="math display">\[p(y|x;v) = \frac{exp(w\cdot f(x, y))}{\sum {y{}&#39;\epsilon \gamma exp(w\cdot f(x, y{}&#39;))}}\]</span></p>
+<p>其中有：</p>
+<ul>
+<li>输入集合 <span class="math inline">\(\chi\)</span></li>
+<li>标签集合 <span class="math inline">\(\gamma\)</span></li>
+<li><span class="math inline">\(w \epsilon \mathbb{R}^{d}\)</span>, $x $, <span class="math inline">\(y \epsilon \gamma\)</span></li>
+<li>特征函数 <span class="math inline">\(f:\chi \times \gamma \rightarrow \mathbb{R}^{d}\)</span></li>
+<li><span class="math inline">\(f(x, y)\)</span> 可认为对输入输出同时抽取特征</li>
+</ul>
+<p>对数线性模型表示的意义为：在条件<span class="math inline">\(x\)</span>以及参数<span class="math inline">\(w\)</span>下发生<span class="math inline">\(y\)</span>的概率，一般<span class="math inline">\(w\)</span>是要学习的参数</p>
+<h3 id="分类问题和序列标注问题">分类问题和序列标注问题</h3>
+<p>分类问题一般是对输入进行建模得到语义编码（如可以使用RNN，CNN进行编码）然后经过分类器将空间映射到分类空间上，最后可通过softmax将权重归一化得到映射到各个分类空间的概率，取概率最大的作为分类。 序列标注问题的重点在于学习序列位置之间的关系，然后解码出最大概率标签路径，比如有<span class="math inline">\(K\)</span>个标签，当输入序列长度为<span class="math inline">\(m\)</span>时，那么就有<span class="math inline">\(K^{m}\)</span>条概率路径，序列标注问题是要从<span class="math inline">\(K^m\)</span>条概率路径中寻找到概率最大的那条路径。</p>
+<h2 id="hmm">HMM</h2>
+<p>之前已经说了HMM是<strong>生成模型</strong>，它引入了<strong>一阶马尔科夫假设</strong>：当前状态只与上一状态有关。结合这两点可以得到联合概率</p>
+<p><span class="math display">\[p(x_{1}...x_{n}, s_{1}...s_{n}) = \prod_{t}p(s_{t}|s_{t-1})p(x_{t}|s_{t})\]</span></p>
+<span class="math inline">\(p(s_{t}|s_{t-1})\)</span>称为状态间的转移概率，<span class="math inline">\(p(x_{t}|s_{t})\)</span>称为发射概率（由隐状态发射成显状态的概率）
+<div style="text-align: center">
+<img src="/images/posts/crf/hmm.png" alt="">
+</div>
+<p>由图可知HMM是一个有向图。</p>
+<p>HMM的解码部分是求解：<span class="math inline">\(arg \underset{s_{1}...s_{n+1}}{max}p(x_{1}...x_{n}, s_{1}...s_{n})\)</span>, 通常采用Viterbi算法解码</p>
+<h3 id="hmm的特点">HMM的特点</h3>
+<p>HMM有两个独立性假设： - 观测序列之间是独立的 - 当前状态仅依赖于先前的状态</p>
+<h2 id="memm">MEMM</h2>
+<p>Max Entropy Markov Model最大熵马尔可夫模型，在最大熵的基础上引入了一阶马尔科夫假设。 MEMM属于判别式模型，它要学习条件概率</p>
+<p><span class="math display">\[p(s_{1}...s_{m}|x_{1}...x_{m}) = \prod_{i=1}^{m}p(s_{i}|s_{1}...s_{i-1}, x_{1}...x_{m})\]</span></p>
+<p>由于引入了一阶马尔科夫假设，故当前状态仅于前一状态有关</p>
+<p><span class="math display">\[p(s_{1}...s_{m}|x_{1}...x_{m}) = \prod_{i=1}^{m}p(s_{i}|s_{i-1}, x_{1}...x_{m})\]</span></p>
+<p>而最大熵模型是对数线性模型从而得到MEMM的模型表达式</p>
+<p><span class="math display">\[p(s_{i}|s_{i-1}, x_{1}...x_{m}; w) = \frac{exp(w \cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{ \sum _{s{}&#39; \epsilon S} exp(w \cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;) ) }\]</span></p>
+<p><span class="math inline">\(\phi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;)\)</span> 是一个特征函数，其中有：</p>
+<ul>
+<li><span class="math inline">\(i\)</span> 代表当前被标记的位置</li>
+<li><span class="math inline">\(s\)</span> 先前的状态</li>
+<li><span class="math inline">\(s{}&#39;\)</span> 当前的状态</li>
+</ul>
+<p>故有</p>
+<p><span class="math display">\[\begin{align*}
+p(s_{1}...s_{m}|x_{1}...x_{m}) &amp;= \prod_{i=1}^{m} p(s_{i}|s_{i-1}, x_{1}...x_{m}) \\
+&amp;= \prod_{i=1}^{m}\frac{exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))} \\
+&amp;= \frac{exp(\sum _{i} w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))} \tag{1}
+\end{align*}\]</span></p>
+<p>MEMM解码部分是计算 <span class="math inline">\(arg \underset{s_{1}...s_{m}}{max}p( s_{1}...s_{m}|x_{1}...x_{m})\)</span>，为了好理解我做了一步步简化</p>
+<p><span class="math display">\[\begin{align*}
+arg \underset{s_{1}...s_{m}}{max}p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \underset{s_{1}...s_{m}}{max}\prod_{i=1}^{m}p( s_{i}|s_{i-1} ,x_{1}...x_{n}) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max} p( s_{i}|s_{i-1}, x_{1}...x_{n} ) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max}\frac{exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))} \\
+&amp;= arg \underset{s_{1}...s_{m}}{max} exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i})) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max} w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}) \tag{2}
+\end{align*}\]</span></p>
+<p>也即是编码等价于求解公式<span class="math inline">\((2)\)</span>，通常用viterbi算法求解，如果不采用viterbi求解它的算法复杂度是<span class="math inline">\(O(K^{m})\)</span> ，采用了viterbi算法可以降到<span class="math inline">\(O(mK^{2})\)</span>，(<span class="math inline">\(K\)</span> 为隐状态数目, <span class="math inline">\(m\)</span>为观测序列长度)</p>
+<div style="text-align: center">
+<img src="/images/posts/crf/memm.png" alt="">
+</div>
+<p>如图，MEMM也是有向图模型。</p>
+<h3 id="memm的优点">MEMM的优点</h3>
+<p>克服了HMM输出独立性问题，通过引入特征函数使得模型比HMM拥有更多信息，而且最大熵则从全局角度来建模，它“保留尽可能多的不确定性，在没有更多的信息时，不擅自做假设”</p>
+<h3 id="memm的缺点">MEMM的缺点</h3>
+<p>标签偏置(labeling bias)问题，由于MEMM的当前状态只与当前观测以及上一状态有关，导致隐状态中有更少转移的状态拥有的转移概率普遍偏高（是不是一头雾水，再没有更好的解释之前只能继续一头雾水了）简单的说就是MEMM中概率最大路径更容易出现在转移少的状态中。 如何解决这个问题呢？引入全局化特征可以解决标签偏置问题，下文的CRF其实就在MEMM上加入全局化特征从而解决标签偏置问题</p>
+<h2 id="crf">CRF</h2>
+<p>Conditional Random Forest条件随机场，这里主要讲解线性链（linear-chain）,这里不会牵扯太多概率图的东西（因为我也不会啊:&lt;）还是从对数线性模型出发。 首先要明确的一点是CRF也属于判别模型，所以和MEMM一样需要对</p>
+<p><span class="math display">\[p(s_{1}...s_{m}|x_{1}...x_{m})\]</span></p>
+<p>建模，CRF也和MEMM一样做了一阶马尔科夫假设，即当前状态只与上一状态有关，但是区别在于CRF的特征采用了全局特征，它把观测序列当做整体来看所以它的特征函数是全局的，它的特征函数为：</p>
+<p><span class="math display">\[\varphi (x_{1}...x_{m}, s_{1}...s{m}) = \sum _{j=1}^{m} \phi (x_{1}...x_{m}, j, s_{j-1}, s_{j})\]</span></p>
+<p>其中 <span class="math inline">\(\phi\)</span> 和MEMM的特征函数是一致的，接下来的步骤和MEMM差不多了，只是特征函数变为了<span class="math inline">\(\varphi\)</span>，为了连续性在此再走一遍流程。</p>
+<p>CRF的模型表达式为：</p>
+<p><span class="math display">\[p(s_{i}|s_{i-1}, x_{1}...x_{m}; w) = \frac{exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))}\]</span></p>
+<p>CRF的解码部分是计算 <span class="math inline">\(arg \underset{s_{1}...s_{m}}{max}p( s_{1}...s_{m}|x_{1}...x_{m})\)</span>，一步步进行简化</p>
+<p><span class="math display">\[\begin{align*}
+arg \underset{s_{1}...s_{m}}{max}p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \underset{s_{1}...s_{m}}{max}\prod_{i=1}^{m}p( s_{i}|s_{i-1} ,x_{1}...x_{n}) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max} p( s_{i}|s_{i-1}, x_{1}...x_{n} ) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max}\frac{exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))} \\
+&amp;= arg \underset{s_{1}...s_{m}}{max} exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i})) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max} w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i}) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max} \sum _{j}^{m} w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}) \tag{3}
+\end{align*}\]</span></p>
+<p>对比一下(2)和(3)可知道CRF和MEMM的区别。和MEMM一样，一般采用viterbi算法来进行解码。</p>
+<div style="text-align: center">
+<img src="/images/posts/crf/crf.png" alt="">
+</div>
+<p>由图可知线性链CRF是无向图模型。</p>
+<h3 id="crf的优点">CRF的优点</h3>
+<p>克服了HMM的输出独立性假设问题以及MEMM的标注偏置问题。</p>
+<h2 id="refrence">Refrence</h2>
+<p>[1] http://www.cs.columbia.edu/~mcollins/hmms-spring2013.pdf</p>
+<p>[2] http://www.cs.columbia.edu/~mcollins/loglinear.pdf</p>
+<p>[3] http://www.cs.columbia.edu/~mcollins/crf.pdf</p>
+<p>[4] https://repository.upenn.edu/cgi/viewcontent.cgi?article=1162&amp;context=cis_papers</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechat-qcode.jpg" alt="sean lee wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎关注我的公众号！</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>感谢支持！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="sean lee 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NLP/" rel="tag"># NLP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/07/python常用魔术方法概览/" rel="next" title="python常用魔术方法概览">
+                <i class="fa fa-chevron-left"></i> python常用魔术方法概览
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="sean lee" />
+            
+              <p class="site-author-name" itemprop="name">sean lee</p>
+              <p class="site-description motion-element" itemprop="description">NLP / DL / Python / C++ | 爱我所爱</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/SeanLee97" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:xmlee97@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://plus.google.com/u/0/114423502510761945752" target="_blank" title="Google">
+                      
+                        <i class="fa fa-fw fa-google"></i>Google</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/SeanLee_xm" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前情知识"><span class="nav-number">1.</span> <span class="nav-text">前情知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#生成模型-判别模型"><span class="nav-number">1.1.</span> <span class="nav-text">生成模型 &amp; 判别模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#生成模型"><span class="nav-number">1.1.1.</span> <span class="nav-text">生成模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#判别式模型"><span class="nav-number">1.1.2.</span> <span class="nav-text">判别式模型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对数线性模型log-linear-model"><span class="nav-number">1.2.</span> <span class="nav-text">对数线性模型（log-linear model）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分类问题和序列标注问题"><span class="nav-number">1.3.</span> <span class="nav-text">分类问题和序列标注问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hmm"><span class="nav-number">2.</span> <span class="nav-text">HMM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hmm的特点"><span class="nav-number">2.1.</span> <span class="nav-text">HMM的特点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memm"><span class="nav-number">3.</span> <span class="nav-text">MEMM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#memm的优点"><span class="nav-number">3.1.</span> <span class="nav-text">MEMM的优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#memm的缺点"><span class="nav-number">3.2.</span> <span class="nav-text">MEMM的缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#crf"><span class="nav-number">4.</span> <span class="nav-text">CRF</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#crf的优点"><span class="nav-number">4.1.</span> <span class="nav-text">CRF的优点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#refrence"><span class="nav-number">5.</span> <span class="nav-text">Refrence</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sean lee</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://seanlee97.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://seanlee97.github.io/2018/08/20/谈谈序列标注三大模型HMM、MEMM、CRF/';
+          this.page.identifier = '2018/08/20/谈谈序列标注三大模型HMM、MEMM、CRF/';
+          this.page.title = '谈谈序列标注三大模型HMM、MEMM、CRF';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://seanlee97.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
