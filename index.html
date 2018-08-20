@@ -401,7 +401,7 @@
 <img src="/images/posts/crf/hmm.png" alt="">
 </div>
 <p>由图可知HMM是一个有向图。</p>
-<p>HMM的解码部分是求解：<span class="math inline">\(arg \underset{s_{1}...s_{n+1}}{max}p(x_{1}...x_{n}, s_{1}...s_{n})\)</span>, 通常采用Viterbi算法解码</p>
+<p>HMM的解码部分是求解：<span class="math inline">\(arg \underset{s_{1}...s_{n+1}}{max}\ p(x_{1}...x_{n}, s_{1}...s_{n})\)</span>, 通常采用Viterbi算法解码</p>
 <h3 id="hmm的特点">HMM的特点</h3>
 <p>HMM有两个独立性假设：</p>
 <ul>
@@ -427,13 +427,13 @@ p(s_{1}...s_{m}|x_{1}...x_{m}) &amp;= \prod_{i=1}^{m} p(s_{i}|s_{i-1}, x_{1}...x
 &amp;= \prod_{i=1}^{m}\frac{exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))} \\
 &amp;= \frac{exp(\sum _{i} w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))} \tag{1}
 \end{align*}\]</span></p>
-<p>MEMM解码部分是计算 <span class="math inline">\(arg \underset{s_{1}...s_{m}}{max}p( s_{1}...s_{m}|x_{1}...x_{m})\)</span>，为了好理解我做了一步步简化</p>
+<p>MEMM解码部分是计算 <span class="math inline">\(arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m})\)</span>，为了好理解我做了一步步简化</p>
 <p><span class="math display">\[\begin{align*}
-arg \underset{s_{1}...s_{m}}{max}p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \underset{s_{1}...s_{m}}{max}\prod_{i=1}^{m}p( s_{i}|s_{i-1} ,x_{1}...x_{n}) \\
-&amp;= arg \underset{s_{1}...s_{m}}{max} p( s_{i}|s_{i-1}, x_{1}...x_{n} ) \\
+arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \underset{s_{1}...s_{m}}{max}\ \prod_{i=1}^{m}p( s_{i}|s_{i-1} ,x_{1}...x_{n}) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max}\ p( s_{i}|s_{i-1}, x_{1}...x_{n} ) \\
 &amp;= arg \underset{s_{1}...s_{m}}{max}\frac{exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))} \\
-&amp;= arg \underset{s_{1}...s_{m}}{max} exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i})) \\
-&amp;= arg \underset{s_{1}...s_{m}}{max} w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}) \tag{2}
+&amp;= arg \underset{s_{1}...s_{m}}{max}\ exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i})) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max}\ w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}) \tag{2}
 \end{align*}\]</span></p>
 <p>也即是编码等价于求解公式<span class="math inline">\((2)\)</span>，通常用viterbi算法求解，如果不采用viterbi求解它的算法复杂度是<span class="math inline">\(O(K^{m})\)</span> ，采用了viterbi算法可以降到<span class="math inline">\(O(mK^{2})\)</span>，(<span class="math inline">\(K\)</span> 为隐状态数目, <span class="math inline">\(m\)</span>为观测序列长度)</p>
 <div style="text-align: center">
@@ -452,14 +452,14 @@ arg \underset{s_{1}...s_{m}}{max}p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \und
 <p>其中 <span class="math inline">\(\phi\)</span> 和MEMM的特征函数是一致的，接下来的步骤和MEMM差不多了，只是特征函数变为了<span class="math inline">\(\varphi\)</span>，为了连续性在此再走一遍流程。</p>
 <p>CRF的模型表达式为：</p>
 <p><span class="math display">\[p(s_{i}|s_{i-1}, x_{1}...x_{m}; w) = \frac{exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))}\]</span></p>
-<p>CRF的解码部分是计算 <span class="math inline">\(arg \underset{s_{1}...s_{m}}{max}p( s_{1}...s_{m}|x_{1}...x_{m})\)</span>，一步步进行简化</p>
+<p>CRF的解码部分是计算 <span class="math inline">\(arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m})\)</span>，一步步进行简化</p>
 <p><span class="math display">\[\begin{align*}
-arg \underset{s_{1}...s_{m}}{max}p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \underset{s_{1}...s_{m}}{max}\prod_{i=1}^{m}p( s_{i}|s_{i-1} ,x_{1}...x_{n}) \\
-&amp;= arg \underset{s_{1}...s_{m}}{max} p( s_{i}|s_{i-1}, x_{1}...x_{n} ) \\
+arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \underset{s_{1}...s_{m}}{max}\prod_{i=1}^{m}p( s_{i}|s_{i-1} ,x_{1}...x_{n}) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max}\ p( s_{i}|s_{i-1}, x_{1}...x_{n} ) \\
 &amp;= arg \underset{s_{1}...s_{m}}{max}\frac{exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))} \\
-&amp;= arg \underset{s_{1}...s_{m}}{max} exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i})) \\
-&amp;= arg \underset{s_{1}...s_{m}}{max} w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i}) \\
-&amp;= arg \underset{s_{1}...s_{m}}{max} \sum _{j}^{m} w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}) \tag{3}
+&amp;= arg \underset{s_{1}...s_{m}}{max}\ exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i})) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max}\ w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i}) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max}\ \sum _{j}^{m} w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}) \tag{3}
 \end{align*}\]</span></p>
 <p>对比一下(2)和(3)可知道CRF和MEMM的区别。和MEMM一样，一般采用viterbi算法来进行解码。</p>
 <div style="text-align: center">
