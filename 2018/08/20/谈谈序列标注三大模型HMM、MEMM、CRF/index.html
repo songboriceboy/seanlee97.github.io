@@ -91,7 +91,7 @@
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/crf/hmm.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/crf/memm.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/crf/crf.png">
-<meta property="og:updated_time" content="2018-08-20T17:14:32.571Z">
+<meta property="og:updated_time" content="2018-08-21T01:19:38.889Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="谈谈序列标注三大模型HMM、MEMM、CRF">
 <meta name="twitter:description" content="很久之前曾经接触过CRF，但是觉得这东西太晦涩难懂了，看了很多科普博客但很多都是从概率图的层面上解释的，虽然图形能让你很快了解个大概，但是有些地方疑惑时是很难从图形中得到答案的，所以我更喜欢从公式出发。最近重拾CRF，顺便也回顾了HMM MEMM，这几个模型主要用在了序列标注上，故在此形成一个小型知识体系便于以后复习。 前情知识 生成模型 &amp;amp; 判别模型 生成模型 生成模型学习的是联合概率\">
@@ -382,7 +382,7 @@
 </div>
 <h3 id="对数线性模型log-linear-model">对数线性模型（log-linear model）</h3>
 <p>对于有一系列输入数据 <span class="math inline">\(\chi\)</span> ，和一系列标签数据 <span class="math inline">\(\gamma\)</span> ，如何通过这些标注数据来求解 <span class="math inline">\(p(y|x)\)</span> 呢？ 一般可以用对数线性模型来求解，也就是判别模型一般可以通过对数线性模型来建模，常见的最大熵模型、softmax、<strong>MEMM、CRF都使用了对数线性模型</strong>。</p>
-<p>对数线性模型形如： <span class="math display">\[p(y|x;w) = \frac{exp(w\cdot f(x, y))}{\sum {y{}&#39;\epsilon \gamma exp(w\cdot f(x, y{}&#39;))}}\]</span></p>
+<p>对数线性模型形如： <span class="math display">\[p(y|x;w) = \frac{exp(w\cdot f(x, y))}{\sum _{y{}&#39;\epsilon \gamma} exp(w\cdot f(x, y{}&#39;))}\]</span></p>
 <p>其中有：</p>
 <ul>
 <li>输入集合 <span class="math inline">\(\chi\)</span></li>
@@ -394,7 +394,10 @@
 </ul>
 <p>对数线性模型表示的意义为：在条件<span class="math inline">\(x\)</span>以及参数<span class="math inline">\(w\)</span>下发生<span class="math inline">\(y\)</span>的概率，一般<span class="math inline">\(w\)</span>是要学习的参数</p>
 <h3 id="分类问题和序列标注问题">分类问题和序列标注问题</h3>
-<p>分类问题一般是对输入进行建模得到语义编码（如可以使用RNN，CNN进行编码）然后经过分类器将空间映射到分类空间上，最后可通过softmax将权重归一化得到映射到各个分类空间的概率，取概率最大的作为分类。 序列标注问题的重点在于学习序列位置之间的关系，然后解码出最大概率标签路径，比如有<span class="math inline">\(K\)</span>个标签，当输入序列长度为<span class="math inline">\(m\)</span>时，那么就有<span class="math inline">\(K^{m}\)</span>条概率路径，序列标注问题是要从<span class="math inline">\(K^m\)</span>条概率路径中寻找到概率最大的那条路径。</p>
+<h4 id="分类问题">分类问题</h4>
+<p>分类问题一般是对输入进行建模得到语义编码（如可以使用RNN，CNN进行编码）然后经过分类器将空间映射到分类空间上，最后可通过softmax将权重归一化得到映射到各个分类空间的概率，取概率最大的作为分类。</p>
+<h4 id="序列标注问题">序列标注问题</h4>
+<p>序列标注问题的重点在于学习序列位置之间的关系，然后解码出最大概率标签路径，比如有<span class="math inline">\(K\)</span>个标签，当输入序列长度为<span class="math inline">\(m\)</span>时，那么就有<span class="math inline">\(K^{m}\)</span>条概率路径，序列标注问题是要从<span class="math inline">\(K^m\)</span>条概率路径中寻找到概率最大的那条路径。</p>
 <h2 id="hmm">HMM</h2>
 <p>之前已经说了HMM是<strong>生成模型</strong>，它引入了<strong>一阶马尔科夫假设</strong>：当前状态只与上一状态有关。结合这两点可以得到联合概率</p>
 <p><span class="math display">\[p(x_{1}...x_{n}, s_{1}...s_{n}) = \prod_{t}p(s_{t}|s_{t-1})p(x_{t}|s_{t})\]</span></p>
@@ -403,7 +406,7 @@
 <img src="/images/posts/crf/hmm.png" alt="">
 </div>
 <p>由图可知HMM是一个有向图。</p>
-<p>HMM的解码部分是求解：<span class="math inline">\(arg \underset{s_{1}...s_{n+1}}{max}\ p(x_{1}...x_{n}, s_{1}...s_{n})\)</span>, 通常采用Viterbi算法解码</p>
+<p>HMM的解码部分是求解：<span class="math inline">\(arg \underset{s_{1}...s_{m}}{max}\ p(x_{1}...x_{m}, s_{1}...s_{m})\)</span>, 通常采用Viterbi算法解码</p>
 <h3 id="hmm的特点">HMM的特点</h3>
 <p>HMM有两个独立性假设：</p>
 <ul>
@@ -416,7 +419,7 @@
 <p>由于引入了一阶马尔科夫假设，故当前状态仅于前一状态有关</p>
 <p><span class="math display">\[p(s_{1}...s_{m}|x_{1}...x_{m}) = \prod_{i=1}^{m}p(s_{i}|s_{i-1}, x_{1}...x_{m})\]</span></p>
 <p>而最大熵模型是对数线性模型从而得到MEMM的模型表达式</p>
-<p><span class="math display">\[p(s_{i}|s_{i-1}, x_{1}...x_{m}; w) = \frac{exp(w \cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{ \sum _{s{}&#39; \epsilon S} exp(w \cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;) ) }\]</span></p>
+<p><span class="math display">\[p(s_{i}|s_{i-1}, x_{1}...x_{m}; w) = \frac{exp(w \cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{ \sum _{s{}&#39; \epsilon S} exp(w \cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;) ) }\]</span></p>
 <p><span class="math inline">\(\phi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;)\)</span> 是一个特征函数，其中有：</p>
 <ul>
 <li><span class="math inline">\(i\)</span> 代表当前被标记的位置</li>
@@ -450,7 +453,7 @@ arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \u
 <p>Conditional Random Forest条件随机场，这里主要讲解线性链（linear-chain）,这里不会牵扯太多概率图的东西（因为我也不会啊:&lt;）还是从对数线性模型出发。 首先要明确的一点是CRF也属于判别模型，所以和MEMM一样需要对</p>
 <p><span class="math display">\[p(s_{1}...s_{m}|x_{1}...x_{m})\]</span></p>
 <p>建模，CRF也和MEMM一样做了一阶马尔科夫假设，即当前状态只与上一状态有关，但是区别在于CRF的特征采用了全局特征，它把观测序列当做整体来看所以它的特征函数是全局的，它的特征函数为：</p>
-<p><span class="math display">\[\varphi (x_{1}...x_{m}, s_{1}...s{m}) = \sum _{j=1}^{m} \phi (x_{1}...x_{m}, j, s_{j-1}, s_{j})\]</span></p>
+<p><span class="math display">\[\varphi (x_{1}...x_{m}, s_{1}...s_{m}) = \sum _{j=1}^{m} \phi (x_{1}...x_{m}, j, s_{j-1}, s_{j})\]</span></p>
 <p>其中 <span class="math inline">\(\phi\)</span> 和MEMM的特征函数是一致的，接下来的步骤和MEMM差不多了，只是特征函数变为了<span class="math inline">\(\varphi\)</span>，为了连续性在此再走一遍流程。</p>
 <p>CRF的模型表达式为：</p>
 <p><span class="math display">\[p(s_{i}|s_{i-1}, x_{1}...x_{m}; w) = \frac{exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))}\]</span></p>
@@ -719,7 +722,7 @@ arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \u
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前情知识"><span class="nav-number">1.</span> <span class="nav-text">前情知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#生成模型-判别模型"><span class="nav-number">1.1.</span> <span class="nav-text">生成模型 &amp; 判别模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#生成模型"><span class="nav-number">1.1.1.</span> <span class="nav-text">生成模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#判别式模型"><span class="nav-number">1.1.2.</span> <span class="nav-text">判别式模型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对数线性模型log-linear-model"><span class="nav-number">1.2.</span> <span class="nav-text">对数线性模型（log-linear model）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分类问题和序列标注问题"><span class="nav-number">1.3.</span> <span class="nav-text">分类问题和序列标注问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hmm"><span class="nav-number">2.</span> <span class="nav-text">HMM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hmm的特点"><span class="nav-number">2.1.</span> <span class="nav-text">HMM的特点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memm"><span class="nav-number">3.</span> <span class="nav-text">MEMM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#memm的优点"><span class="nav-number">3.1.</span> <span class="nav-text">MEMM的优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#memm的缺点"><span class="nav-number">3.2.</span> <span class="nav-text">MEMM的缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#crf"><span class="nav-number">4.</span> <span class="nav-text">CRF</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#crf的优点"><span class="nav-number">4.1.</span> <span class="nav-text">CRF的优点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#refrence"><span class="nav-number">5.</span> <span class="nav-text">Refrence</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前情知识"><span class="nav-number">1.</span> <span class="nav-text">前情知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#生成模型-判别模型"><span class="nav-number">1.1.</span> <span class="nav-text">生成模型 &amp; 判别模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#生成模型"><span class="nav-number">1.1.1.</span> <span class="nav-text">生成模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#判别式模型"><span class="nav-number">1.1.2.</span> <span class="nav-text">判别式模型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对数线性模型log-linear-model"><span class="nav-number">1.2.</span> <span class="nav-text">对数线性模型（log-linear model）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分类问题和序列标注问题"><span class="nav-number">1.3.</span> <span class="nav-text">分类问题和序列标注问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#分类问题"><span class="nav-number">1.3.1.</span> <span class="nav-text">分类问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#序列标注问题"><span class="nav-number">1.3.2.</span> <span class="nav-text">序列标注问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hmm"><span class="nav-number">2.</span> <span class="nav-text">HMM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hmm的特点"><span class="nav-number">2.1.</span> <span class="nav-text">HMM的特点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memm"><span class="nav-number">3.</span> <span class="nav-text">MEMM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#memm的优点"><span class="nav-number">3.1.</span> <span class="nav-text">MEMM的优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#memm的缺点"><span class="nav-number">3.2.</span> <span class="nav-text">MEMM的缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#crf"><span class="nav-number">4.</span> <span class="nav-text">CRF</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#crf的优点"><span class="nav-number">4.1.</span> <span class="nav-text">CRF的优点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#refrence"><span class="nav-number">5.</span> <span class="nav-text">Refrence</span></a></li></ol></div>
             
 
           </div>
