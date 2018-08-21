@@ -91,7 +91,7 @@
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/crf/hmm.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/crf/memm.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/crf/crf.png">
-<meta property="og:updated_time" content="2018-08-21T01:19:38.889Z">
+<meta property="og:updated_time" content="2018-08-21T01:37:42.914Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="谈谈序列标注三大模型HMM、MEMM、CRF">
 <meta name="twitter:description" content="很久之前曾经接触过CRF，但是觉得这东西太晦涩难懂了，看了很多科普博客但很多都是从概率图的层面上解释的，虽然图形能让你很快了解个大概，但是有些地方疑惑时是很难从图形中得到答案的，所以我更喜欢从公式出发。最近重拾CRF，顺便也回顾了HMM MEMM，这几个模型主要用在了序列标注上，故在此形成一个小型知识体系便于以后复习。 前情知识 生成模型 &amp;amp; 判别模型 生成模型 生成模型学习的是联合概率\">
@@ -397,10 +397,10 @@
 <h4 id="分类问题">分类问题</h4>
 <p>分类问题一般是对输入进行建模得到语义编码（如可以使用RNN，CNN进行编码）然后经过分类器将空间映射到分类空间上，最后可通过softmax将权重归一化得到映射到各个分类空间的概率，取概率最大的作为分类。</p>
 <h4 id="序列标注问题">序列标注问题</h4>
-<p>序列标注问题的重点在于学习序列位置之间的关系，然后解码出最大概率标签路径，比如有<span class="math inline">\(K\)</span>个标签，当输入序列长度为<span class="math inline">\(m\)</span>时，那么就有<span class="math inline">\(K^{m}\)</span>条概率路径，序列标注问题是要从<span class="math inline">\(K^m\)</span>条概率路径中寻找到概率最大的那条路径。</p>
+<p>序列标注问题的重点在于学习序列位置之间的关系，然后解码出最大概率标签路径，比如有<span class="math inline">\(K\)</span>个标签，当输入序列长度为<span class="math inline">\(m\)</span>时，那么就有<span class="math inline">\(K^{m}\)</span>条概率路径，序列标注问题是要从<span class="math inline">\(K^m\)</span>条概率路径中寻找到概率最大的那条路径。NLP中常见的任务，如分词，词性标注，命名体识别都属于序列标注问题。</p>
 <h2 id="hmm">HMM</h2>
 <p>之前已经说了HMM是<strong>生成模型</strong>，它引入了<strong>一阶马尔科夫假设</strong>：当前状态只与上一状态有关。结合这两点可以得到联合概率</p>
-<p><span class="math display">\[p(x_{1}...x_{n}, s_{1}...s_{n}) = \prod_{t}p(s_{t}|s_{t-1})p(x_{t}|s_{t})\]</span></p>
+<p><span class="math display">\[p(x_{1}...x_{m}, s_{1}...s_{n}) = \prod_{t}p(s_{t}|s_{t-1})p(x_{t}|s_{t})\]</span></p>
 <span class="math inline">\(p(s_{t}|s_{t-1})\)</span>称为状态间的转移概率，<span class="math inline">\(p(x_{t}|s_{t})\)</span>称为发射概率（由隐状态发射成显状态的概率）
 <div style="text-align: center">
 <img src="/images/posts/crf/hmm.png" alt="">
@@ -434,8 +434,8 @@ p(s_{1}...s_{m}|x_{1}...x_{m}) &amp;= \prod_{i=1}^{m} p(s_{i}|s_{i-1}, x_{1}...x
 \end{align*}\]</span></p>
 <p>MEMM解码部分是计算 <span class="math inline">\(arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m})\)</span>，为了好理解我做了一步步简化</p>
 <p><span class="math display">\[\begin{align*}
-arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \underset{s_{1}...s_{m}}{max}\ \prod_{i=1}^{m}p( s_{i}|s_{i-1} ,x_{1}...x_{n}) \\
-&amp;= arg \underset{s_{1}...s_{m}}{max}\ p( s_{i}|s_{i-1}, x_{1}...x_{n} ) \\
+arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \underset{s_{1}...s_{m}}{max}\ \prod_{i=1}^{m}p( s_{i}|s_{i-1} ,x_{1}...x_{m}) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max}\ p( s_{i}|s_{i-1}, x_{1}...x_{m} ) \\
 &amp;= arg \underset{s_{1}...s_{m}}{max}\frac{exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))} \\
 &amp;= arg \underset{s_{1}...s_{m}}{max}\ exp(w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i})) \\
 &amp;= arg \underset{s_{1}...s_{m}}{max}\ w\cdot \phi (x_{1}...x_{m}, i, s_{i-1}, s_{i}) \tag{2}
@@ -459,8 +459,8 @@ arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \u
 <p><span class="math display">\[p(s_{i}|s_{i-1}, x_{1}...x_{m}; w) = \frac{exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))}\]</span></p>
 <p>CRF的解码部分是计算 <span class="math inline">\(arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m})\)</span>，一步步进行简化</p>
 <p><span class="math display">\[\begin{align*}
-arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \underset{s_{1}...s_{m}}{max}\prod_{i=1}^{m}p( s_{i}|s_{i-1} ,x_{1}...x_{n}) \\
-&amp;= arg \underset{s_{1}...s_{m}}{max}\ p( s_{i}|s_{i-1}, x_{1}...x_{n} ) \\
+arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \underset{s_{1}...s_{m}}{max}\prod_{i=1}^{m}p( s_{i}|s_{i-1} ,x_{1}...x_{m}) \\
+&amp;= arg \underset{s_{1}...s_{m}}{max}\ p( s_{i}|s_{i-1}, x_{1}...x_{m} ) \\
 &amp;= arg \underset{s_{1}...s_{m}}{max}\frac{exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i}))}{\sum _{s{}&#39;\epsilon S}exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s{}&#39;))} \\
 &amp;= arg \underset{s_{1}...s_{m}}{max}\ exp(w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i})) \\
 &amp;= arg \underset{s_{1}...s_{m}}{max}\ w\cdot \varphi (x_{1}...x_{m}, i, s_{i-1}, s_{i}) \\
@@ -473,6 +473,9 @@ arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \u
 <p>由图可知线性链CRF是无向图模型。</p>
 <h3 id="crf的优点">CRF的优点</h3>
 <p>克服了HMM的输出独立性假设问题以及MEMM的标注偏置问题。</p>
+<h2 id="后记">后记</h2>
+<p>HMM、MEMM属于有向图模型，贝叶斯网络一般属于有向图。而CRF属于马尔科夫网络属于无向图。所以它们本身属于统计概率图（PGM）的一部分，要想真正弄懂之间的原理和区别还需要系统的学习PGM。</p>
+<p>另，由Refrence中可知本文大量引用了Michael Collins教授的tutorial,MC的tutorial通俗易懂，但是有些地方做了简化，如果不详细说明有时也会一头雾水，所以本文主要做了些翻译和修补工作。</p>
 <h2 id="refrence">Refrence</h2>
 <p>[1] http://www.cs.columbia.edu/~mcollins/hmms-spring2013.pdf</p>
 <p>[2] http://www.cs.columbia.edu/~mcollins/loglinear.pdf</p>
@@ -722,7 +725,7 @@ arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \u
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前情知识"><span class="nav-number">1.</span> <span class="nav-text">前情知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#生成模型-判别模型"><span class="nav-number">1.1.</span> <span class="nav-text">生成模型 &amp; 判别模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#生成模型"><span class="nav-number">1.1.1.</span> <span class="nav-text">生成模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#判别式模型"><span class="nav-number">1.1.2.</span> <span class="nav-text">判别式模型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对数线性模型log-linear-model"><span class="nav-number">1.2.</span> <span class="nav-text">对数线性模型（log-linear model）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分类问题和序列标注问题"><span class="nav-number">1.3.</span> <span class="nav-text">分类问题和序列标注问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#分类问题"><span class="nav-number">1.3.1.</span> <span class="nav-text">分类问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#序列标注问题"><span class="nav-number">1.3.2.</span> <span class="nav-text">序列标注问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hmm"><span class="nav-number">2.</span> <span class="nav-text">HMM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hmm的特点"><span class="nav-number">2.1.</span> <span class="nav-text">HMM的特点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memm"><span class="nav-number">3.</span> <span class="nav-text">MEMM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#memm的优点"><span class="nav-number">3.1.</span> <span class="nav-text">MEMM的优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#memm的缺点"><span class="nav-number">3.2.</span> <span class="nav-text">MEMM的缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#crf"><span class="nav-number">4.</span> <span class="nav-text">CRF</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#crf的优点"><span class="nav-number">4.1.</span> <span class="nav-text">CRF的优点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#refrence"><span class="nav-number">5.</span> <span class="nav-text">Refrence</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前情知识"><span class="nav-number">1.</span> <span class="nav-text">前情知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#生成模型-判别模型"><span class="nav-number">1.1.</span> <span class="nav-text">生成模型 &amp; 判别模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#生成模型"><span class="nav-number">1.1.1.</span> <span class="nav-text">生成模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#判别式模型"><span class="nav-number">1.1.2.</span> <span class="nav-text">判别式模型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对数线性模型log-linear-model"><span class="nav-number">1.2.</span> <span class="nav-text">对数线性模型（log-linear model）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分类问题和序列标注问题"><span class="nav-number">1.3.</span> <span class="nav-text">分类问题和序列标注问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#分类问题"><span class="nav-number">1.3.1.</span> <span class="nav-text">分类问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#序列标注问题"><span class="nav-number">1.3.2.</span> <span class="nav-text">序列标注问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hmm"><span class="nav-number">2.</span> <span class="nav-text">HMM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hmm的特点"><span class="nav-number">2.1.</span> <span class="nav-text">HMM的特点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memm"><span class="nav-number">3.</span> <span class="nav-text">MEMM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#memm的优点"><span class="nav-number">3.1.</span> <span class="nav-text">MEMM的优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#memm的缺点"><span class="nav-number">3.2.</span> <span class="nav-text">MEMM的缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#crf"><span class="nav-number">4.</span> <span class="nav-text">CRF</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#crf的优点"><span class="nav-number">4.1.</span> <span class="nav-text">CRF的优点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-number">5.</span> <span class="nav-text">后记</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#refrence"><span class="nav-number">6.</span> <span class="nav-text">Refrence</span></a></li></ol></div>
             
 
           </div>
