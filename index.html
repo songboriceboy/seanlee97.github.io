@@ -1688,7 +1688,9 @@ W   \cdot  X_i + b \leqslant -1 + \S_i &amp; \text{ if } y_i = -1
 s.t.\ \sum_{i=1}^{N} \lambda_iy_i = 0, \lambda_i \geq 0, 0 \leqslant \lambda_i \leqslant C
 \end{cases}
 \ \ \ \ (19)\]</span></p>
-<p>还是用二次规划求解 ### 非线性 开头已经叙述了非线性下往往要把当前空间映射到高维空间上，高维空间下按照线性的方式去处理当前问题。既然要映射就要有映射函数（核函数）,我们假设核函数为 <span class="math inline">\(\phi (X)\)</span> , 现在决策边界就变成了：<span class="math inline">\(W\phi (X) + b\)</span>，接下来就和上述的步骤一样求解目标函数了 当然核函数不是随便来的，必须要满足Mercer定理，大致要求如下：必须存在一个相应的变化，使得计算一对向量的核函数等价于在变换后的空间中计算这对向量的点积（空间中计算点积的意义是可以理解为求相似度）。</p>
+<p>还是用二次规划求解</p>
+<h3 id="非线性">非线性</h3>
+<p>开头已经叙述了非线性下往往要把当前空间映射到高维空间上，高维空间下按照线性的方式去处理当前问题。既然要映射就要有映射函数（核函数）,我们假设核函数为 <span class="math inline">\(\phi (X)\)</span> , 现在决策边界就变成了：<span class="math inline">\(W\phi (X) + b\)</span>，接下来就和上述的步骤一样求解目标函数了 当然核函数不是随便来的，必须要满足Mercer定理，大致要求如下：必须存在一个相应的变化，使得计算一对向量的核函数等价于在变换后的空间中计算这对向量的点积（空间中计算点积的意义是可以理解为求相似度）。</p>
 <h3 id="svm的优点">SVM的优点</h3>
 <ul>
 <li>凸优化问题，可以找到全局最优</li>
@@ -2541,7 +2543,7 @@ s.t.\ \sum_{i=1}^{N} \lambda_iy_i = 0, \lambda_i \geq 0, 0 \leqslant \lambda_i \
               
               
               <div class="site-state-item site-state-categories">
-                <a href="/categories/index.html">
+                <a href="/categories/index-1.html">
                   <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
