@@ -82,7 +82,7 @@
 <meta name="description" content="NLP / DL / Python / C++ | 爱我所爱">
 <meta property="og:type" content="website">
 <meta property="og:title" content="明天探索者">
-<meta property="og:url" content="http://seanlee97.github.io/tags/机器学习/index.html">
+<meta property="og:url" content="http://seanlee97.github.io/page/3/index.html">
 <meta property="og:site_name" content="明天探索者">
 <meta property="og:description" content="NLP / DL / Python / C++ | 爱我所爱">
 <meta property="og:locale" content="zh-Hans">
@@ -118,13 +118,13 @@
 
 
 
-  <link rel="canonical" href="http://seanlee97.github.io/tags/机器学习/"/>
+  <link rel="canonical" href="http://seanlee97.github.io/page/3/"/>
 
 
 
 
 
-  <title>标签: 机器学习 | 明天探索者</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>明天探索者</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -143,7 +143,8 @@
     
   
 
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left ">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left 
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -246,55 +247,193 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  
-  
-  
-  <div class="post-block tag">
-
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>机器学习<small>标签</small>
-        </h1>
-      </div>
-
+  <section id="posts" class="posts-expand">
+    
       
-        
+
+  
+
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/04/16/超参数的调整技巧/" itemprop="url">
-              
-                <span itemprop="name">超参数的调整技巧</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/" itemprop="url">xmnlp — A Lightweight Chinese NLP Toolkit.</a></h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-04-16T18:11:24+08:00"
-              content="2018-04-16" >
-          04-16
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-16T23:13:07+08:00">
+                2018-02-16
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/02/16/xmnlp-—-A-Lightweight-Chinese-NLP-Toolkit/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    </div>
+      
 
+      
+        
+          
+            <figure>
+<img src="/images/posts/xmnlp/slogan.png" alt="slogan"><figcaption>slogan</figcaption>
+</figure>
+<p>python下NLP工具有很多 jieba, nltk, ltp 等， 虽然他们很强大，但是提供的功能比较分散，而且通常模型比较大。为了方便平时的处理工作，我尝试找了一些集成工具包，发现snownlp还可以，它的分词是基于TnT的，总得来说分词效果逊色于基于词典的分词（比如jieba）。所以决定自己写一个包xmnlp，主打轻量快捷。</p>
+<h2 id="功能">功能</h2>
+<ol type="1">
+<li><p>中文分词 &amp; 词性标注： 基于词典构建DAG图，然后采用动态规划的思想求得最大概率路径（jieba分词采用了反向输出，我采用了正向加权反向输出的方式，使得正反向共同影响分词效果），对于未登录词采用HMM+Viterbi处理</p></li>
+<li><p>文本纠错：采用了bi-gram + levenshtein实现</p></li>
+<li><p>文本摘要 &amp; 关键词提取：textrank</p></li>
+<li><p>情感分析：naive bayes</p></li>
+<li><p>文本转拼音：Trie 树检索</p></li>
+</ol>
+<p>以下展示xmnlp的功能效果，不同模块的原理之后的文章会补上。</p>
+<h2 id="分词词性标注">分词&amp;词性标注</h2>
+<p>[ doc ]</p>
+<p>自然语言处理: 是人工智能和语言学领域的分支学科。 在这此领域中探讨如何处理及运用自然语言；自然语言认知则是指让电脑“懂”人类的语言。 自然语言生成系统把计算机数据转化为自然语言。 自然语言理解系统把自然语言转化为计算机程序更易于处理的形式。</p>
+<p>[ 分词 ]</p>
+<p>自然语言处理 / : / 是 / 人工智能 / 和 / 语言学 / 领域 / 的 / 分支 / 学科 / 。 / 在 / 这此 / 领域 / 中 / 探讨 / 如何 / 处理 / 及 / 运用 / 自然 / 语言 / ； / 自然 / 语言 / 认知 / 则 / 是 / 指让 / 电脑 / “ / 懂 / ” / 人类 / 的 / 语言 / 。 / 自然 / 语言 / 生成 / 系统 / 把 / 计算机 / 数据 / 转化 / 为 / 自然 / 语言 / 。 / 自然 / 语言 / 理解 / 系统 / 把 / 自然 / 语言 / 转化 / 为 / 计算机程序 / 更 / 易于 / 处理 / 的 / 形式 / 。</p>
+<p>[ 标注 ]</p>
+<p>自然语言处理 un / : un / 是 v / 人工智能 nw / 和 c / 语言学 n / 领域 n / 的 uj / 分支 n / 学科 n / 。 un / 在 p / 这此 un / 领域 n / 中 f / 探讨 v / 如何 r / 处理 v / 及 c / 运用 vn / 自然 d / 语言 n / ； un / 自然 d / 语言 n / 认知 v / 则 d / 是 v / 指让 un / 电脑 n / “ un / 懂 v / ” un / 人类 n / 的 uj / 语言 n / 。 un / 自然 d / 语言 n / 生成 v / 系统 n / 把 p / 计算机 n / 数据 n / 转化 v / 为 p / 自然 d / 语言 n / 。 un / 自然 d / 语言 n / 理解 v / 系统 n / 把 p / 自然 d / 语言 n / 转化 v / 为 p / 计算机程序 n / 更 d / 易于 v / 处理 v / 的 uj / 形式 n / 。 un</p>
+<h2 id="文本纠错">文本纠错</h2>
+<p>[ doc ]</p>
+<p>这理风景绣丽，而且天汽不错，我的心情各外舒畅!</p>
+<p>[ 纠错 ]</p>
+<p>这里风景秀丽，而且天气不错，我的心情格外舒畅!</p>
+<h2 id="文本摘要关键词">文本摘要&amp;关键词</h2>
+<p>[ doc ]</p>
+<p>自然语言处理: 是人工智能和语言学领域的分支学科。 在这此领域中探讨如何处理及运用自然语言；自然语言认知则是指让电脑“懂”人类的语言。 自然语言生成系统把计算机数据转化为自然语言。 自然语言理解系统把自然语言转化为计算机程序更易于处理的形式。</p>
+<p>[ 关键词 ]</p>
+<p>(‘自然语言’, 2.2069266136741321),</p>
+<p>(‘处理’, 1.5572478858429686),</p>
+<p>(‘是’, 1.4182222157079281),</p>
+<p>(‘系统’, 1.2431338210535401),</p>
+<p>(‘转化’, 1.1532093387566391)</p>
+<p>[ 摘要 ]</p>
+<p>自然语言理解系统把自然语言转化为计算机程序更易于处理的形式</p>
+<h2 id="情感分析">情感分析</h2>
+<p>[ doc ]</p>
+<p>这件衣服的质量也太差了吧！一穿就烂！</p>
+<p>[ 分值 ]</p>
+<p>0.009959694621645698</p>
+<h2 id="文本转拼音">文本转拼音</h2>
+<p>[ doc ]</p>
+<p>面朝大海，春暖花开</p>
+<p>[ 拼音 ]</p>
+<p>[‘mian’, ‘zhao’, ‘da’, ‘hai’, ‘，’, ‘chun’, ‘nuan’, ‘hua’, ‘kai’]</p>
+<h2 id="项目地址">项目地址</h2>
+<p><a href="https://github.com/SeanLee97/xmnlp" target="_blank" rel="noopener">github</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
   </div>
   
   
   
+  </article>
+
+
+    
+  </section>
 
   
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
+
 
 
           </div>
