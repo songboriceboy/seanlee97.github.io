@@ -1680,6 +1680,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">技术日志</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -1732,8 +1754,63 @@
 <p><span class="math display">\[A \cdot x = \lambda x \Rightarrow  （A - \lambda E）x = 0\]</span></p>
 <p>而 <span class="math inline">\(x \neq 0\)</span> 故有 <span class="math inline">\(|A - \lambda E|\)</span> = 0</p>
 <p>以一道例题来帮助理解：</p>
-<p><img src="/images/posts/pca/pca-1.png" alt="pca-1"> <img src="/images/posts/pca/pca-2.png" alt="pca-2"> <img src="/images/posts/pca/pca-3.png" alt="pca-3"> <img src="/images/posts/pca/pca-4.png" alt="pca-4"></p>
-<p>上述截图来自<a href="https://jingyan.baidu.com/article/27fa7326afb4c146f8271ff3.html" target="_blank" rel="noopener">百度经验</a></p>
+<p><strong>题目：</strong>求矩阵 <span class="math inline">\(A = \bigl(\begin{smallmatrix} -2 &amp; 1 &amp; 1 \\ 0 &amp; 2 &amp; 0 \\ -4 &amp; 1 &amp; 3 \end{smallmatrix}\bigr)\)</span> 的特征值和特征向量，并求可逆矩阵 <span class="math inline">\(P\)</span> ， 使得 <span class="math inline">\(P^{-1}AP\)</span> 为对角矩阵.</p>
+<p><strong>解：</strong></p>
+<p><span class="math display">\[\left | A-\lambda E \right | = \begin{vmatrix}
+-2-\lambda &amp; 1 &amp; 1 \\ 
+0 &amp; 2-\lambda  &amp; 0 \\ 
+-4 &amp; 1 &amp; 3-\lambda
+\end{vmatrix} = -(\lambda - 2)^{2}(\lambda + 1)\]</span></p>
+<p>得到特征值 <span class="math inline">\(\lambda = -1,2\)</span></p>
+<p>1. 当<span class="math inline">\(\lambda = -1\)</span> ,解线性方程组 <span class="math inline">\((A+E)x = 0\)</span> 得到</p>
+<p><span class="math display">\[\left | A+E \right | = \bigl(\begin{smallmatrix}
+-1 &amp; 1 &amp; 1 \\ 
+0 &amp; 3 &amp; 0 \\ 
+-4 &amp; 1 &amp; 4
+\end{smallmatrix}\bigr) \rightarrow \bigl(\begin{smallmatrix}
+1 &amp; 0 &amp; -1 \\ 
+0 &amp; 1 &amp; 0 \\ 
+0 &amp; 0 &amp; 0
+\end{smallmatrix}\bigr) \rightarrow 
+\left\{\begin{matrix}
+x_{1} - x_{3} = 0\\ 
+x_{2} = 0
+\end{matrix}\right. \rightarrow p_{1} = \bigl(\begin{smallmatrix}
+1\\ 
+0\\ 
+1
+\end{smallmatrix}\bigr)\]</span></p>
+<p>2. 当 <span class="math inline">\(\lambda =2\)</span> 解线性方程组 <span class="math inline">\((A - 2E)x = 0\)</span> 得</p>
+<p><span class="math display">\[\left | A-2E \right | = \bigl(\begin{smallmatrix}
+-4 &amp; 1 &amp; 1 \\ 
+0 &amp; 0 &amp; 0 \\ 
+-4 &amp; 1 &amp; 1
+\end{smallmatrix}\bigr) \rightarrow \bigl(\begin{smallmatrix}
+-4 &amp; 1 &amp; 1 \\ 
+0 &amp; 0 &amp; 0 \\ 
+0 &amp; 0 &amp; 0
+\end{smallmatrix}\bigr)\]</span></p>
+<p><span class="math display">\[-4x_{1} + x_{2} + x_{3} = 0 \rightarrow p_{2} = \bigl(\begin{smallmatrix}
+0\\ 
+1\\ 
+-1
+\end{smallmatrix}\bigr)\ p_{3} = \bigl(\begin{smallmatrix}
+1 \\ 
+0 \\ 
+4
+\end{smallmatrix}\bigr)\]</span></p>
+<p>3. <span class="math inline">\(p_{1}, p_{2}, p_{3}\)</span> 为基础解系,设 <span class="math inline">\(P = (p_{1}, p_{2}, p_{3})\)</span> 即</p>
+<p><span class="math display">\[P = (p_{1}, p_{2}, p_{3}) = \bigl(\begin{smallmatrix}
+1 &amp; 0 &amp; 1 \\ 
+0 &amp; 1 &amp; 0 \\ 
+1 &amp; -1 &amp; 4
+\end{smallmatrix}\bigr)\]</span></p>
+<p>则</p>
+<p><span class="math display">\[P^{-1} A P = \bigl(\begin{smallmatrix}
+-1 &amp;  &amp; \\ 
+ &amp; 2 &amp; \\ 
+ &amp;  &amp; 2
+\end{smallmatrix}\bigr)\]</span></p>
 <h2 id="pca">PCA</h2>
 <h3 id="特征值特征向量的意义">特征值特征向量的意义</h3>
 <p><strong>Q：</strong> 一个矩阵和一个向量相乘的意义是什么？为什么可以等同于一个常数和一个向量相乘？</p>
@@ -1784,6 +1861,11 @@ Q = U^{T} = U = \begin{bmatrix}
 <p>由于降至一维且 <span class="math inline">\(\lambda _1 &gt; \lambda _2\)</span> 故选择 <span class="math inline">\(\lambda _1\)</span> 对应的维度 即 <span class="math inline">\({x}&#39; = \begin{bmatrix} \frac{\sqrt{2}}{2} &amp; \frac{-\sqrt{2}}{2} \end{bmatrix} x = \begin{bmatrix} \frac{-3\sqrt{2}}{2} &amp; \frac{-\sqrt{2}}{2} &amp; 0 &amp; \frac{3\sqrt{2}}{2} &amp; \frac{-\sqrt{2}}{2} \end{bmatrix}\)</span> <span class="math inline">\({x}&#39;\)</span> 即为降维后所得</p>
 <h2 id="python实现pca">python实现PCA</h2>
 <p>有了上面的知识，现在我们可以开始coding了 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">PCA</span><span class="params">(x, n_components=<span class="number">2</span>)</span>:</span></span><br><span class="line">    <span class="comment"># 1. 对每个特征（每一行）进行去中心化，即每个数据减去均值</span></span><br><span class="line">    mean_val = np.mean(x, axis=<span class="number">0</span>)</span><br><span class="line">    mean_x = x - mean_val</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 求mean_x协方差方阵</span></span><br><span class="line">    C_x = np.cov(mean_x, rowvar=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 3. 求C_x特征值和特征向量</span></span><br><span class="line">    eig_vals, eig_vects = np.linalg.eig(np.mat(C_x))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 4. 对特征值从大到小排序</span></span><br><span class="line">    sorted_idx = np.argsort(-eig_vals)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 5. 降维</span></span><br><span class="line">    topn_index = sorted_idx[:n_components]</span><br><span class="line">    topn_vects = eig_vects[topn_index, :]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 6. 投影到低维空间</span></span><br><span class="line">    pca_x = topn_vects * x  </span><br><span class="line">    <span class="keyword">return</span> pca_x</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    x = np.mat([[<span class="number">-1</span>, <span class="number">-1</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>], </span><br><span class="line">                [<span class="number">-2</span>,  <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>]])</span><br><span class="line">    x_ = PCA(x, n_components=<span class="number">1</span>)</span><br><span class="line">    print(x_)</span><br></pre></td></tr></table></figure></p>
+<h2 id="补充">补充</h2>
+<p>上述的求解过程是针对方阵的，如果是非方阵可以用SVD去求解，关于SVD这里不详细介绍，后面会有专文介绍。</p>
+<p>SVD可将矩阵（不一定是方阵）分解为三个矩阵</p>
+<p><span class="math display">\[A_{m \times n} = U_{m\times m} \Sigma_{m\times n}V^{T}_{n\times n} \approx U_{m\times k} \Sigma_{k\times k}V^{T}_{k\times n}\]</span></p>
+<p><span class="math inline">\(U,V^{T}\)</span> 称为酉矩阵， <span class="math inline">\(\Sigma\)</span> 称为奇异矩阵，对于 <span class="math inline">\(k\times k\)</span> 的奇异矩阵 $$ 它的主对角线为零，对应的值称为奇异值，非主对角线上的值均为0 (是不是和上面的对角矩阵很像)，同理求解PCA时需要用到奇异矩阵 <span class="math inline">\(\Sigma\)</span></p>
 <h2 id="refrence">Refrence</h2>
 <p><a href="https://blog.csdn.net/sunshine_in_moon/article/details/51513880" target="_blank" rel="noopener">sunshine_in_moon`s blog</a></p>
 
@@ -2279,7 +2361,7 @@ Q = U^{T} = U = \begin{bmatrix}
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
+                <a href="/tags/index-1.html">
                   <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
