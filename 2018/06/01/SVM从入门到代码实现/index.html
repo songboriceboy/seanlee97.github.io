@@ -102,7 +102,8 @@
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/svm/learn-4.jpg">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/svm/learn-5.jpg">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/svm/result.jpg">
-<meta property="og:updated_time" content="2018-08-22T12:45:03.740Z">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/svm/hingeloss.png">
+<meta property="og:updated_time" content="2018-09-03T15:41:02.803Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SVM从入门到代码实现">
 <meta name="twitter:description" content="本学期选修了数据挖掘课程，发现课本很多内容和李航博士的《统计学习方法》相同，所以我还是从复习《统计学习方法》开始，再结合老师课堂讲的，尽量做到温故而知新。 这篇博文主要记录我对SVM的理解，逐渐深入，到代码实现三个过程。 相信大多数人和我一样，觉得SVM (support vector machine，支持向量机)很高大上，是一个牛逼的算法。但是当看到有关SVM的讲解，推导时，相信大多数人也和我一">
@@ -379,7 +380,12 @@
       
 
       
-        <p>本学期选修了数据挖掘课程，发现课本很多内容和李航博士的《统计学习方法》相同，所以我还是从复习《统计学习方法》开始，再结合老师课堂讲的，尽量做到温故而知新。 这篇博文主要记录我对SVM的理解，逐渐深入，到代码实现三个过程。 相信大多数人和我一样，觉得SVM (support vector machine，支持向量机)很高大上，是一个牛逼的算法。但是当看到有关SVM的讲解，推导时，相信大多数人也和我一样，草草略过，抱着：“会用就行了，原理之后再说吧”的思想，因为初一看SVM真的挺复杂的。 由于课程需要，不得不狠下心来去啃这块骨头。</p>
+        <p>本学期选修了数据挖掘课程，发现课本很多内容和李航博士的《统计学习方法》相同，所以我还是从复习《统计学习方法》开始，再结合老师课堂讲的，尽量做到温故而知新。 这篇博文主要记录我对SVM的理解，逐渐深入，到代码实现三个过程。 相信大多数人和我一样，觉得SVM (support vector machine，支持向量机)很高大上，是一个牛逼的算法。但是当看到有关SVM的讲解，推导时，相信大多数人也和我一样，草草略过，抱着：“会用就行了，原理之后再说吧”的思想，因为乍一看SVM真的挺复杂的。由于课程需要，不得不狠下心来去啃这块骨头。</p>
+<p>本文主要从讲解SVM的两种求解方式：</p>
+<ul>
+<li>二次规划求解</li>
+<li>Hingle Loss + 梯度下降（略讲）</li>
+</ul>
 <h1 id="svm的简单理解">SVM的简单理解</h1>
 <p>对SVM的理解，我是看了知乎一篇文章才对SVM有了初步的理解，<a href="https://www.zhihu.com/question/21094489" target="_blank" rel="noopener">原文章地址</a>，在这里我简述一下文章主要内容。 文章是以一个故事来讲述SVM的： 在很久以前的情人节，大侠要去救他的爱人，但魔鬼和他玩了一个游戏。 魔鬼在桌子上似乎有规律放了两种颜色的球，说：“你用一根棍分开它们？要求：尽量在放更多球之后，仍然适用。”</p>
 <figure>
@@ -415,7 +421,7 @@
 </figure>
 <p>把这些球叫做 「data」，把棍子叫做 「classifier」, 最大间隙叫做「optimization」， 拍桌子叫做「kernelling」, 那张纸叫做「hyperplane」。 好了，简单的说SVM就是这样了，再加之有libsvm，sklearn等优秀的工具包已经封装好了SVM，使用已经不是问题了。</p>
 <p>如果你想更加理解svm的原理，可继续看下文。</p>
-<h1 id="逐渐深入">逐渐深入</h1>
+<h1 id="二次规划思想求解">二次规划思想求解</h1>
 <h2 id="知识储备">知识储备</h2>
 <h3 id="凸集凸函数">凸集凸函数</h3>
 <p>凸优化、凸集、凸函数等本身就是一个体系，在机器学习，以及深度学习的优化函数部分很有作用，为了帮助理解SVM，我尝试学习了些皮毛，首先推荐斯坦佛大学的教程<a href="http://cs229.stanford.edu/section/cs229-cvxopt.pdf" target="_blank" rel="noopener">Convex Optimization Overview</a>（链接是pdf文件）,以及博文<a href="https://www.52ml.net/20845.html" target="_blank" rel="noopener">凸优化－凸集和凸函数</a>，在这里仅简单介绍一下。</p>
@@ -436,7 +442,7 @@
 min f(x_1, x_2, ..., x_n) \\\\ 
 s.t.\ h_k(x_1, x_2, ..., x_n)  &amp; k=1, 2, ..., l
 \end{cases}\]</span></p>
-<p>(注： <span class="math inline">\(s.t.\)</span> 是一个很常用的符号，它是 <span class="math inline">\(subject\ to\)</span> 的缩写, 中文意思是受限于) 把原目标函数 <span class="math inline">\(f(x)\)</span> 变成的新的目标函数 <span class="math inline">\(F(x)\)</span></p>
+<p>把原目标函数 <span class="math inline">\(f(x)\)</span> 变成的新的目标函数 <span class="math inline">\(F(x)\)</span></p>
 <p><span class="math display">\[F(x, \lambda) = f(x) + \sum_{k=1}^{l} \lambda_k h_k(x)\]</span></p>
 <p>式中的 <span class="math inline">\(h_k(x)\)</span> 就是原目标函数 <span class="math inline">\(f(x)\)</span> 的等式约束条件，待定系数 <span class="math inline">\(\lambda_k\)</span> 称为<strong>拉格朗日乘子</strong>。这种方法称为<strong>拉格朗日乘子法</strong>。 在极值点处有：<span class="math inline">\(\frac{\partial F}{\partial x_i} = 0\  ,\ (i=1, 2, ..., n)\)</span> 和 <span class="math inline">\(\frac{\partial F}{\partial \lambda_k} = 0\  ,\ (k=1, 2, ..., l)\)</span> 共有 <span class="math inline">\(n+l\)</span> 个方程，联立可以算出这 <span class="math inline">\(n+l\)</span> 个变量，求出了这些变量代入即可得到目标函数的极值。</p>
 <h3 id="二次规划">二次规划</h3>
@@ -470,44 +476,44 @@ W  \cdot  X^{-} + b = -1
 <p>又有:</p>
 <p><span class="math display">\[X^{+} = X^{-} + \lambda W \ \Rightarrow \ \lambda = \frac{2}{W  \cdot  W}\]</span></p>
 <p>所以间距和为：</p>
-<p><span class="math display">\[ d = \left | X^{+} - X^{-} \right | = \left | \lambda W \right | = \frac{2}{W  \cdot  W} \left \| W \right \| = \frac{2}{\left \| W \right \|} \ \ \ \ (1)\]</span></p>
+<p><span class="math display">\[ d = \left | X^{+} - X^{-} \right | = \left | \lambda W \right | = \frac{2}{W  \cdot  W} \left \| W \right \| = \frac{2}{\left \| W \right \|} \tag{1}\]</span></p>
 <p>我们要做的就是最大化 <span class="math inline">\(d\)</span> 了。 为什么叫支持向量这个奇怪的名字呢？这个图可以直观的反应了最大间隔分离超平面完全由离该超平面最近的点定义，其它点可以从数据集中删除掉，因为它们对最优超平面的选择没有影响。这些决定最大间隔分离超平面的点通常被称为<strong>支持向量</strong>，因此SVM的意思就是使用这些支持向量来学习出最优的超平面，也即是SVM使用了训练实例的一个子集来表示决策边界，这个子集就称作支持向量。 SVM的训练阶段包括从训练数据中估计决策边界的参数 <span class="math inline">\(W\)</span> 和 <span class="math inline">\(b\)</span>。选择的参数必须满足：</p>
 <p><span class="math display">\[\begin{cases}
 W   \cdot  X_i + b \geqslant 1  &amp; \text{ if } y_i=1 \\\\ 
 W   \cdot  X_i + b \leqslant -1 &amp; \text{ if } y_i = -1
 \end{cases}
-\ \ \ \ (2)\]</span></p>
+\tag{2}\]</span></p>
 <p>也即是：</p>
-<p><span class="math display">\[y_i (W  \cdot  x + b) \geqslant 1\ ,\ i=1, 2, ..., N \ \ \ \ (3)\]</span></p>
+<p><span class="math display">\[y_i (W  \cdot  x + b) \geqslant 1\ ,\ i=1, 2, ..., N \tag{3}\]</span></p>
 <p>我们换个思路，最大间隔 <span class="math inline">\(d\)</span> 等价于最优化下面的目标函数：</p>
-<p><span class="math display">\[f (W) = \frac{\left \| W ^{2} \right \|}{2} \ \ \ \ (4)\]</span> 加上受限条件得到优化问题： <span class="math display">\[\begin{cases}
+<p><span class="math display">\[f (W) = \frac{\left \| W ^{2} \right \|}{2} \tag{4}\]</span> 加上受限条件得到优化问题： <span class="math display">\[\begin{cases}
 \underset{W}{min} \frac{\left \| W ^{2} \right \|}{2} \\\\ 
 s.t.\ y_i(W  \cdot  X + b) \geqslant 1 
 \end{cases}
-\ \ \ \ (5)\]</span></p>
+\tag{5}\]</span></p>
 <p>可知目标函数是二次的，而约束是线性的，因此这个问题是凸优化问题。 看到这个形式是不是觉得有点熟悉？好了接下来我们要用拉格朗日乘子法了。 通过拉格朗日乘子法可得到新的目标函数</p>
-<p><span class="math display">\[L_P = \frac{1}{2}\ {\left \| W \right \|}^{2} - \sum_{i=1}^{N}\lambda_i(y_i(W  \cdot  X + b) - 1) \ \ \ \ (6)\]</span></p>
+<p><span class="math display">\[L_P = \frac{1}{2}\ {\left \| W \right \|}^{2} - \sum_{i=1}^{N}\lambda_i(y_i(W  \cdot  X + b) - 1) \tag{6}\]</span></p>
 <p><strong>看到<span class="math inline">\(L_p\)</span> 我是很惊喜的，SVM太强大了，它竟然自带L2正则 <span class="math inline">\(\frac{1}{2}\ {\left \| W \right \|}^{2}\)</span>，这也在一方面说明了SVM为什么能最小化结构化风险吧？我们都知道正则化手段是抑制过拟合的一种方法，因为发生过拟合时参数 <span class="math inline">\(W\)</span> 一般是较大的值，而正则化主要是对 <span class="math inline">\(W\)</span> 进行惩罚，从而降低模型的复杂性。</strong></p>
 <p>接下来要做得工作是最小化新目标函数，我们对 <span class="math inline">\(L_p\)</span> 关于 <span class="math inline">\(W\)</span> 和 <span class="math inline">\(b\)</span> 求偏导，并令它们等于零，即</p>
-<p><span class="math display">\[\frac{\partial L_P}{\partial W} = 0 \Rightarrow W = \sum_{i=1}^{N}\lambda_i y_i X_i  \ \ \ \ (7)\]</span></p>
-<p><span class="math display">\[\frac{\partial L_P}{\partial b} = 0 \Rightarrow \sum_{i=1}^{N}\lambda_i y_i = 0 \ \ \ \ (8)\]</span></p>
+<p><span class="math display">\[\frac{\partial L_P}{\partial W} = 0 \Rightarrow W = \sum_{i=1}^{N}\lambda_i y_i X_i  \tag{7}\]</span></p>
+<p><span class="math display">\[\frac{\partial L_P}{\partial b} = 0 \Rightarrow \sum_{i=1}^{N}\lambda_i y_i = 0 \tag{8}\]</span></p>
 <p>处理不等式约束的一种方法就是将其变为一组等式约束。只要限制拉格朗日乘子非负这种变换就可行。这种变换导致如下拉格朗日乘子约束，称作KTT条件。</p>
 <p><span class="math display">\[\lambda_{i} \geqslant 0\]</span></p>
 <p><span class="math display">\[ \lambda_{i} [y_{i}(W \cdot X_i+b)-1] = 0 \]</span></p>
 <p>该约束表明，除非 <span class="math inline">\(y_{i}(W \cdot X_i+b)-1=0\)</span> 否则 <span class="math inline">\(\lambda_i\)</span> 必须为0，那些 <span class="math inline">\(\lambda_i &gt; 0\)</span> 称为支持向量，而 <span class="math inline">\(W\)</span> 和 <span class="math inline">\(b\)</span> 的确定仅依赖这些支持向量。因此KTT条件解释了为什么SVM仅由支持向量决定。</p>
 <p>拉格朗日乘子 <span class="math inline">\(\lambda_i\)</span> 现在是未知的，我们无法直接求得 <span class="math inline">\(W\)</span> 、<span class="math inline">\(b\)</span>，为了减少变量将 (7) (8) 式代入(6)得到</p>
-<p><span class="math display">\[L_D = \sum_{i=1}^{N} \lambda_i - \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N} \lambda_i \lambda_j y_i y_j X_i X_j \ \ \ \ (9)\]</span></p>
+<p><span class="math display">\[L_D = \sum_{i=1}^{N} \lambda_i - \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N} \lambda_i \lambda_j y_i y_j X_i X_j \tag{9}\]</span></p>
 <p>根据拉格朗日对偶性，原始问题的对偶问题是极大化极小化原始问题</p>
 <p><span class="math display">\[\underset{\lambda }{max}\ \underset{W,b }{min}L(W, b, \lambda )\]</span></p>
 <p><span class="math inline">\(L_D\)</span> 是 <span class="math inline">\(L_P\)</span> 的对偶问题, 所以最小化 <span class="math inline">\(L_P\)</span> 等价于最大化 <span class="math inline">\(L_D\)</span></p>
 <p>二次规划一般求最小值，我们改一下 <span class="math inline">\(L_D\)</span> 得到</p>
-<p><span class="math display">\[{L_D}&#39; =  \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N} \lambda_i \lambda_j y_i y_j X_i X_j - \sum_{i=1}^{N} \lambda_i \ \ \ \ (10)\]</span></p>
+<p><span class="math display">\[{L_D}&#39; =  \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N} \lambda_i \lambda_j y_i y_j X_i X_j - \sum_{i=1}^{N} \lambda_i \tag{10}\]</span></p>
 <p>现在问题变成了最小化 <span class="math inline">\({L_D}&#39;\)</span> 也就是现在的优化问题是</p>
 <p><span class="math display">\[\begin{cases}
 \underset{\lambda }{min} \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N} \lambda_i \lambda_j y_i y_j X_i X_j - \sum_{i=1}^{N} \lambda_i  \\\\ 
 s.t.\ \sum_{i=1}^{N} \lambda_iy_i = 0, \lambda_i \geq 0 
 \end{cases}
-\ \ \ \ (11)\]</span></p>
+\tag{11}\]</span></p>
 <p>接下来我们可以用二次规划去优化</p>
 <h3 id="线性不可分的情况">线性不可分的情况</h3>
 <p>线性可分是一种理想的情况，现实数据集不可能没有噪声，如下图</p>
@@ -519,28 +525,48 @@ s.t.\ \sum_{i=1}^{N} \lambda_iy_i = 0, \lambda_i \geq 0
 W   \cdot  X_i + b \geqslant 1 - \S_i  &amp; \text{ if } y_i=1 \\\\ 
 W   \cdot  X_i + b \leqslant -1 + \S_i &amp; \text{ if } y_i = -1
 \end{cases}
-\ \ \ \ (12)\]</span></p>
-<p>用式子(12)替换(2)再走一遍上述过程，可以得到目标函数，但是如果仅仅加入松弛因子，由于在决策边界误分类样本的数量上没有限制，学习算法可能会找到边缘很宽的边界，但是却分错了很多的训练实例，为了避免这个问题，必须修改目标函数用来惩罚那些松弛因子很大的决策边界。加入了惩罚因子的原始目标函数为</p>
-<p><span class="math display">\[f(W) = \frac{ {\left \| W \right \|}^{2} }{2} + C{(\sum_{i=1}^{N}\S_i)}^{k}\ \ \ \ (13)\]</span></p>
+\tag{12}\]</span></p>
+<p>用式子(12)替换(2)再走一遍上述过程，可以得到目标函数，但是如果仅仅加入松弛因子，由于在决策边界误分类样本的数量上没有限制，学习算法可能会找到边缘很宽的边界，但是却分错了很多的训练实例，为了避免这个问题，必须修改目标函数用来惩罚那些松弛因子很大的决策边界。加入了惩罚因子后想要优化的式子变为</p>
+<p><span class="math display">\[\begin{align*}
+&amp; min \frac{\left \| w \right \|^2}{2} + C\sum_{i=1}^{N}\xi  _{i} \\\\
+&amp; s.t.\ y_{i}(W\cdot X + b) \geqslant 1 - \xi_{i},\ \xi_{i} \geqslant 0
+\end{align*} \tag{13}\]</span></p>
 <p>C就是惩罚因子了，C和k都是超参，为了简化运算令k=1，加入了惩罚因子和松弛因子后得到的拉格朗日函数为</p>
-<p><span class="math display">\[L = \frac{1}{2}\ {\left \| W \right \| }^{2} + C \sum_{i=1}^{N} \S_i - \sum_{i=1}^{N}\lambda_i(y_i(W  \cdot  X + b) - 1 + \S_i) \ \ \ \ (14)\]</span></p>
+<p><span class="math display">\[L = \frac{1}{2}\ {\left \| W \right \| }^{2} + C \sum_{i=1}^{N} \S_i - \sum_{i=1}^{N}\lambda_i(y_i(W  \cdot  X + b) - 1 + \S_i) \tag{14}\]</span></p>
 <p>利用如下KTT条件可以将不等式约束转为等式约束</p>
 <p><span class="math display">\[\S_i \geqslant 0,\ \lambda_i \geqslant 0,\ \mu_i \geqslant 0\]</span></p>
 <p><span class="math display">\[\lambda_i \{ y_i(W  \cdot  X_i + b) - 1 + \S_i \} = 0\]</span></p>
 <p><span class="math display">\[\mu_i \S_i = 0\]</span></p>
 <p>令 <span class="math inline">\(L\)</span> 关于 <span class="math inline">\(W\)</span>、<span class="math inline">\(b\)</span> 和 <span class="math inline">\(\S_i\)</span>的一阶导数为0得</p>
-<p><span class="math display">\[\frac{\partial L}{\partial W_j} = 0 \Rightarrow W_j = \sum_{i=1}^{N}\lambda_i y_i X_{ij}  \ \ \ \ (15)\]</span> <span class="math display">\[\frac{\partial L}{\partial b} = 0 \Rightarrow \sum_{i=1}^{N}\lambda_i y_i = 0 \ \ \ \ (16)\]</span> <span class="math display">\[\frac{\partial L}{\partial \S_i} = 0 \Rightarrow \lambda_i + \mu_i = C \ \ \ \ (17)\]</span></p>
+<p><span class="math display">\[\begin{align*}
+&amp; \frac{\partial L}{\partial W_j} = 0 \Rightarrow W_j = \sum_{i=1}^{N}\lambda_i y_i X_{ij} \\\\
+&amp; \frac{\partial L}{\partial b} = 0 \Rightarrow \sum_{i=1}^{N}\lambda_i y_i = 0 \\\\
+&amp; \frac{\partial L}{\partial \S_i} = 0 \Rightarrow \lambda_i + \mu_i = C
+\end{align*}\]</span></p>
 <p>和之前的步骤一样，最后得到的最终目标函数为</p>
-<p><span class="math display">\[{L_D}^{&#39;&#39;} =  \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N} \lambda_i \lambda_j y_i y_j X_i X_j - \sum_{i=1}^{N} \lambda_i \ \ \ \ (18)\]</span></p>
+<p><span class="math display">\[{L_D}^{&#39;&#39;} =  \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N} \lambda_i \lambda_j y_i y_j X_i X_j - \sum_{i=1}^{N} \lambda_i \ \tag{15}\]</span></p>
 <p>可以看到目标函数和线性可分的一样，但是约束条件已经不一样了，现在优化问题为</p>
 <p><span class="math display">\[\begin{cases}
 \underset{\lambda }{min} \frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N} \lambda_i \lambda_j y_i y_j X_i X_j - \sum_{i=1}^{N} \lambda_i  \\\\ 
 s.t.\ \sum_{i=1}^{N} \lambda_iy_i = 0, \lambda_i \geq 0, 0 \leqslant \lambda_i \leqslant C
 \end{cases}
-\ \ \ \ (19)\]</span></p>
+\tag{16}\]</span></p>
 <p>还是用二次规划求解</p>
 <h3 id="非线性">非线性</h3>
 <p>开头已经叙述了非线性下往往要把当前空间映射到高维空间上，高维空间下按照线性的方式去处理当前问题。既然要映射就要有映射函数（核函数）,我们假设核函数为 <span class="math inline">\(\phi (X)\)</span> , 现在决策边界就变成了：<span class="math inline">\(W\phi (X) + b\)</span>，接下来就和上述的步骤一样求解目标函数了 当然核函数不是随便来的，必须要满足Mercer定理，大致要求如下：必须存在一个相应的变化，使得计算一对向量的核函数等价于在变换后的空间中计算这对向量的点积（空间中计算点积的意义是可以理解为求相似度）。</p>
+<h3 id="核函数">核函数</h3>
+<p>核函数就是为了解决上述的非线性问题，什么是非线性呢？举个例子</p>
+<p><span class="math display">\[\begin{align*}
+&amp; w = y\cdot a \\\\
+&amp; f(x) = w^{T}x = a^{T}y^{T}\cdot x = a^{T} K(y^{T}, x)
+\end{align*}\]</span></p>
+<p><span class="math inline">\(f(x)\)</span> 就是非线性的，而<span class="math inline">\(K(y^{T}, x)\)</span>就是一个核函数，把它当成一个整体来看<span class="math inline">\(f(x)\)</span>就变成线性的了</p>
+<h4 id="常见的核函数">常见的核函数</h4>
+<ul>
+<li>线性核: <span class="math inline">\(K(x, y) = x^{t}y\)</span></li>
+<li>多项式核: <span class="math inline">\(K(x, y) = (ax^{t}y + c)^{d}\)</span></li>
+<li>高斯核: <span class="math inline">\(K(x, y) = e^{\frac{\left \| x-y \right \|^2}{2 \sigma ^{2}}}\)</span></li>
+</ul>
 <h3 id="svm的优点">SVM的优点</h3>
 <ul>
 <li>凸优化问题，可以找到全局最优</li>
@@ -553,13 +579,57 @@ s.t.\ \sum_{i=1}^{N} \lambda_iy_i = 0, \lambda_i \geq 0, 0 \leqslant \lambda_i \
 <figure>
 <img src="/images/posts/svm/result.jpg" alt="result"><figcaption>result</figcaption>
 </figure>
-<p>好了，终于写完了，就当做个记录，虽然以后还是会直接用第三方封装好的库函数，但是从原理上终于对SVM有了一定的理解。 欢迎指正！</p>
+<h1 id="hingle-loss-求解">Hingle Loss 求解</h1>
+<p>上面已经讲了二次规划求解SVM的一些步骤，但由于知识储备原因，并没有讲太多二次规划的知识，只是利用了工具包求解。这部分主要补充一下Hingle Loss 求解的思路</p>
+<h2 id="hingle-loss">Hingle Loss</h2>
+<p><code>hingle loss</code>中文译名<code>铰链损失函数</code> （教练），由于函数图像很像一本要合上的书故也称做<code>合页损失函数</code>，它的函数图像为</p>
+<figure>
+<img src="/images/posts/svm/hingeloss.png" alt="hingle loss"><figcaption>hingle loss</figcaption>
+</figure>
+<p>乍一看觉得也很像<code>ReLU</code>的函数图像，在二分类下它的损失函数为：</p>
+<p><span class="math display">\[\begin{align*}
+&amp; L(\widehat{y}, y) = max(0, 1-y \cdot \widehat{y}) \\\\
+&amp; y \in \{-1, 1\} \\\\
+&amp; \widehat{y} \in [-1, 1]
+\end{align*}\]</span></p>
+<p><span class="math inline">\(y\)</span>是正确的标签(值为<span class="math inline">\(\pm 1\)</span>)，<span class="math inline">\(\widehat{y}\)</span> 是预测值(-1到1之间)</p>
+<p>如果被正确分类即 <span class="math inline">\(\widehat{y} == y \Rightarrow \widehat{y}\cdot y = 1\)</span> 故损失是0，否则损失就是 <span class="math inline">\(1-\widehat{y}\cdot y\)</span></p>
+<h3 id="hingle-loss-的特点">Hingle Loss 的特点</h3>
+<p>可知 <span class="math inline">\(\widehat{y}\)</span> 的值在 <span class="math inline">\([-1, 1]\)</span> 即可，并不鼓励 <span class="math inline">\(|y| &gt; 1\)</span> 即不鼓励分类器过度自信，从而使得分类器可以专注于整体的分类误差</p>
+<h3 id="hingle-loss-的变种">Hingle Loss 的变种</h3>
+<p>如果有正负样本，我们往往希望损失函数能使得正样本的分数得分较高，使得负样本的分数越低越好，此时可以通过合页函数来构造</p>
+<p><span class="math display">\[L(\widehat{y}, y) = max(0, m-y+\widehat{y})\]</span></p>
+<p>m为设置的最大边界(max margin)，上述二分类的最大边界为1</p>
+<h3 id="hingle-loss-与svm">Hingle Loss 与SVM</h3>
+<p>有了先前SVM的介绍，现在应该有所了解了，对于<span class="math inline">\((13)\)</span> 即</p>
+<p><span class="math display">\[\begin{align*}
+&amp; min \frac{\left \| w \right \|^2}{2} + C\sum_{i=1}^{N}\xi  _{i} \\\\
+&amp; s.t.\ y_{i}(w^{T}\cdot x_{i} + b) \geqslant 1 - \xi_{i},\ \xi_{i} \geqslant 0
+\end{align*}\]</span></p>
+<p>对约束项进行变形有</p>
+<p><span class="math display">\[\xi_{i} \geqslant 1 - y_{i}(w^{T}\cdot x_{i} + b)\]</span></p>
+<p>则损失函数可写为</p>
+<p><span class="math display">\[J(w) = \frac{\left \| w \right \|^{2}}{2} + C\sum_{i=1}^{N}
+max(0, 1-(w^{T}x_{i} + b)) \tag{17}\]</span></p>
+<p>因此<strong>SVM的损失函数可以看作是L2正则+Hingle Loss</strong></p>
+<p>Hinge Loss在 <span class="math inline">\(\widehat{y}*y=1\)</span> 的时候是不可微的</p>
+<h4 id="梯度下降求解">梯度下降求解</h4>
+<p>对<span class="math inline">\((17)\)</span>进行梯度下降有</p>
+<p><span class="math display">\[\begin{align*}
+&amp; w := w - \eta  \frac{\alpha (J(w))}{\alpha(w)} \\\\
+&amp; \frac{\alpha (J(w))}{\alpha(w)} = w + \sum y_{i} x_{i} \\\\
+&amp; s.t. y_{i}w^{T}x_{i} &lt; 1, i = 1, 2...n
+\end{align*}\]</span></p>
+<p><span class="math inline">\(\eta\)</span> 为学习速率</p>
+<h1 id="后记">后记</h1>
+<p>好了，终于写完了，就当做个记录，虽然以后还是会直接用第三方封装好的库函数，但是从原理上终于对SVM有了一定的理解。欢迎指正！</p>
 <h1 id="reference">Reference</h1>
 <p>[0] https://www.zhihu.com/question/21094489</p>
 <p>[1] https://www.52ml.net/20845.html</p>
 <p>[2] 《统计学习方法》</p>
 <p>[3] 《数据挖掘导论》</p>
 <p>[4] https://github.com/ajtulloch/svmpy</p>
+<p>[5] https://www.cnblogs.com/yymn/p/8336979.html</p>
 
       
     </div>
@@ -735,7 +805,7 @@ s.t.\ \sum_{i=1}^{N} \lambda_iy_i = 0, \lambda_i \geq 0, 0 \leqslant \lambda_i \
               
               
               <div class="site-state-item site-state-categories">
-                <a href="/categories/index-1.html">
+                <a href="/categories/index.html">
                   <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
@@ -746,7 +816,7 @@ s.t.\ \sum_{i=1}^{N} \lambda_iy_i = 0, \lambda_i \geq 0, 0 \leqslant \lambda_i \
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/tags/index-1.html">
+                <a href="/tags/index.html">
                   <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
@@ -808,7 +878,7 @@ s.t.\ \sum_{i=1}^{N} \lambda_iy_i = 0, \lambda_i \geq 0, 0 \leqslant \lambda_i \
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#svm的简单理解"><span class="nav-number">1.</span> <span class="nav-text">SVM的简单理解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#逐渐深入"><span class="nav-number">2.</span> <span class="nav-text">逐渐深入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#知识储备"><span class="nav-number">2.1.</span> <span class="nav-text">知识储备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#凸集凸函数"><span class="nav-number">2.1.1.</span> <span class="nav-text">凸集凸函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#凸集的性质"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">凸集的性质</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#凸函数"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">凸函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拉格朗日乘子法"><span class="nav-number">2.1.2.</span> <span class="nav-text">拉格朗日乘子法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">定义</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二次规划"><span class="nav-number">2.1.3.</span> <span class="nav-text">二次规划</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#二次规划问题的标准形式"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">二次规划问题的标准形式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#svm原理"><span class="nav-number">2.2.</span> <span class="nav-text">SVM原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#支持向量机"><span class="nav-number">2.2.1.</span> <span class="nav-text">支持向量机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从线性可分开始"><span class="nav-number">2.2.2.</span> <span class="nav-text">从线性可分开始</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线性不可分的情况"><span class="nav-number">2.2.3.</span> <span class="nav-text">线性不可分的情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非线性"><span class="nav-number">2.2.4.</span> <span class="nav-text">非线性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#svm的优点"><span class="nav-number">2.2.5.</span> <span class="nav-text">SVM的优点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#svm的简单理解"><span class="nav-number">1.</span> <span class="nav-text">SVM的简单理解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二次规划思想求解"><span class="nav-number">2.</span> <span class="nav-text">二次规划思想求解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#知识储备"><span class="nav-number">2.1.</span> <span class="nav-text">知识储备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#凸集凸函数"><span class="nav-number">2.1.1.</span> <span class="nav-text">凸集凸函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#凸集的性质"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">凸集的性质</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#凸函数"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">凸函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拉格朗日乘子法"><span class="nav-number">2.1.2.</span> <span class="nav-text">拉格朗日乘子法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">定义</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二次规划"><span class="nav-number">2.1.3.</span> <span class="nav-text">二次规划</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#二次规划问题的标准形式"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">二次规划问题的标准形式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#svm原理"><span class="nav-number">2.2.</span> <span class="nav-text">SVM原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#支持向量机"><span class="nav-number">2.2.1.</span> <span class="nav-text">支持向量机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从线性可分开始"><span class="nav-number">2.2.2.</span> <span class="nav-text">从线性可分开始</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线性不可分的情况"><span class="nav-number">2.2.3.</span> <span class="nav-text">线性不可分的情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非线性"><span class="nav-number">2.2.4.</span> <span class="nav-text">非线性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#核函数"><span class="nav-number">2.2.5.</span> <span class="nav-text">核函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#常见的核函数"><span class="nav-number">2.2.5.1.</span> <span class="nav-text">常见的核函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#svm的优点"><span class="nav-number">2.2.6.</span> <span class="nav-text">SVM的优点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hingle-loss-求解"><span class="nav-number">4.</span> <span class="nav-text">Hingle Loss 求解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#hingle-loss"><span class="nav-number">4.1.</span> <span class="nav-text">Hingle Loss</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hingle-loss-的特点"><span class="nav-number">4.1.1.</span> <span class="nav-text">Hingle Loss 的特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hingle-loss-的变种"><span class="nav-number">4.1.2.</span> <span class="nav-text">Hingle Loss 的变种</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hingle-loss-与svm"><span class="nav-number">4.1.3.</span> <span class="nav-text">Hingle Loss 与SVM</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#梯度下降求解"><span class="nav-number">4.1.3.1.</span> <span class="nav-text">梯度下降求解</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">5.</span> <span class="nav-text">后记</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>
