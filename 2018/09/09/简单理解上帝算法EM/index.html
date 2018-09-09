@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="NLP," />
+  <meta name="keywords" content="NLP,ML," />
 
 
 
@@ -79,18 +79,21 @@
 
 
 
-<meta name="description" content="数学中常用余弦定理来计算两条边的夹角，NLP中可以用余弦定理来计算文本相似度。 计算两个向量的余弦定理，求得的夹角 $\theta$ 越小，说明两个向量越接近，计算公式如下： $$\begin{align}cos(\theta) &amp;amp;= \frac{\underset{a}{\rightarrow} \cdot \underset{b}{\rightarrow}}{\left | \unde">
-<meta name="keywords" content="NLP">
+<meta name="description" content="EM(Expectation Maximization, 期望最大)算法也称“上帝算法”，能称为“上帝”可见它有多牛掰。 EM的原理很简单但真正理解起来是挺痛苦的一件事，本文以凡人视角尝试理解上帝本意。 知识储备 KL距离 KL距离又称相对熵(relative entropy)，用来衡量空间上两个概率分布 \(P(x)\)，\(Q(x)\) 的相对差距的测度（通俗的说就是两个概率分布的距离） \[">
+<meta name="keywords" content="NLP,ML">
 <meta property="og:type" content="article">
-<meta property="og:title" content="余弦定理和文本相似度">
-<meta property="og:url" content="http://seanlee97.github.io/2018/08/31/余弦定理和文本相似度/index.html">
+<meta property="og:title" content="简单理解&quot;上帝算法&quot;EM">
+<meta property="og:url" content="http://seanlee97.github.io/2018/09/09/简单理解上帝算法EM/index.html">
 <meta property="og:site_name" content="明天探索者">
-<meta property="og:description" content="数学中常用余弦定理来计算两条边的夹角，NLP中可以用余弦定理来计算文本相似度。 计算两个向量的余弦定理，求得的夹角 $\theta$ 越小，说明两个向量越接近，计算公式如下： $$\begin{align}cos(\theta) &amp;amp;= \frac{\underset{a}{\rightarrow} \cdot \underset{b}{\rightarrow}}{\left | \unde">
+<meta property="og:description" content="EM(Expectation Maximization, 期望最大)算法也称“上帝算法”，能称为“上帝”可见它有多牛掰。 EM的原理很简单但真正理解起来是挺痛苦的一件事，本文以凡人视角尝试理解上帝本意。 知识储备 KL距离 KL距离又称相对熵(relative entropy)，用来衡量空间上两个概率分布 \(P(x)\)，\(Q(x)\) 的相对差距的测度（通俗的说就是两个概率分布的距离） \[">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-31T15:24:52.131Z">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/em/jensen.jpg">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/em/aotufunc.png">
+<meta property="og:updated_time" content="2018-09-09T15:43:23.397Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="余弦定理和文本相似度">
-<meta name="twitter:description" content="数学中常用余弦定理来计算两条边的夹角，NLP中可以用余弦定理来计算文本相似度。 计算两个向量的余弦定理，求得的夹角 $\theta$ 越小，说明两个向量越接近，计算公式如下： $$\begin{align}cos(\theta) &amp;amp;= \frac{\underset{a}{\rightarrow} \cdot \underset{b}{\rightarrow}}{\left | \unde">
+<meta name="twitter:title" content="简单理解&quot;上帝算法&quot;EM">
+<meta name="twitter:description" content="EM(Expectation Maximization, 期望最大)算法也称“上帝算法”，能称为“上帝”可见它有多牛掰。 EM的原理很简单但真正理解起来是挺痛苦的一件事，本文以凡人视角尝试理解上帝本意。 知识储备 KL距离 KL距离又称相对熵(relative entropy)，用来衡量空间上两个概率分布 \(P(x)\)，\(Q(x)\) 的相对差距的测度（通俗的说就是两个概率分布的距离） \[">
+<meta name="twitter:image" content="http://seanlee97.github.io/images/posts/em/jensen.jpg">
 
 
 
@@ -120,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://seanlee97.github.io/2018/08/31/余弦定理和文本相似度/"/>
+  <link rel="canonical" href="http://seanlee97.github.io/2018/09/09/简单理解上帝算法EM/"/>
 
 
 
 
 
-  <title>余弦定理和文本相似度 | 明天探索者</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>简单理解"上帝算法"EM | 明天探索者</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -263,7 +266,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/08/31/余弦定理和文本相似度/">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/09/09/简单理解上帝算法EM/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="sean lee">
@@ -280,7 +283,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">余弦定理和文本相似度</h1>
+          <h1 class="post-title" itemprop="name headline">简单理解"上帝算法"EM</h1>
         
 
         <div class="post-meta">
@@ -292,8 +295,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-31T22:02:53+08:00">
-                2018-08-31
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-09T20:00:07+08:00">
+                2018-09-09
               </time>
             
 
@@ -333,9 +336,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2018/08/31/余弦定理和文本相似度/#comments" itemprop="discussionUrl">
+                <a href="/2018/09/09/简单理解上帝算法EM/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/08/31/余弦定理和文本相似度/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2018/09/09/简单理解上帝算法EM/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -363,19 +366,100 @@
       
 
       
-        <p>数学中常用余弦定理来计算两条边的夹角，NLP中可以用余弦定理来计算文本相似度。</p>
-<p>计算两个向量的余弦定理，求得的夹角 $\theta$ 越小，说明两个向量越接近，计算公式如下：</p>
-<p>$$\begin{align<em>}<br>cos(\theta) &amp;= \frac{\underset{a}{\rightarrow} \cdot \underset{b}{\rightarrow}}{\left | \underset{a}{\rightarrow} \right | \left | \underset{b}{\rightarrow} \right |} \<br>&amp;=  \frac{x_{1} \times x_{2} + y_{1} \times y_{2}}{\sqrt{x_{1}^{2} + y_{1}^{2}} \times \sqrt{x_{2}^{2} + y_{2}^{2}}} \<br>&amp; where \underset{a}{\rightarrow} = (x_{1}, y_{1}),\ \underset{b}{\rightarrow} = (x_{2}, y_{2})<br>\end{align</em>}$$</p>
-<p>同理如果将两篇文档分别表示成向量利用余弦定理计算不就能得到两篇文档的相关性了吗？<br>因此我们第一步要做的就是对文档进行向量化表示，表示方法一般有两种：</p>
-<ul>
-<li>词袋模型（文本特征为词频）</li>
-<li>tf-idf（文本特征为tfidf值)</li>
-</ul>
-<p>文档中每一个词对应一个维度，因此文档向量是多维的，因此需要对余弦定理泛化，使其能计算多维空间的距离，扩展公式为:</p>
-<p>$$\begin{align<em>}<br>cos(\theta) &amp;= \frac{\underset{a}{\rightarrow} \cdot \underset{b}{\rightarrow}}{\left | \underset{a}{\rightarrow} \right | \left | \underset{b}{\rightarrow} \right |} \<br>&amp;=  \frac{x_{1} \times y_{2} + x_{2} \times y_{2} + … + x_{n} \times y_{n}}{\sqrt{x_{1}^{2} + x_{2}^{2} + … + x_{n}^{2}} \times \sqrt{y_{1}^{2} + y_{2}^{2} + … + y_{n}^{2}}} \<br>&amp; where \underset{a}{\rightarrow} = (x_{1}, x_{1}, …, x_{n}),\ \underset{b}{\rightarrow} = (y_{2}, y_{2}, …, y_{n})<br>\end{align</em>}$$</p>
-<h4 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h4><p>如果你熟悉<code>numpy</code>那么上面的计算就是小case了</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sim</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, kernel=<span class="string">'tfidf'</span>)</span>:</span></span><br><span class="line">        self.word2idx = &#123;&#125;</span><br><span class="line">        self.kernel = kernel</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">tokenizer</span><span class="params">(self, sent)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> jieba.lcut(sent)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算词袋向量</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">calc_bow</span><span class="params">(self, docs)</span>:</span></span><br><span class="line">        bow = np.zeros([len(docs), len(self.word2idx)])</span><br><span class="line">        <span class="keyword">for</span> docidx, words <span class="keyword">in</span> enumerate(docs):</span><br><span class="line">            <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">                <span class="keyword">if</span> word <span class="keyword">in</span> self.word2idx:</span><br><span class="line">                    bow[docidx, self.word2idx[word]] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> bow</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算tfidf    </span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">calc_tfidf</span><span class="params">(self, docs)</span>:</span></span><br><span class="line">        tf = self.calc_bow(docs)</span><br><span class="line">        df = np.ones([<span class="number">1</span>, len(self.word2idx)])</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> docidx, words <span class="keyword">in</span> enumerate(docs):</span><br><span class="line">            tf[docidx] /= np.max(tf[docidx])</span><br><span class="line">            <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">                <span class="keyword">if</span> word <span class="keyword">in</span> self.word2idx:</span><br><span class="line">                    df[<span class="number">0</span>, self.word2idx[word]] += <span class="number">1</span></span><br><span class="line">        idf = np.log(len(docs)) - np.log(df)</span><br><span class="line">        tfidf = tf * idf</span><br><span class="line">        <span class="keyword">return</span> tfidf</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 计算余弦相似度</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">cos</span><span class="params">(self, vec1, vec2)</span>:</span></span><br><span class="line">        cos = np.dot(vec1, vec2) / (np.linalg.norm(vec1)*np.linalg.norm(vec2))</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            cos = np.dot(vec1, vec2) / (np.linalg.norm(vec1)*np.linalg.norm(vec2))</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            cos = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> cos</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算文本相似度</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">similarity</span><span class="params">(self, doc1, doc2)</span>:</span></span><br><span class="line">        words1 = self.tokenizer(doc1)</span><br><span class="line">        words2 = self.tokenizer(doc2)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 求并集</span></span><br><span class="line">        words = set(words1) | set(words2)</span><br><span class="line">        <span class="comment"># word2idx = &#123;word1:0, word2:1, ...&#125;</span></span><br><span class="line">        self.word2idx = dict(zip(words, range(len(words))))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self.kernel == <span class="string">'tfidf'</span>:</span><br><span class="line">            feature = self.calc_tfidf</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            feature = self.calc_bow</span><br><span class="line"></span><br><span class="line">        vec = feature([words1, words2])</span><br><span class="line">        vec1 = vec[<span class="number">0</span>]</span><br><span class="line">        vec2 = vec[<span class="number">1</span>]</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> self.cos(vec1, vec2)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    doc1 = <span class="string">"""计算机科学（英语：computer science，有时缩写为CS）是系统性研究信息与计算的理论基础以及它们在计算机系统中如何实现与应用的实用技术的学科。</span></span><br><span class="line"><span class="string">    [1] [2]它通常被形容为对那些创造、描述以及转换信息的算法处理的系统研究。</span></span><br><span class="line"><span class="string">    计算机科学包含很多分支领域；有些强调特定结果的计算，比如计算机图形学；</span></span><br><span class="line"><span class="string">    而有些是探讨计算问题的性质，比如计算复杂性理论；还有一些领域专注于怎样实现计算，比如编程语言理论是研究描述计算的方法，</span></span><br><span class="line"><span class="string">    而程序设计是应用特定的编程语言解决特定的计算问题，人机交互则是专注于怎样使计算机和计算变得有用、好用，以及随时随地为人所用。"""</span></span><br><span class="line"></span><br><span class="line">    doc2 = <span class="string">"""自然语言处理（英语：natural language processing，缩写作 NLP）是人工智能和语言学领域的分支学科。此领域探讨如何处理及运用自然语言；自然语言认知则是指让电脑“懂”人类的语言。</span></span><br><span class="line"><span class="string">自然语言生成系统把计算机数据转化为自然语言。自然语言理解系统把自然语言转化为计算机程序更易于处理的形式。"""</span></span><br><span class="line">    sim = Sim()</span><br><span class="line">    print(sim.similarity(doc1, doc2))</span><br></pre></td></tr></table></figure>
-<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>NLP中涉及到计算应该下意识的想到将文本转换成空间向量表示，因为向量是能计算的而文本不能直接计算</p>
+        <p>EM(Expectation Maximization, 期望最大)算法也称“上帝算法”，能称为“上帝”可见它有多牛掰。</p>
+<p>EM的原理很简单但真正理解起来是挺痛苦的一件事，本文以凡人视角尝试理解上帝本意。</p>
+<h2 id="知识储备">知识储备</h2>
+<h3 id="kl距离">KL距离</h3>
+<p>KL距离又称相对熵(relative entropy)，用来衡量空间上两个概率分布 <span class="math inline">\(P(x)\)</span>，<span class="math inline">\(Q(x)\)</span> 的相对差距的测度（通俗的说就是两个概率分布的距离）</p>
+<p><span class="math display">\[\begin{align*}
+D_{KL}(P||Q) &amp; = \sum_{i} P(i)log\ \frac{P(i)}{Q(i)} \\
+&amp; = \sum_{i} P(i) log\ P(i) - \sum_{i} P(i) log\  Q(i) \\
+&amp; = E_{P}(log\ P(i)) - E_{P}(log\ Q(i))
+\end{align*} \tag{1}\]</span></p>
+<p><span class="math inline">\((1)\)</span> 式便于理解“距离”的概念，因为A, B两点的距离我们一般表示为 <span class="math inline">\(|A-B|\)</span> ，当 <span class="math inline">\(P\)</span> 和 <span class="math inline">\(Q\)</span> 是同概率分布时KL距离为0</p>
+<h3 id="极大似然估计">极大似然估计</h3>
+<p>极大似然估计，是用来估计一个概率模型的参数的一种方法，它一般求解似然函数</p>
+<p><span class="math display">\[L(\theta | x_{1}...x_{m}) = f_{\theta}(x_{1}...x_{m})\]</span></p>
+<p>取最大值时的参数 <span class="math inline">\(\widehat{\theta}\)</span></p>
+<p><span class="math display">\[\widehat{\theta} = \underset{\theta}{argmax} L(\theta | x_{1}...x_{m})\]</span></p>
+<h3 id="隐变量">隐变量</h3>
+<p>在统计学中，隐变量或潜变量指的是不可观测的随机变量,隐变量可以通过使用数学模型依据观测得的数据被推断出来。</p>
+<p>通俗的说隐变量是存在的但是你无法看到。举个例子吧，分类和聚类看起来是差不多的，都是把一堆相似的东西分到一起，但是分类（显式）提供了类别信息，而聚类没有（显式）提供类别信息，聚类之所以能把一堆相似的东西分到一起可以认为它内部定义了一个“隐藏”的类别信息，可以认为是隐变量</p>
+<p>（上述解释系本人捏造的，不一定正确）</p>
+<h3 id="jensen-不等式">Jensen 不等式</h3>
+<p><img src="/images/posts/em/jensen.jpg"></p>
+<p>如果 <span class="math inline">\(f\)</span> 是凸函数(如上图)， <span class="math inline">\(x\)</span> 是随机变量有</p>
+<p><span class="math display">\[E(f(x)) \geq f(E(x)) \tag{2}\]</span></p>
+<p>凹函数则相反</p>
+<p><span class="math display">\[E(f(x)) \leq f(E(x))\]</span></p>
+<p><strong>当 <span class="math inline">\(x\)</span> 是常量时上式取等</strong>，即上图<span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>两点重合时取等</p>
+<p>Jensen不等式在下述EM算法的推导中很重要</p>
+<h4 id="凹凸函数">凹凸函数</h4>
+<p>可能受中文<code>凹凸</code>字型的影响会对<code>凹凸</code>函数有歧义，凸函数可理解为<code>下凸</code>，凹函数可理解为<code>上凸</code></p>
+<p><img src="/images/posts/em/aotufunc.png"></p>
+<h2 id="em算法的推导">EM算法的推导</h2>
+<p>EM算法主要分两个求解步骤，称为E步和M步</p>
+<h3 id="e步">E步</h3>
+<p>假设有训练集</p>
+<p><span class="math display">\[{x^{1}, ...., x^{m}}\]</span></p>
+<p>包含 <span class="math inline">\(m\)</span> 个独立样本，我们希望从中找到该组数据的模型 <span class="math inline">\(p(x, z)\)</span> 的参数</p>
+<p>在这里我们先以<strong>极大似然</strong>的思想去建立目标函数，取对数似然函数</p>
+<p><span class="math display">\[L(\theta) = \sum_{i=1}^{m} log\ p(x; \theta) \tag{3}\]</span></p>
+<p>我们给 <span class="math inline">\((3)\)</span> 式加入隐变量 <span class="math inline">\(z\)</span> , 对于联合分布 <span class="math inline">\(p(x, z; \theta)\)</span> 有 <span class="math inline">\(\sum_{z}\ p(x, z; \theta) = p(x; \theta)\)</span>, 故有</p>
+<p>$$<span class="math display">\[\begin{align*}
+L(\theta) &amp; = \sum_{i=1}^{m} log\ p(x; \theta) \\
+
+&amp; = \sum_{i=1}^{m} log\ \sum_{z} p(x, z; \theta)
+\end{align*}\]</span> $$</p>
+<p><span class="math inline">\(z\)</span> 是随机的隐变量，直接找到参数的估计是很困难的，我们要做的是建立 <span class="math inline">\(L(\theta)\)</span> 的下界，然后<strong>求该下界的最大值，重复求解直至收敛到局部最大值</strong></p>
+<p>因为假设了样本是独立的，故整体的概率有</p>
+<p><span class="math display">\[P = \prod_{i} p(x^{(i)}; \theta) = \prod_{i} \sum_{z^{(i)}}  p(x^{(i)}, z^{(i)}; \theta)\]</span></p>
+<p>为了方便推导，一般两边取对数，故有</p>
+<p><span class="math display">\[\begin{align*}
+log\ P &amp; = \sum_{i} log\ p(x^{(i)}; \theta) \\
+&amp; = \sum_{i} log\  \sum_{z^{(i)}} p(x^{(i)}, z^{(i)}; \theta)
+\end{align*} \tag{5}\]</span></p>
+<p>现在我们假设 <span class="math inline">\(Q_{i}\)</span> 是 <span class="math inline">\(z\)</span> 的某一分布，$Q_{i} 0 $， <span class="math inline">\(\sum_{i} Q_{i} = 1\)</span>，此时 <span class="math inline">\((5)\)</span> 有</p>
+<p><span class="math display">\[\begin{align*}
+log\ P &amp; = \sum_{i} log\ p(x^{(i)}; \theta) \\
+&amp; = \sum_{i} log\  \sum_{z^{(i)}} p(x^{(i)}, z^{(i)}; \theta) \\
+&amp; = \sum_{i} log\  \sum_{z^{(i)}} Q_{i}(z^{(i)}) \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}
+\end{align*} \tag{6}\]</span></p>
+<p>对于 <span class="math inline">\((6)\)</span> 有</p>
+<p><span class="math display">\[\sum_{i} log\  \sum_{z^{(i)}} Q_{i}(z^{(i)}) \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} = \sum_{i} log(E_{Q_{i}} (\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}) ) \tag{7}\]</span></p>
+<p>因为<code>log(x)</code>是凸函数，根据<strong>Jensen不等式</strong>，对于<span class="math inline">\((7)\)</span> 有</p>
+<p><span class="math display">\[\begin{align*}
+\sum_{i} log(E_{Q_{i}} ( \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}) )
+\geq \sum_{i} E_{Q_{i}}(log( \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}) )
+=\sum_{i} \sum_{z^{(i)}} Q_{i}(z^{(i)}) log\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} 
+\end{align*} \tag{8}\]</span></p>
+<p>因此由<span class="math inline">\((8)\)</span>可得</p>
+<p><span class="math display">\[\begin{align*}
+log\ P &amp; = \sum_{i} log\ p(x^{(i)}; \theta) \\
+&amp; = \sum_{i} log\  \sum_{z^{(i)}} p(x^{(i)}, z^{(i)}; \theta) \\
+&amp; = \sum_{i} log\  \sum_{z^{(i)}} Q_{i}(z^{(i)}) \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} \\
+&amp; \geq \sum_{i} \sum_{z^{(i)}} Q_{i}(z^{(i)}) log\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} 
+\end{align*} \tag{9}\]</span></p>
+<p>因为之前已经说了我们要求最大下界，回到Jensen不等式 <span class="math inline">\((2)\)</span> 当x为常量时才能取等号，也就是对于 <span class="math inline">\((8)\)</span> 当</p>
+<p><span class="math display">\[\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} = c \tag{10}\]</span></p>
+<p><span class="math inline">\(c\)</span> 为常数时才能取等，从<strong>KL距离</strong>解释就是当<span class="math inline">\(p\)</span> 和 <span class="math inline">\(Q\)</span> 的KL距离为0时才能取等，也就是说 <span class="math inline">\(p\)</span> 和 <span class="math inline">\(Q\)</span> 是同分布的，而由 <span class="math inline">\((10)\)</span>可知 <strong><span class="math inline">\(p\)</span> 和 <span class="math inline">\(Q\)</span> 是线性关系</strong>，故属于同分布, 对<span class="math inline">\(p\)</span>归一化有</p>
+<p><span class="math display">\[\frac{p(x^{(i)}, z^{(i)}; \theta)}{\sum_{z} p(x^{(i)}, z; \theta)} = 1 \tag{11}\]</span></p>
+<p>此时刚好满足 <span class="math inline">\(\sum_{z} Q_{i}(z^{(i)}) = 1\)</span>，因此我们可以用 <span class="math inline">\(p\)</span> 来表示 <span class="math inline">\(Q\)</span></p>
+<p><span class="math display">\[\begin{align*}
+Q_{i}(z^{(i)}) &amp; = \frac{p(x^{(i)}, z^{(i)}; \theta)}{\sum_{z} p(x^{(i)}, z; \theta)} \\
+&amp; = \frac{p(x^{(i)}, z^{(i)}; \theta)}{p(x^{(i)}; \theta)} \\
+&amp; = p(z^{(i)} | x^{(i)}; \theta)
+\end{align*} \tag{12}\]</span></p>
+<p>由<span class="math inline">\((12)\)</span>可知，<span class="math inline">\(Q_{i}(z^{(i)})\)</span> 的估计就是给定 <span class="math inline">\(x^{(i)}\)</span> 下 <span class="math inline">\(z^{(i)}\)</span> 发生的条件分布，此时可以使得 <span class="math inline">\((9)\)</span> 式取等</p>
+<p>因此<strong>E步可以认为是固定参数 <span class="math inline">\(\theta\)</span> 最大化 <span class="math inline">\(Q_{i}(z^{(i)})\)</span></strong></p>
+<h3 id="m步">M步</h3>
+<p><strong>M步的思想是固定住 <span class="math inline">\(Q_{i}(z^{(i)})\)</span> 最大化 <span class="math inline">\(\theta\)</span></strong>，即</p>
+<p><span class="math display">\[\theta := \underset{\theta}{argmax} \sum_{i} \sum_{z^{(i)}} Q_{i}(z^{(i)}) log\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} \tag{13}\]</span></p>
+<p>至于M步如何求解就是EM算法计算的难点所在，此文不做详细讨论</p>
+<h3 id="综述">综述</h3>
+<p>由上可知EM算法，就是通过E步和M步来循环更新 <span class="math inline">\(\theta\)</span> 和 <span class="math inline">\(Q\)</span> 使得极值推向设定的收敛值</p>
+<h2 id="refrence">Refrence</h2>
+<p>[0] https://zh.wikipedia.org/wiki/%E9%9A%90%E5%8F%98%E9%87%8F</p>
 
       
     </div>
@@ -427,6 +511,8 @@
           
             <a href="/tags/NLP/" rel="tag"># NLP</a>
           
+            <a href="/tags/ML/" rel="tag"># ML</a>
+          
         </div>
       
 
@@ -438,8 +524,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/25/为朴素贝叶斯加入TF-IDF特征/" rel="next" title="为朴素贝叶斯加入tf-idf特征">
-                <i class="fa fa-chevron-left"></i> 为朴素贝叶斯加入tf-idf特征
+              <a href="/2018/09/01/SVD的原理及LSA的求解/" rel="next" title="SVD的原理及LSA的求解">
+                <i class="fa fa-chevron-left"></i> SVD的原理及LSA的求解
               </a>
             
           </div>
@@ -447,10 +533,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/09/01/SVD的原理及LSA的求解/" rel="prev" title="SVD的原理及LSA的求解">
-                SVD的原理及LSA的求解 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -624,7 +706,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#代码实现"><span class="nav-number">1.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#知识储备"><span class="nav-number">1.</span> <span class="nav-text">知识储备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#kl距离"><span class="nav-number">1.1.</span> <span class="nav-text">KL距离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#极大似然估计"><span class="nav-number">1.2.</span> <span class="nav-text">极大似然估计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#隐变量"><span class="nav-number">1.3.</span> <span class="nav-text">隐变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jensen-不等式"><span class="nav-number">1.4.</span> <span class="nav-text">Jensen 不等式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#凹凸函数"><span class="nav-number">1.4.1.</span> <span class="nav-text">凹凸函数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#em算法的推导"><span class="nav-number">2.</span> <span class="nav-text">EM算法的推导</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#e步"><span class="nav-number">2.1.</span> <span class="nav-text">E步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#m步"><span class="nav-number">2.2.</span> <span class="nav-text">M步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#综述"><span class="nav-number">2.3.</span> <span class="nav-text">综述</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#refrence"><span class="nav-number">3.</span> <span class="nav-text">Refrence</span></a></li></ol></div>
             
 
           </div>
@@ -802,9 +884,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://seanlee97.github.io/2018/08/31/余弦定理和文本相似度/';
-          this.page.identifier = '2018/08/31/余弦定理和文本相似度/';
-          this.page.title = '余弦定理和文本相似度';
+          this.page.url = 'http://seanlee97.github.io/2018/09/09/简单理解上帝算法EM/';
+          this.page.identifier = '2018/09/09/简单理解上帝算法EM/';
+          this.page.title = '简单理解\"上帝算法\"EM';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://seanlee97.disqus.com/embed.js';
