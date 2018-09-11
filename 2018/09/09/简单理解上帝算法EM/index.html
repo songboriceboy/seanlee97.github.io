@@ -89,7 +89,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/em/jensen.jpg">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/em/aotufunc.png">
-<meta property="og:updated_time" content="2018-09-11T13:04:16.196Z">
+<meta property="og:updated_time" content="2018-09-11T13:25:13.487Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="简单理解&quot;上帝算法&quot;EM">
 <meta name="twitter:description" content="EM(Expectation Maximization, 期望最大)算法也称“上帝算法”，能称为“上帝”可见它有多牛掰。 EM的原理很简单但真正理解起来是挺痛苦的一件事，本文以凡人视角尝试理解上帝本意。 知识储备 KL距离 KL距离又称相对熵(relative entropy)，用来衡量空间上两个概率分布 \(P(x)\)，\(Q(x)\) 的相对差距的测度（通俗的说就是两个概率分布的距离） \[">
@@ -420,7 +420,7 @@ L(\theta) &amp; = \sum_{i=1}^{m} log\ p(x; \theta) \\
 log\ P &amp; = \sum_{i} log\ p(x^{(i)}; \theta) \\
 &amp; = \sum_{i} log\  \sum_{z^{(i)}} p(x^{(i)}, z^{(i)}; \theta)
 \end{align*} \tag{5}\]</span></p>
-<p>现在我们假设 <span class="math inline">\(Q_{i}\)</span> 是 <span class="math inline">\(z\)</span> 的某一分布，$Q_{i} 0 $， <span class="math inline">\(\sum_{i} Q_{i} = 1\)</span>，此时 <span class="math inline">\((5)\)</span> 有</p>
+<p>现在我们假设 <span class="math inline">\(Q_{i}\)</span> 是 <span class="math inline">\(z\)</span> 的某一分布，<span class="math inline">\(Q_{i} \geqslant 0\)</span>， <span class="math inline">\(\sum_{i} Q_{i} = 1\)</span>，此时 <span class="math inline">\((5)\)</span> 有</p>
 <p><span class="math display">\[\begin{align*}
 log\ P &amp; = \sum_{i} log\ p(x^{(i)}; \theta) \\
 &amp; = \sum_{i} log\  \sum_{z^{(i)}} p(x^{(i)}, z^{(i)}; \theta) \\
