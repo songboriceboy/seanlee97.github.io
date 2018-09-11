@@ -406,11 +406,12 @@ D_{KL}(P||Q) &amp; = \sum_{i} P(i)log\ \frac{P(i)}{Q(i)} \\
 <p>在这里我们先以<strong>极大似然</strong>的思想去建立目标函数，取对数似然函数</p>
 <p><span class="math display">\[L(\theta) = \sum_{i=1}^{m} log\ p(x; \theta) \tag{3}\]</span></p>
 <p>我们给 <span class="math inline">\((3)\)</span> 式加入隐变量 <span class="math inline">\(z\)</span> , 对于联合分布 <span class="math inline">\(p(x, z; \theta)\)</span> 有 <span class="math inline">\(\sum_{z}\ p(x, z; \theta) = p(x; \theta)\)</span>, 故有</p>
-<p>$$<span class="math display">\[\begin{align*}
+<p><span class="math display">\[
+\begin{align*}
 L(\theta) &amp; = \sum_{i=1}^{m} log\ p(x; \theta) \\
-
 &amp; = \sum_{i=1}^{m} log\ \sum_{z} p(x, z; \theta)
-\end{align*}\]</span> $$</p>
+\end{align*} \tag{4}
+\]</span></p>
 <p><span class="math inline">\(z\)</span> 是随机的隐变量，直接找到参数的估计是很困难的，我们要做的是建立 <span class="math inline">\(L(\theta)\)</span> 的下界，然后<strong>求该下界的最大值，重复求解直至收敛到局部最大值</strong></p>
 <p>因为假设了样本是独立的，故整体的概率有</p>
 <p><span class="math display">\[P = \prod_{i} p(x^{(i)}; \theta) = \prod_{i} \sum_{z^{(i)}}  p(x^{(i)}, z^{(i)}; \theta)\]</span></p>
@@ -427,7 +428,7 @@ log\ P &amp; = \sum_{i} log\ p(x^{(i)}; \theta) \\
 \end{align*} \tag{6}\]</span></p>
 <p>对于 <span class="math inline">\((6)\)</span> 有</p>
 <p><span class="math display">\[\sum_{i} log\  \sum_{z^{(i)}} Q_{i}(z^{(i)}) \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} = \sum_{i} log(E_{Q_{i}} (\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}) ) \tag{7}\]</span></p>
-<p>因为<code>log(x)</code>是凸函数，根据<strong>Jensen不等式</strong>，对于<span class="math inline">\((7)\)</span> 有</p>
+<p>因为<code>log(x)</code>是凹函数，根据<strong>Jensen不等式</strong>，对于<span class="math inline">\((7)\)</span> 有</p>
 <p><span class="math display">\[\begin{align*}
 \sum_{i} log(E_{Q_{i}} ( \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}) )
 \geq \sum_{i} E_{Q_{i}}(log( \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}) )
@@ -2405,7 +2406,7 @@ arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \u
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/tags/index-1.html">
+                <a href="/tags/index.html">
                   <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
