@@ -344,59 +344,69 @@
       
         
           
-            <h2 id="排列"><a href="#排列" class="headerlink" title="排列"></a>排列</h2><p>从 <code>n</code> 各不同元素中，任取 <code>m</code> (m &lt;= n) 个元素，按照一定的顺序排列，叫做从 <code>n</code> 个不同元素中<br>取出 <code>m</code> 个元素的一个排列</p>
-<p>$${\color{Blue} A_{n}^{m} = \frac{n!}{(n-m)!}}$$</p>
-<h2 id="组合"><a href="#组合" class="headerlink" title="组合"></a>组合</h2><p>从 <code>n</code> 个不同元素中，任取 <code>m</code> (m &lt;= n) 个元素组成一组(不考虑顺序)，叫做从 <code>n</code> 个不同元素中<br>取出 <code>m</code> 个不同元素的一个组合</p>
-<p>$${\color{Blue} C_{n}^{m} = \frac{n!}{(n-m)!*m!}}$$</p>
-<h2 id="涂色问题"><a href="#涂色问题" class="headerlink" title="涂色问题"></a>涂色问题</h2><h3 id="1-区域涂色问题"><a href="#1-区域涂色问题" class="headerlink" title="1. 区域涂色问题"></a>1. 区域涂色问题</h3><p><img src="/images/posts/plzh/plzh-p1.png" alt="图1"></p>
-<p><center>图1</center><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如图，用5种不同的颜色给图中标①、②、③、④的各部分涂色，每部分只涂一种颜色，相</span><br><span class="line">邻部分涂不同颜色，则有多少种不同涂色方案？</span><br></pre></td></tr></table></figure></p>
+            <h2 id="排列">排列</h2>
+<p>从 <code>n</code> 各不同元素中，任取 <code>m</code> (m &lt;= n) 个元素，按照一定的顺序排列，叫做从 <code>n</code> 个不同元素中 取出 <code>m</code> 个元素的一个排列</p>
+<p><span class="math display">\[{\color{Blue} A_{n}^{m} = \frac{n!}{(n-m)!}}\]</span></p>
+<h2 id="组合">组合</h2>
+<p>从 <code>n</code> 个不同元素中，任取 <code>m</code> (m &lt;= n) 个元素组成一组(不考虑顺序)，叫做从 <code>n</code> 个不同元素中 取出 <code>m</code> 个不同元素的一个组合</p>
+<p><span class="math display">\[{\color{Blue} C_{n}^{m} = \frac{n!}{(n-m)!*m!}}\]</span></p>
+<h2 id="涂色问题">涂色问题</h2>
+<h3 id="区域涂色问题">1. 区域涂色问题</h3>
+<img src="/images/posts/plzh/plzh-p1.png" alt="图1">
+<center>
+图1
+</center>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如图，用5种不同的颜色给图中标①、②、③、④的各部分涂色，每部分只涂一种颜色，相</span><br><span class="line">邻部分涂不同颜色，则有多少种不同涂色方案？</span><br></pre></td></tr></table></figure>
 <p>利用分步计数原理有：</p>
-<ol>
-<li>先给①涂色有 ${\color{Blue} C_{5}^{1} = 5}$ 种方法</li>
-<li>再给②涂色有 ${\color{Blue} C_{4}^{1} = 4}$ 种方法</li>
-<li>③有 ${\color{Blue} C_{3}^{1} = 3}$ 种</li>
-<li>④有 ${\color{Blue} C_{2}^{1} = 2}$ 种</li>
+<ol type="1">
+<li>先给①涂色有 <span class="math inline">\({\color{Blue} C_{5}^{1} = 5}\)</span> 种方法</li>
+<li>再给②涂色有 <span class="math inline">\({\color{Blue} C_{4}^{1} = 4}\)</span> 种方法</li>
+<li>③有 <span class="math inline">\({\color{Blue} C_{3}^{1} = 3}\)</span> 种</li>
+<li>④有 <span class="math inline">\({\color{Blue} C_{2}^{1} = 2}\)</span> 种</li>
 </ol>
 <p>故总共有 5 x 4 x 3 x 2 = 240 种方法</p>
-<h3 id="2-扇形上色问题"><a href="#2-扇形上色问题" class="headerlink" title="2. 扇形上色问题"></a>2. 扇形上色问题</h3><p><img src="/images/posts/plzh/plzh-p2.png" alt="图2"></p>
-<p><center>图2</center><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如图，6个扇形区域A、B、C、D、E，现给这6个区域着色，要求同一区域涂同一种颜色，相邻的两个</span><br><span class="line">区域不能使用同一种颜色，先有4种不同的颜色，求有多少种涂色方案？</span><br></pre></td></tr></table></figure></p>
-<ol>
-<li>当A、C、E着同一种颜色时，有 ${\color{Blue} C_{4}^{1} = 4}$ 种着色方案<br>，此时，B、D、F各有 ${\color{Blue} C_{3}^{1} = 3}$ 种着色方案。故此时有<br><code>4x3x3x3=108</code> 种方法</li>
-<li>当A、C、E着两种不同颜色时，有 ${\color{Blue} C_{4}^{2} A_{3}^{3} = 36}$ 种方法，此时，<br>B、D、F有 <code>3x2x2=12</code> 方法。故此时有<br><code>36x12=432</code> 种方法</li>
-<li>当A、C、E着三种不同颜色时，有 ${\color{Blue} A_{4}^{3} = 24}$ 种方法，此时，<br>B、D、F各有2种方法。故此时有<br><code>24x2x2x2=192</code> 种方法</li>
+<h3 id="扇形上色问题">2. 扇形上色问题</h3>
+<img src="/images/posts/plzh/plzh-p2.png" alt="图2">
+<center>
+图2
+</center>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如图，6个扇形区域A、B、C、D、E，现给这6个区域着色，要求同一区域涂同一种颜色，相邻的两个</span><br><span class="line">区域不能使用同一种颜色，先有4种不同的颜色，求有多少种涂色方案？</span><br></pre></td></tr></table></figure>
+<ol type="1">
+<li>当A、C、E着同一种颜色时，有 <span class="math inline">\({\color{Blue} C_{4}^{1} = 4}\)</span> 种着色方案 ，此时，B、D、F各有 <span class="math inline">\({\color{Blue} C_{3}^{1} = 3}\)</span> 种着色方案。故此时有 <code>4x3x3x3=108</code> 种方法</li>
+<li>当A、C、E着两种不同颜色时，有 <span class="math inline">\({\color{Blue} C_{4}^{2} A_{3}^{3} = 36}\)</span> 种方法，此时， B、D、F有 <code>3x2x2=12</code> 方法。故此时有 <code>36x12=432</code> 种方法</li>
+<li>当A、C、E着三种不同颜色时，有 <span class="math inline">\({\color{Blue} A_{4}^{3} = 24}\)</span> 种方法，此时， B、D、F各有2种方法。故此时有 <code>24x2x2x2=192</code> 种方法</li>
 </ol>
 <p>故此时总共有 108 + 432 + 192 = 732 种方法</p>
-<p><strong> 延伸 </strong><br><img src="/images/posts/plzh/plzh-p3.png" alt="图3"></p>
-<p><center>图3</center><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如图3， 把一个圆分成 n (n&gt;=2) 个扇形，现在使用m种不同的颜色去给扇形上色，要求相邻扇形</span><br><span class="line">颜色不一样，则有多少种方法？</span><br></pre></td></tr></table></figure></p>
-<p>解：设有 ${\color{Blue} a_{n}}$ 种</p>
-<ol>
-<li>当n=2时，${\color{Blue} A_{1}}$ 、 ${\color{Blue} A_{2}}$ 有 ${\color{Blue} A_{m}^2}$ 种</li>
-<li>当分成n个扇形时，${\color{Blue} A_{1}}$ 与 ${\color{Blue} A_{2}}$ 不同色，${\color{Blue} A_{2}}$ 与 ${\color{Blue} A_{3}}$ 不同色… ${\color{Blue} A_{n-1}}$ 与 ${\color{Blue} A_{n}}$ 不同色，共有 ${\color{Blue} m * (m-1)^{n-1}}$ 种方法，但由于 ${\color{Blue} A_{1}}$ 与 ${\color{Blue} A_{n}}$ 相邻，所以要排除 ${\color{Blue} A_{1}}$ 与 ${\color{Blue} A_{n}}$ 同色的情况： ${\color{Blue} A_{1}}$ 与 ${\color{Blue} A_{n}}$ 同色时，可把 ${\color{Blue} A_{1}}$ 、 ${\color{Blue} A_{n}}$ 看成一个扇形，与前 $n-2$ 个扇形加在一起为 $n-1$ 个扇形，此时有 ${\color{Blue} a_{n-1}}$ 种情况，故有如下关系</li>
+** 延伸 ** <img src="/images/posts/plzh/plzh-p3.png" alt="图3">
+<center>
+图3
+</center>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如图3， 把一个圆分成 n (n&gt;=2) 个扇形，现在使用m种不同的颜色去给扇形上色，要求相邻扇形</span><br><span class="line">颜色不一样，则有多少种方法？</span><br></pre></td></tr></table></figure>
+<p>解：设有 <span class="math inline">\({\color{Blue} a_{n}}\)</span> 种</p>
+<ol type="1">
+<li>当n=2时，<span class="math inline">\({\color{Blue} A_{1}}\)</span> 、 <span class="math inline">\({\color{Blue} A_{2}}\)</span> 有 <span class="math inline">\({\color{Blue} A_{m}^2}\)</span> 种</li>
+<li>当分成n个扇形时，<span class="math inline">\({\color{Blue} A_{1}}\)</span> 与 <span class="math inline">\({\color{Blue} A_{2}}\)</span> 不同色，<span class="math inline">\({\color{Blue} A_{2}}\)</span> 与 <span class="math inline">\({\color{Blue} A_{3}}\)</span> 不同色… <span class="math inline">\({\color{Blue} A_{n-1}}\)</span> 与 <span class="math inline">\({\color{Blue} A_{n}}\)</span> 不同色，共有 <span class="math inline">\({\color{Blue} m * (m-1)^{n-1}}\)</span> 种方法，但由于 <span class="math inline">\({\color{Blue} A_{1}}\)</span> 与 <span class="math inline">\({\color{Blue} A_{n}}\)</span> 相邻，所以要排除 <span class="math inline">\({\color{Blue} A_{1}}\)</span> 与 <span class="math inline">\({\color{Blue} A_{n}}\)</span> 同色的情况： <span class="math inline">\({\color{Blue} A_{1}}\)</span> 与 <span class="math inline">\({\color{Blue} A_{n}}\)</span> 同色时，可把 <span class="math inline">\({\color{Blue} A_{1}}\)</span> 、 <span class="math inline">\({\color{Blue} A_{n}}\)</span> 看成一个扇形，与前 <span class="math inline">\(n-2\)</span> 个扇形加在一起为 <span class="math inline">\(n-1\)</span> 个扇形，此时有 <span class="math inline">\({\color{Blue} a_{n-1}}\)</span> 种情况，故有如下关系</li>
 </ol>
-<p>$${\color{Blue} a_{n}} = {\color{Blue} m * (m-1)^{n-1} - a_{n-1}}$$</p>
+<p><span class="math display">\[{\color{Blue} a_{n}} = {\color{Blue} m * (m-1)^{n-1} - a_{n-1}}\]</span></p>
 <p>python代码实现：</p>
-<ol>
-<li><p>递归的方式</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># m, 颜色数</span></span><br><span class="line"><span class="comment"># n, 分块数</span></span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(m, n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> n &lt; <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> m</span><br><span class="line">    <span class="keyword">return</span> m*math.pow(m<span class="number">-1</span>, n<span class="number">-1</span>) - f(m, n<span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>虽然递归的方式比较直观，但是递归往往是低效的方式，由于${\color{Blue} a_{n}}$是递推式，是天然的动态规划，所以这里推荐用动态规划实现</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(m, n)</span>:</span></span><br><span class="line">    dp = [<span class="number">0</span>] * (n+<span class="number">1</span>)</span><br><span class="line">    dp[<span class="number">0</span>] = m</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n+<span class="number">1</span>):</span><br><span class="line">        dp[i] = m*math.pow(m<span class="number">-1</span>, i<span class="number">-1</span>) - dp[i<span class="number">-1</span>]</span><br><span class="line">    <span class="keyword">return</span> int(dp[n])</span><br></pre></td></tr></table></figure>
-</li>
+<ol type="1">
+<li><p>递归的方式 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># m, 颜色数</span></span><br><span class="line"><span class="comment"># n, 分块数</span></span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(m, n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> n &lt; <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> m</span><br><span class="line">    <span class="keyword">return</span> m*math.pow(m<span class="number">-1</span>, n<span class="number">-1</span>) - f(m, n<span class="number">-1</span>)</span><br></pre></td></tr></table></figure></p></li>
+<li><p>虽然递归的方式比较直观，但是递归往往是低效的方式，由于<span class="math inline">\({\color{Blue} a_{n}}\)</span>是递推式，是天然的动态规划，所以这里推荐用动态规划实现 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(m, n)</span>:</span></span><br><span class="line">    dp = [<span class="number">0</span>] * (n+<span class="number">1</span>)</span><br><span class="line">    dp[<span class="number">0</span>] = m</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, n+<span class="number">1</span>):</span><br><span class="line">        dp[i] = m*math.pow(m<span class="number">-1</span>, i<span class="number">-1</span>) - dp[i<span class="number">-1</span>]</span><br><span class="line">    <span class="keyword">return</span> int(dp[n])</span><br></pre></td></tr></table></figure></p></li>
 </ol>
-<h2 id="走格子-棋盘问题"><a href="#走格子-棋盘问题" class="headerlink" title="走格子/棋盘问题"></a>走格子/棋盘问题</h2><p><img src="/images/posts/plzh/plzh-p4.png" alt="图4"></p>
-<p><center>图4</center><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">如图4， 在4*5的矩阵中</span><br><span class="line">1. 请计算从A移动到B一共多少种走法？</span><br><span class="line">2. 在1. 上添加不能经过P的条件，此时有多少种走法？</span><br><span class="line">(要求每次只能向上或向右移动一格)</span><br></pre></td></tr></table></figure></p>
-<ol>
-<li>从A到B必须要向上走3步，向右走4步，所以从A到B，一共有 ${\color{Blue} C_{4+3}^{3} = 35}$ 种走法</li>
-<li>若不经过P， 则要排除所有经过P的情况，从A到P有 ${\color{Blue} C_{2+2}^{2} = 6}$ 种走法，从P到B总共有${\color{Blue} C_{1+2}^{1} = 3}$ 种走法，故不经过P有 ${\color{Blue} C_{4+3}^{3} - C_{2+2}^{2} * C_{1+2}^{2} = 17}$ 种走法</li>
+<h2 id="走格子棋盘问题">走格子/棋盘问题</h2>
+<img src="/images/posts/plzh/plzh-p4.png" alt="图4">
+<center>
+图4
+</center>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">如图4， 在4*5的矩阵中</span><br><span class="line">1. 请计算从A移动到B一共多少种走法？</span><br><span class="line">2. 在1. 上添加不能经过P的条件，此时有多少种走法？</span><br><span class="line">(要求每次只能向上或向右移动一格)</span><br></pre></td></tr></table></figure>
+<ol type="1">
+<li>从A到B必须要向上走3步，向右走4步，所以从A到B，一共有 <span class="math inline">\({\color{Blue} C_{4+3}^{3} = 35}\)</span> 种走法</li>
+<li>若不经过P， 则要排除所有经过P的情况，从A到P有 <span class="math inline">\({\color{Blue} C_{2+2}^{2} = 6}\)</span> 种走法，从P到B总共有<span class="math inline">\({\color{Blue} C_{1+2}^{1} = 3}\)</span> 种走法，故不经过P有 <span class="math inline">\({\color{Blue} C_{4+3}^{3} - C_{2+2}^{2} * C_{1+2}^{2} = 17}\)</span> 种走法</li>
 </ol>
 <p>对于问题1. 可以用代码实现：</p>
-<ol>
-<li><p>递归方式</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(m, n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> m &lt; <span class="number">0</span> <span class="keyword">or</span> n &lt; <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">if</span> m == <span class="number">1</span> <span class="keyword">or</span> n == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> f(m<span class="number">-1</span>, n) + f(m, n<span class="number">-1</span>)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>动态规划</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(m, n)</span>:</span></span><br><span class="line">    dp = [[<span class="number">0</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(n+<span class="number">1</span>)] <span class="keyword">for</span> i <span class="keyword">in</span> range(m+<span class="number">1</span>)]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># init</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(m+<span class="number">1</span>):</span><br><span class="line">        dp[i][<span class="number">0</span>] = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(n+<span class="number">1</span>):</span><br><span class="line">        dp[<span class="number">0</span>][j] = <span class="number">1</span></span><br><span class="line">    <span class="comment"># bottom-up</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, m+<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, n+<span class="number">1</span>):</span><br><span class="line">            dp[i][j] = dp[i<span class="number">-1</span>][j] + dp[i][j<span class="number">-1</span>]</span><br><span class="line">    <span class="keyword">return</span> dp[m<span class="number">-1</span>][n<span class="number">-1</span>]</span><br></pre></td></tr></table></figure>
-</li>
+<ol type="1">
+<li><p>递归方式 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(m, n)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> m &lt; <span class="number">0</span> <span class="keyword">or</span> n &lt; <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">if</span> m == <span class="number">1</span> <span class="keyword">or</span> n == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> f(m<span class="number">-1</span>, n) + f(m, n<span class="number">-1</span>)</span><br></pre></td></tr></table></figure></p></li>
+<li><p>动态规划 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(m, n)</span>:</span></span><br><span class="line">    dp = [[<span class="number">0</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(n+<span class="number">1</span>)] <span class="keyword">for</span> i <span class="keyword">in</span> range(m+<span class="number">1</span>)]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># init</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(m+<span class="number">1</span>):</span><br><span class="line">        dp[i][<span class="number">0</span>] = <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(n+<span class="number">1</span>):</span><br><span class="line">        dp[<span class="number">0</span>][j] = <span class="number">1</span></span><br><span class="line">    <span class="comment"># bottom-up</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, m+<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, n+<span class="number">1</span>):</span><br><span class="line">            dp[i][j] = dp[i<span class="number">-1</span>][j] + dp[i][j<span class="number">-1</span>]</span><br><span class="line">    <span class="keyword">return</span> dp[m<span class="number">-1</span>][n<span class="number">-1</span>]</span><br></pre></td></tr></table></figure></p></li>
 </ol>
 
           
@@ -528,53 +538,59 @@
       
         
           
-            <h2 id="Kruskal-概述"><a href="#Kruskal-概述" class="headerlink" title="Kruskal 概述"></a>Kruskal 概述</h2><p>Kruskal算法，是用来求加权连通图的最小生成树的算法。 </p>
+            <h2 id="kruskal-概述">Kruskal 概述</h2>
+<p>Kruskal算法，是用来求加权连通图的最小生成树的算法。</p>
 <p>它的基本思想是：按照权值从小到大的顺序选择n-1条边，并保证这n-1条边不构成回路（环）。</p>
-<p>具体做法是：首先构造一个只含n个顶点的森林，<br>然后依权值从小到大从连通网中选择边加入到森林中，<br>并使森林中不产生回路，直至森林变成一棵树为止。</p>
-<p>更多关于kruskal的知识欢迎查看<a href="https://en.wikipedia.org/wiki/Kruskal%27s_algorithm" target="_blank" rel="noopener">维基百科-Kruskal’s algorithm</a><br>，本文主要是记录并查集这个数据结构怎么用在Kruskal求解最小生成树的问题上。</p>
-<h2 id="并查集（union-find-set）概述"><a href="#并查集（union-find-set）概述" class="headerlink" title="并查集（union-find set）概述"></a>并查集（union-find set）概述</h2><p>union-find set 翻译成中文就是并查集,<br>并查集是一种树型的数据结构，用于处理一些不相交集合（disjoint sets）的合并及查询问题。</p>
+<p>具体做法是：首先构造一个只含n个顶点的森林， 然后依权值从小到大从连通网中选择边加入到森林中， 并使森林中不产生回路，直至森林变成一棵树为止。</p>
+<p>更多关于kruskal的知识欢迎查看<a href="https://en.wikipedia.org/wiki/Kruskal%27s_algorithm" target="_blank" rel="noopener">维基百科-Kruskal’s algorithm</a> ，本文主要是记录并查集这个数据结构怎么用在Kruskal求解最小生成树的问题上。</p>
+<h2 id="并查集union-find-set概述">并查集（union-find set）概述</h2>
+<p>union-find set 翻译成中文就是并查集, 并查集是一种树型的数据结构，用于处理一些不相交集合（disjoint sets）的合并及查询问题。</p>
 <p>并查集的主要操作：</p>
 <p><strong>1. 初始化</strong>：把每个点所在集合初始化为其自身。</p>
 <p><strong>2. 查找</strong>：查找元素所在的集合，即根节点。</p>
 <p><strong>3. 合并</strong>：将两个元素所在的集合合并为一个集合。</p>
-<p>举个例子吧，<br>假设有一组数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1， 2， 3， 4， 5， 6</span><br></pre></td></tr></table></figure></p>
-<p>首先我们把其中每一个数字当成一个单独的集合，也即是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;1&#125;， &#123;2&#125;， &#123;3&#125;， &#123;4&#125;， &#123;5&#125;， &#123;6&#125;</span><br></pre></td></tr></table></figure></p>
-<p>接下来我们对上面的集合进行合并，使其成为一个大集合，我们用树的表示形式，<br>但是我们不创建树的节点，而是用一个parent数字来表示当前索引为index的元素的祖先。</p>
+<p>举个例子吧， 假设有一组数据 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1， 2， 3， 4， 5， 6</span><br></pre></td></tr></table></figure></p>
+<p>首先我们把其中每一个数字当成一个单独的集合，也即是 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;1&#125;， &#123;2&#125;， &#123;3&#125;， &#123;4&#125;， &#123;5&#125;， &#123;6&#125;</span><br></pre></td></tr></table></figure></p>
+<p>接下来我们对上面的集合进行合并，使其成为一个大集合，我们用树的表示形式， 但是我们不创建树的节点，而是用一个parent数字来表示当前索引为index的元素的祖先。</p>
 <p>可知，上述初始化的集合parent[index] = index, 即等于本身。接下来开始遍历数组，构建并查集:</p>
-<ol>
+<ol type="1">
 <li>对于1, 2有parent[1] = 1, parent[2] = 2,祖先不一样说明他们属于不同的集合，那么可以合并,即{1, 2}</li>
 </ol>
-<p><img src="/images/posts/unionfind/union-find.png" alt="union-find"></p>
+<figure>
+<img src="/images/posts/unionfind/union-find.png" alt="union-find"><figcaption>union-find</figcaption>
+</figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">合并后选择谁作为祖先呢？当然可以自由选择，但是从效率上来说应该选择大集合的根作为祖先，</span><br><span class="line">如果把小的集合的根当做合并后集合的根的话，那么并查集最后用树的形式表示出来的时候就是像链表的形式，</span><br><span class="line">这样就失去了快速查找的能力</span><br><span class="line">如上图：如果把小集合的根作为合并后的集合那么可能得到(a)的结果</span><br></pre></td></tr></table></figure>
 <p>由于两个集合的大小是相等的，故可以任意选择，在这里选择1作为合并后的祖先，即parent[2] = 1</p>
-<ol>
-<li><p>对于{1, 2}和3，同理对其进行合并{1, 2, 3}, 选择大集合{1, 2}的根作为合并后集合的根，即parent[3] = 1,</p>
-</li>
-<li><p>依次进行，直到{1, 2, 3, 4, 5, 6}合并完毕</p>
-</li>
+<ol start="2" type="1">
+<li><p>对于{1, 2}和3，同理对其进行合并{1, 2, 3}, 选择大集合{1, 2}的根作为合并后集合的根，即parent[3] = 1,</p></li>
+<li><p>依次进行，直到{1, 2, 3, 4, 5, 6}合并完毕</p></li>
 </ol>
 <p>上述的查找、合并的代码在python中可以是:</p>
-<p><strong> 1. find_parent 查找当前索引的根结点</strong></p>
+<p>** 1. find_parent 查找当前索引的根结点**</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_parent</span><span class="params">(self, parent, i)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> parent[i] == i:</span><br><span class="line">        <span class="keyword">return</span> i</span><br><span class="line">    <span class="keyword">return</span> self.find_parent(parent, parent[i])</span><br></pre></td></tr></table></figure>
-<p>上面是递归方式，也可用循环来查找<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_parent</span><span class="params">(self, parent, i)</span>:</span></span><br><span class="line">    j = i </span><br><span class="line">    <span class="keyword">while</span> parent[j] != j:</span><br><span class="line">        j = parent[j]</span><br><span class="line">    x = i</span><br><span class="line">    <span class="keyword">while</span> x != j:</span><br><span class="line">        y = parent[x]</span><br><span class="line">        parent[x] = j</span><br><span class="line">        x = y</span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure></p>
-<p><strong> 2. union 合并操作</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(self, parent, rank, x, y)</span>:</span></span><br><span class="line">    x_set_flag = self.find_parent(parent, x)</span><br><span class="line">    y_set_flag = self.find_parent(parent, y)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> rank[x_set_flag] &lt; rank[y_set_flag]:</span><br><span class="line">        <span class="comment"># y_set_flag是大集合的代表</span></span><br><span class="line">        <span class="comment"># 小集合往大集合并,可知y_set_flag是大集合的代表,故小集合的代表应该换成大集合的代表</span></span><br><span class="line">        parent[x_set_flag] = y_set_flag</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># x_set_flag是大集合的代表</span></span><br><span class="line">        <span class="keyword">if</span> rank[x_set_flag] == rank[y_set_flag]:</span><br><span class="line">            <span class="comment"># 如果集合大小相等，因为选择了x_set_flag作为代表,则x_set_flag大表的值应该+1</span></span><br><span class="line">            rank[x_set_flag] += <span class="number">1</span></span><br><span class="line">        <span class="comment"># x_set_flag是大集合的代表，故y_set_flag的代表值为x_set_flag</span></span><br><span class="line">        parent[y_set_flag] = x_set_flag</span><br></pre></td></tr></table></figure></p>
-<p>由于笔者水平有限，加之其他博主已经有很好的文章介绍并查集故不再详述了，<br>以下是推荐阅读的文章，希望对大家有帮助：</p>
-<ol>
+<p>上面是递归方式，也可用循环来查找 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_parent</span><span class="params">(self, parent, i)</span>:</span></span><br><span class="line">    j = i </span><br><span class="line">    <span class="keyword">while</span> parent[j] != j:</span><br><span class="line">        j = parent[j]</span><br><span class="line">    x = i</span><br><span class="line">    <span class="keyword">while</span> x != j:</span><br><span class="line">        y = parent[x]</span><br><span class="line">        parent[x] = j</span><br><span class="line">        x = y</span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure></p>
+<p>** 2. union 合并操作** <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(self, parent, rank, x, y)</span>:</span></span><br><span class="line">    x_set_flag = self.find_parent(parent, x)</span><br><span class="line">    y_set_flag = self.find_parent(parent, y)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> rank[x_set_flag] &lt; rank[y_set_flag]:</span><br><span class="line">        <span class="comment"># y_set_flag是大集合的代表</span></span><br><span class="line">        <span class="comment"># 小集合往大集合并,可知y_set_flag是大集合的代表,故小集合的代表应该换成大集合的代表</span></span><br><span class="line">        parent[x_set_flag] = y_set_flag</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># x_set_flag是大集合的代表</span></span><br><span class="line">        <span class="keyword">if</span> rank[x_set_flag] == rank[y_set_flag]:</span><br><span class="line">            <span class="comment"># 如果集合大小相等，因为选择了x_set_flag作为代表,则x_set_flag大表的值应该+1</span></span><br><span class="line">            rank[x_set_flag] += <span class="number">1</span></span><br><span class="line">        <span class="comment"># x_set_flag是大集合的代表，故y_set_flag的代表值为x_set_flag</span></span><br><span class="line">        parent[y_set_flag] = x_set_flag</span><br></pre></td></tr></table></figure></p>
+<p>由于笔者水平有限，加之其他博主已经有很好的文章介绍并查集故不再详述了， 以下是推荐阅读的文章，希望对大家有帮助：</p>
+<ol type="1">
 <li><a href="http://blog.csdn.net/niushuai666/article/details/6662911" target="_blank" rel="noopener">超有爱的并查集~</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Disjoint-set_data_structure" target="_blank" rel="noopener">Disjoint-set data structure</a></li>
 </ol>
-<h2 id="并查集判断无向图是否有环"><a href="#并查集判断无向图是否有环" class="headerlink" title="并查集判断无向图是否有环"></a>并查集判断无向图是否有环</h2><p><img src="/images/posts/unionfind/cycle-graph.png" alt="cycle-graph"></p>
-<p>如上图, 如何判断该图是否有环呢？首先你可能会想到用递归的方式去做所以你用了DFS，<br>没错DFS确实可以做到，但是复杂度过高，那么能否用并查集来判断无向图是否有环呢？<br>答案是肯定的。</p>
+<h2 id="并查集判断无向图是否有环">并查集判断无向图是否有环</h2>
+<figure>
+<img src="/images/posts/unionfind/cycle-graph.png" alt="cycle-graph"><figcaption>cycle-graph</figcaption>
+</figure>
+<p>如上图, 如何判断该图是否有环呢？首先你可能会想到用递归的方式去做所以你用了DFS， 没错DFS确实可以做到，但是复杂度过高，那么能否用并查集来判断无向图是否有环呢？ 答案是肯定的。</p>
 <p>首先规定如果两个点之间有边相连，如果这两个点不属于同一个集合，那就将他们合并成一个集合</p>
-<ol>
+<ol type="1">
 <li>我们把每个点看成独立的集合{0} ，{1}， {2}</li>
 <li>对于边0-1，直接将这两个点代表的集合合并{0， 1}, 让1来当父节点</li>
-<li>对于边1-2， 它们分别属于不同的集合，合并集合之后是{1，2}，让2来当父节点，<br>这时候有0-&gt;1-&gt;2 即 0的祖先节点是2</li>
-<li>对于边0-2，他们属于一个集合，因为他们有着共同的祖先2，<br>这就说明0-2之间在没有0-2这条边之前已经连通了，<br>如果加上这条边的话那从0到2就有两条路径可达，就说明存在环了</li>
+<li>对于边1-2， 它们分别属于不同的集合，合并集合之后是{1，2}，让2来当父节点， 这时候有0-&gt;1-&gt;2 即 0的祖先节点是2</li>
+<li>对于边0-2，他们属于一个集合，因为他们有着共同的祖先2， 这就说明0-2之间在没有0-2这条边之前已经连通了， 如果加上这条边的话那从0到2就有两条路径可达，就说明存在环了</li>
 </ol>
-<p>代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检测一个图是否有环</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Graph</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.vertex = set()</span><br><span class="line">        self.edge = defaultdict(list)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_edge</span><span class="params">(self, u, v)</span>:</span></span><br><span class="line">        self.vertex.add(u)</span><br><span class="line">        self.vertex.add(v)</span><br><span class="line">        self.edge[u].append(v)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_parent</span><span class="params">(self, parent, i)</span>:</span></span><br><span class="line">        j = i </span><br><span class="line">        <span class="keyword">while</span> parent[j] != j:</span><br><span class="line">            j = parent[j]</span><br><span class="line">        x = i</span><br><span class="line">        <span class="keyword">while</span> x != j:</span><br><span class="line">            y = parent[x]</span><br><span class="line">            parent[x] = j</span><br><span class="line">            x = y</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    def find_parent(self, parent, i):</span></span><br><span class="line"><span class="string">        if parent[i] == -1:</span></span><br><span class="line"><span class="string">            return i</span></span><br><span class="line"><span class="string">        else:</span></span><br><span class="line"><span class="string">            return self.find_parent(parent, parent[i])</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(self, parent, rank, x, y)</span>:</span></span><br><span class="line">        x_set_flag = self.find_parent(parent, x)</span><br><span class="line">        y_set_flag = self.find_parent(parent, y)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> rank[x_set_flag] &lt; rank[y_set_flag]:</span><br><span class="line">            parent[x_set_flag] = y_set_flag</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">        	parent[y_set_flag] = x_set_flag</span><br><span class="line">        	<span class="keyword">if</span> rank[x_set_flag] == rank[y_set_flag]:</span><br><span class="line">        		rank[x_set_flag] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 判断无向图是否有环</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">detect_cycle</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># init</span></span><br><span class="line">        parent = []</span><br><span class="line">        rank = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(self.vertex)):</span><br><span class="line">        	parent.append(i)</span><br><span class="line">        	rank.append(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> self.edge:</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> self.edge[i]:</span><br><span class="line">                x = self.find_parent(parent, i)</span><br><span class="line">                y = self.find_parent(parent, j)</span><br><span class="line">                <span class="keyword">if</span> x == y:</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">                self.union(parent, rank, x, y)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    g = Graph()</span><br><span class="line">    g.add_edge(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">    g.add_edge(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    g.add_edge(<span class="number">0</span>, <span class="number">2</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> g.detect_cycle():</span><br><span class="line">        print(<span class="string">"Graph contains cycle"</span>)</span><br><span class="line">    <span class="keyword">else</span> :</span><br><span class="line">        print(<span class="string">"Graph does not contain cycle "</span>)</span><br></pre></td></tr></table></figure></p>
-<h2 id="并查集实现Kruskal算法"><a href="#并查集实现Kruskal算法" class="headerlink" title="并查集实现Kruskal算法"></a>并查集实现Kruskal算法</h2><p>有了上述的知识，现在可以实现Kruskal算法了，总得来Kruskal主要有两个工作：</p>
-<ol>
+<p>代码如下： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 检测一个图是否有环</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Graph</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.vertex = set()</span><br><span class="line">        self.edge = defaultdict(list)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_edge</span><span class="params">(self, u, v)</span>:</span></span><br><span class="line">        self.vertex.add(u)</span><br><span class="line">        self.vertex.add(v)</span><br><span class="line">        self.edge[u].append(v)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_parent</span><span class="params">(self, parent, i)</span>:</span></span><br><span class="line">        j = i </span><br><span class="line">        <span class="keyword">while</span> parent[j] != j:</span><br><span class="line">            j = parent[j]</span><br><span class="line">        x = i</span><br><span class="line">        <span class="keyword">while</span> x != j:</span><br><span class="line">            y = parent[x]</span><br><span class="line">            parent[x] = j</span><br><span class="line">            x = y</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    def find_parent(self, parent, i):</span></span><br><span class="line"><span class="string">        if parent[i] == -1:</span></span><br><span class="line"><span class="string">            return i</span></span><br><span class="line"><span class="string">        else:</span></span><br><span class="line"><span class="string">            return self.find_parent(parent, parent[i])</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">union</span><span class="params">(self, parent, rank, x, y)</span>:</span></span><br><span class="line">        x_set_flag = self.find_parent(parent, x)</span><br><span class="line">        y_set_flag = self.find_parent(parent, y)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> rank[x_set_flag] &lt; rank[y_set_flag]:</span><br><span class="line">            parent[x_set_flag] = y_set_flag</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">        	parent[y_set_flag] = x_set_flag</span><br><span class="line">        	<span class="keyword">if</span> rank[x_set_flag] == rank[y_set_flag]:</span><br><span class="line">        		rank[x_set_flag] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 判断无向图是否有环</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">detect_cycle</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># init</span></span><br><span class="line">        parent = []</span><br><span class="line">        rank = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(self.vertex)):</span><br><span class="line">        	parent.append(i)</span><br><span class="line">        	rank.append(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> self.edge:</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> self.edge[i]:</span><br><span class="line">                x = self.find_parent(parent, i)</span><br><span class="line">                y = self.find_parent(parent, j)</span><br><span class="line">                <span class="keyword">if</span> x == y:</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">                self.union(parent, rank, x, y)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    g = Graph()</span><br><span class="line">    g.add_edge(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">    g.add_edge(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    g.add_edge(<span class="number">0</span>, <span class="number">2</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> g.detect_cycle():</span><br><span class="line">        print(<span class="string">"Graph contains cycle"</span>)</span><br><span class="line">    <span class="keyword">else</span> :</span><br><span class="line">        print(<span class="string">"Graph does not contain cycle "</span>)</span><br></pre></td></tr></table></figure></p>
+<h2 id="并查集实现kruskal算法">并查集实现Kruskal算法</h2>
+<p>有了上述的知识，现在可以实现Kruskal算法了，总得来Kruskal主要有两个工作：</p>
+<ol type="1">
 <li>权值的排序</li>
 <li>判断是否有环</li>
 </ol>
@@ -711,50 +727,54 @@
       
         
           
-            <p><img src="/images/posts/xmnlp/slogan.png" alt="slogan"></p>
+            <figure>
+<img src="/images/posts/xmnlp/slogan.png" alt="slogan"><figcaption>slogan</figcaption>
+</figure>
 <p>python下NLP工具有很多 jieba, nltk, ltp 等， 虽然他们很强大，但是提供的功能比较分散，而且通常模型比较大。为了方便平时的处理工作，我尝试找了一些集成工具包，发现snownlp还可以，它的分词是基于TnT的，总得来说分词效果逊色于基于词典的分词（比如jieba）。所以决定自己写一个包xmnlp，主打轻量快捷。</p>
-<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><ol>
-<li><p>中文分词 &amp; 词性标注： 基于词典构建DAG图，然后采用动态规划的思想求得最大概率路径（jieba分词采用了反向输出，我采用了正向加权反向输出的方式，使得正反向共同影响分词效果），对于未登录词采用HMM+Viterbi处理</p>
-</li>
-<li><p>文本纠错：采用了bi-gram + levenshtein实现</p>
-</li>
-<li><p>文本摘要 &amp; 关键词提取：textrank</p>
-</li>
-<li><p>情感分析：naive bayes</p>
-</li>
-<li><p>文本转拼音：Trie 树检索</p>
-</li>
+<h2 id="功能">功能</h2>
+<ol type="1">
+<li><p>中文分词 &amp; 词性标注： 基于词典构建DAG图，然后采用动态规划的思想求得最大概率路径（jieba分词采用了反向输出，我采用了正向加权反向输出的方式，使得正反向共同影响分词效果），对于未登录词采用HMM+Viterbi处理</p></li>
+<li><p>文本纠错：采用了bi-gram + levenshtein实现</p></li>
+<li><p>文本摘要 &amp; 关键词提取：textrank</p></li>
+<li><p>情感分析：naive bayes</p></li>
+<li><p>文本转拼音：Trie 树检索</p></li>
 </ol>
 <p>以下展示xmnlp的功能效果，不同模块的原理之后的文章会补上。</p>
-<h2 id="分词-amp-词性标注"><a href="#分词-amp-词性标注" class="headerlink" title="分词&amp;词性标注"></a>分词&amp;词性标注</h2><p>[ doc ]</p>
-<p>自然语言处理: 是人工智能和语言学领域的分支学科。<br>在这此领域中探讨如何处理及运用自然语言；自然语言认知则是指让电脑“懂”人类的语言。<br>自然语言生成系统把计算机数据转化为自然语言。<br>自然语言理解系统把自然语言转化为计算机程序更易于处理的形式。</p>
+<h2 id="分词词性标注">分词&amp;词性标注</h2>
+<p>[ doc ]</p>
+<p>自然语言处理: 是人工智能和语言学领域的分支学科。 在这此领域中探讨如何处理及运用自然语言；自然语言认知则是指让电脑“懂”人类的语言。 自然语言生成系统把计算机数据转化为自然语言。 自然语言理解系统把自然语言转化为计算机程序更易于处理的形式。</p>
 <p>[ 分词 ]</p>
 <p>自然语言处理 / : / 是 / 人工智能 / 和 / 语言学 / 领域 / 的 / 分支 / 学科 / 。 / 在 / 这此 / 领域 / 中 / 探讨 / 如何 / 处理 / 及 / 运用 / 自然 / 语言 / ； / 自然 / 语言 / 认知 / 则 / 是 / 指让 / 电脑 / “ / 懂 / ” / 人类 / 的 / 语言 / 。 / 自然 / 语言 / 生成 / 系统 / 把 / 计算机 / 数据 / 转化 / 为 / 自然 / 语言 / 。 / 自然 / 语言 / 理解 / 系统 / 把 / 自然 / 语言 / 转化 / 为 / 计算机程序 / 更 / 易于 / 处理 / 的 / 形式 / 。</p>
 <p>[ 标注 ]</p>
 <p>自然语言处理 un / : un / 是 v / 人工智能 nw / 和 c / 语言学 n / 领域 n / 的 uj / 分支 n / 学科 n / 。 un / 在 p / 这此 un / 领域 n / 中 f / 探讨 v / 如何 r / 处理 v / 及 c / 运用 vn / 自然 d / 语言 n / ； un / 自然 d / 语言 n / 认知 v / 则 d / 是 v / 指让 un / 电脑 n / “ un / 懂 v / ” un / 人类 n / 的 uj / 语言 n / 。 un / 自然 d / 语言 n / 生成 v / 系统 n / 把 p / 计算机 n / 数据 n / 转化 v / 为 p / 自然 d / 语言 n / 。 un / 自然 d / 语言 n / 理解 v / 系统 n / 把 p / 自然 d / 语言 n / 转化 v / 为 p / 计算机程序 n / 更 d / 易于 v / 处理 v / 的 uj / 形式 n / 。 un</p>
-<h2 id="文本纠错"><a href="#文本纠错" class="headerlink" title="文本纠错"></a>文本纠错</h2><p>[ doc ]</p>
+<h2 id="文本纠错">文本纠错</h2>
+<p>[ doc ]</p>
 <p>这理风景绣丽，而且天汽不错，我的心情各外舒畅!</p>
 <p>[ 纠错 ]</p>
 <p>这里风景秀丽，而且天气不错，我的心情格外舒畅!</p>
-<h2 id="文本摘要-amp-关键词"><a href="#文本摘要-amp-关键词" class="headerlink" title="文本摘要&amp;关键词"></a>文本摘要&amp;关键词</h2><p>[ doc ]</p>
-<p>自然语言处理: 是人工智能和语言学领域的分支学科。<br>在这此领域中探讨如何处理及运用自然语言；自然语言认知则是指让电脑“懂”人类的语言。<br>自然语言生成系统把计算机数据转化为自然语言。<br>自然语言理解系统把自然语言转化为计算机程序更易于处理的形式。</p>
-<p> [ 关键词 ]</p>
-<p>(‘自然语言’, 2.2069266136741321), </p>
-<p>(‘处理’, 1.5572478858429686), </p>
-<p>(‘是’, 1.4182222157079281), </p>
-<p>(‘系统’, 1.2431338210535401), </p>
+<h2 id="文本摘要关键词">文本摘要&amp;关键词</h2>
+<p>[ doc ]</p>
+<p>自然语言处理: 是人工智能和语言学领域的分支学科。 在这此领域中探讨如何处理及运用自然语言；自然语言认知则是指让电脑“懂”人类的语言。 自然语言生成系统把计算机数据转化为自然语言。 自然语言理解系统把自然语言转化为计算机程序更易于处理的形式。</p>
+<p>[ 关键词 ]</p>
+<p>(‘自然语言’, 2.2069266136741321),</p>
+<p>(‘处理’, 1.5572478858429686),</p>
+<p>(‘是’, 1.4182222157079281),</p>
+<p>(‘系统’, 1.2431338210535401),</p>
 <p>(‘转化’, 1.1532093387566391)</p>
 <p>[ 摘要 ]</p>
 <p>自然语言理解系统把自然语言转化为计算机程序更易于处理的形式</p>
-<h2 id="情感分析"><a href="#情感分析" class="headerlink" title="情感分析"></a>情感分析</h2><p>[ doc ]</p>
+<h2 id="情感分析">情感分析</h2>
+<p>[ doc ]</p>
 <p>这件衣服的质量也太差了吧！一穿就烂！</p>
 <p>[ 分值 ]</p>
 <p>0.009959694621645698</p>
-<h2 id="文本转拼音"><a href="#文本转拼音" class="headerlink" title="文本转拼音"></a>文本转拼音</h2><p>[ doc ]</p>
+<h2 id="文本转拼音">文本转拼音</h2>
+<p>[ doc ]</p>
 <p>面朝大海，春暖花开</p>
 <p>[ 拼音 ]</p>
 <p>[‘mian’, ‘zhao’, ‘da’, ‘hai’, ‘，’, ‘chun’, ‘nuan’, ‘hua’, ‘kai’]</p>
-<h2 id="项目地址"><a href="#项目地址" class="headerlink" title="项目地址"></a>项目地址</h2><p><a href="https://github.com/SeanLee97/xmnlp" target="_blank" rel="noopener">github</a></p>
+<h2 id="项目地址">项目地址</h2>
+<p><a href="https://github.com/SeanLee97/xmnlp" target="_blank" rel="noopener">github</a></p>
 
           
         
