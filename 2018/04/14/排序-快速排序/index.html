@@ -82,15 +82,15 @@
 <meta name="description" content="原理简介 快速排序(quick sort)是一种高效的排序算法，它的复杂度、稳定性如下表。    item description     平均时间复杂度 \(O(n \cdot logn)\)   最优时间复杂度 \(O(n \cdot logn)\)   最差时间复杂度 \(O(n^{2})\)   空间复杂度 \(O(log n)\) 和递归深度相同   稳定性 不稳定    它是采用分治策">
 <meta name="keywords" content="数据结构,排序">
 <meta property="og:type" content="article">
-<meta property="og:title" content="排序|快速排序">
+<meta property="og:title" content="详解快速排序">
 <meta property="og:url" content="http://seanlee97.github.io/2018/04/14/排序-快速排序/index.html">
 <meta property="og:site_name" content="明天探索者">
 <meta property="og:description" content="原理简介 快速排序(quick sort)是一种高效的排序算法，它的复杂度、稳定性如下表。    item description     平均时间复杂度 \(O(n \cdot logn)\)   最优时间复杂度 \(O(n \cdot logn)\)   最差时间复杂度 \(O(n^{2})\)   空间复杂度 \(O(log n)\) 和递归深度相同   稳定性 不稳定    它是采用分治策">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/quick_sort/Sorting_quicksort_anim.gif">
-<meta property="og:updated_time" content="2018-05-23T15:24:39.317Z">
+<meta property="og:updated_time" content="2018-09-25T14:20:55.616Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="排序|快速排序">
+<meta name="twitter:title" content="详解快速排序">
 <meta name="twitter:description" content="原理简介 快速排序(quick sort)是一种高效的排序算法，它的复杂度、稳定性如下表。    item description     平均时间复杂度 \(O(n \cdot logn)\)   最优时间复杂度 \(O(n \cdot logn)\)   最差时间复杂度 \(O(n^{2})\)   空间复杂度 \(O(log n)\) 和递归深度相同   稳定性 不稳定    它是采用分治策">
 <meta name="twitter:image" content="http://seanlee97.github.io/images/posts/quick_sort/Sorting_quicksort_anim.gif">
 
@@ -128,7 +128,7 @@
 
 
 
-  <title>排序|快速排序 | 明天探索者</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>详解快速排序 | 明天探索者</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -282,7 +282,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">排序|快速排序</h1>
+          <h1 class="post-title" itemprop="name headline">详解快速排序</h1>
         
 
         <div class="post-meta">
@@ -397,8 +397,16 @@
 </tr>
 </tbody>
 </table>
-<p>它是采用<strong>分治策略</strong>实现的，那么什么是分治策略呢？ &gt;分治策略：是一种分而治之的思想，就是把一个复杂的问题分成两个或更多的相同或相似的子问题，直到最后子问题可以简单的直接求解，原问题的解即子问题的解的合并。</p>
-<p>利用分治法实现快排的步骤： - 选基准：在数组中，选择一个元素作为”基准”（pivot），为了方便一般选择最后一个元素做为基准。 - 比pivot小的放到pivot左边，比pivot大的放到pivot右边 - 对”基准”左边和右边的两个子集，不断重复第一步和第二步，直到所有子集只剩下一个元素为止。</p>
+<p>它是采用<strong>分治策略</strong>实现的，那么什么是分治策略呢？</p>
+<blockquote>
+<p>分治策略：是一种分而治之的思想，就是把一个复杂的问题分成两个或更多的相同或相似的子问题，直到最后子问题可以简单的直接求解，原问题的解即子问题的解的合并。</p>
+</blockquote>
+<p>利用分治法实现快排的步骤：</p>
+<ul>
+<li>选基准：在数组中，选择一个元素作为”基准”（pivot），为了方便一般选择最后一个元素做为基准。</li>
+<li>比pivot小的放到pivot左边，比pivot大的放到pivot右边</li>
+<li>对”基准”左边和右边的两个子集，不断重复第一步和第二步，直到所有子集只剩下一个元素为止。</li>
+</ul>
 <img src="/images/posts/quick_sort/Sorting_quicksort_anim.gif" alt="快排原理图">
 <center>
 (图片来自维基百科)
@@ -614,7 +622,7 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/tags/index-1.html">
+                <a href="/tags/index.html">
                   <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
@@ -856,7 +864,7 @@
         var disqus_config = function () {
           this.page.url = 'http://seanlee97.github.io/2018/04/14/排序-快速排序/';
           this.page.identifier = '2018/04/14/排序-快速排序/';
-          this.page.title = '排序|快速排序';
+          this.page.title = '详解快速排序';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://seanlee97.disqus.com/embed.js';
