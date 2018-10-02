@@ -383,7 +383,7 @@ f{}&#39;(x_{0}) &amp; = \lim_{x \rightarrow x_{0}} \frac{f(x) - f(x_{0})}{x-x_{0
 <h3 id="牛顿法和拟牛顿法">牛顿法和拟牛顿法</h3>
 <p>牛顿法和拟牛顿法也是求解无约束最优化问题的常用方法，它的优点是收敛速度快。一般用来求解大规模数据的优化问题</p>
 <h4 id="海森矩阵hessian-matrix">海森矩阵(Hessian Matrix)</h4>
-<p>海森矩阵是一个<strong>多变量实值函数</strong>的<strong>二阶偏导数</strong>组成的<strong>方块矩阵</strong>,假设有一实数函数 <span class="math inline">\(f(x_{1}, x_{2}, ..., x_{n})\)</span> ，如果 <span class="math inline">\(f\)</span> 所有的二阶偏导数都存在，那么 <span class="math inline">\(f\)</span> 的海森矩阵的第 <span class="math inline">\(ij\)</span> 项即为 <span class="math inline">\(H(f)_{ij}(x) = D_{i}D_{j}f(x)\)</span> ，其中 <span class="math inline">\(x=(x_{1}, x_{2}, ..., x_{n})\)</span> 即</p>
+<p>海森矩阵是一个<strong>多变量实值函数</strong>的<strong>二阶偏导数</strong>组成的<strong>方块矩阵</strong>,假设有一实数函数 <span class="math inline">\(f(x_{1}, x_{2}, ..., x_{n})\)</span> ，如果 <span class="math inline">\(f\)</span> 所有的二阶偏导数都存在，那么海森矩阵为对称矩阵， <span class="math inline">\(f\)</span> 的海森矩阵的第 <span class="math inline">\(ij\)</span> 项即为 <span class="math inline">\(H(f)_{ij}(x) = D_{i}D_{j}f(x)\)</span> ，其中 <span class="math inline">\(x=(x_{1}, x_{2}, ..., x_{n})\)</span> 即</p>
 <p><img src="/images/posts/gradient_descent/02.png"></p>
 <p>更一般的海森矩阵也可表示为</p>
 <p><span class="math display">\[\begin{align*}
