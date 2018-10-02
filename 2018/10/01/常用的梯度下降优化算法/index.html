@@ -97,7 +97,7 @@
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/gradient_descent/08.gif">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/gradient_descent/09.gif">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/gradient_descent/10.gif">
-<meta property="og:updated_time" content="2018-10-02T03:02:25.028Z">
+<meta property="og:updated_time" content="2018-10-02T04:21:08.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="常用的梯度下降优化算法">
 <meta name="twitter:description" content="梯度下降是常用的优化方式，具体的算法有：  梯度下降法  批梯度下降(Batch Gradient Descent, BGD) 随机梯度下降(Stochastic Gradient Decent, SGD) 小批量梯度下降(Mini-Batch Gradient Decent, MBGD)  梯度下降优化  动量梯度下降(Gradient Descent with Momentum) 均方根支(R">
@@ -517,8 +517,8 @@ Y_{1} &amp; \text{ if } t=1\\
 &amp; S_{dw} = \beta_{2} S_{dw} + (1-\beta _{2}) dw^{2}, S_{db} = \beta_{2} S_{db} + (1-\beta _{2}) db^{2} \\\\
 &amp; \upsilon_{dw}^{correct} = \frac{\upsilon _{dw}}{1-\beta_{1}^{t}}, \upsilon_{db}^{correct} = \frac{\upsilon_{db}}{1-\beta_{1}^{t}} \\\\
 &amp; S_{dw}^{correct} = \frac{S_{dw}}{1-\beta_{2}^{t}}, S_{db}^{correct} = \frac{S_{db}}{1-\beta_{2}^{t}} \\\\
-&amp; w := w - \alpha \frac{\upsilon_{dw}^{correct}}{\sqrt{S_{dw}^{correct} + \epsilon}} \\\\
-&amp; b := b - \alpha \frac{\upsilon_{db}^{correct}}{\sqrt{S_{db}^{correct} + \epsilon}} \\\\
+&amp; w := w - \alpha \frac{\upsilon_{dw}^{correct}}{\sqrt{S_{dw}^{correct}} + \epsilon} \\\\
+&amp; b := b - \alpha \frac{\upsilon_{db}^{correct}}{\sqrt{S_{db}^{correct}} + \epsilon} \\\\
 \tag{11}
 \end{align*}\]</span></p>
 <p><span class="math inline">\(\beta _{1}\)</span>为第一阶矩，<span class="math inline">\(\beta _{2}\)</span> 为第二阶矩</p>

@@ -509,8 +509,8 @@ Y_{1} &amp; \text{ if } t=1\\
 &amp; S_{dw} = \beta_{2} S_{dw} + (1-\beta _{2}) dw^{2}, S_{db} = \beta_{2} S_{db} + (1-\beta _{2}) db^{2} \\\\
 &amp; \upsilon_{dw}^{correct} = \frac{\upsilon _{dw}}{1-\beta_{1}^{t}}, \upsilon_{db}^{correct} = \frac{\upsilon_{db}}{1-\beta_{1}^{t}} \\\\
 &amp; S_{dw}^{correct} = \frac{S_{dw}}{1-\beta_{2}^{t}}, S_{db}^{correct} = \frac{S_{db}}{1-\beta_{2}^{t}} \\\\
-&amp; w := w - \alpha \frac{\upsilon_{dw}^{correct}}{\sqrt{S_{dw}^{correct} + \epsilon}} \\\\
-&amp; b := b - \alpha \frac{\upsilon_{db}^{correct}}{\sqrt{S_{db}^{correct} + \epsilon}} \\\\
+&amp; w := w - \alpha \frac{\upsilon_{dw}^{correct}}{\sqrt{S_{dw}^{correct}} + \epsilon} \\\\
+&amp; b := b - \alpha \frac{\upsilon_{db}^{correct}}{\sqrt{S_{db}^{correct}} + \epsilon} \\\\
 \tag{11}
 \end{align*}\]</span></p>
 <p><span class="math inline">\(\beta _{1}\)</span>为第一阶矩，<span class="math inline">\(\beta _{2}\)</span> 为第二阶矩</p>
