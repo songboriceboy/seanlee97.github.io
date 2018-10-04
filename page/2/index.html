@@ -262,6 +262,175 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/07/21/java缓冲池/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/21/java缓冲池/" itemprop="url">java缓冲池</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-21T10:28:25+08:00">
+                2018-07-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">技术日志</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/07/21/java缓冲池/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/07/21/java缓冲池/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="自动装箱拆箱">自动装箱、拆箱</h1>
+<p>基本类型都有其对应的包装类型，基本类型与其对应的包装类型间的转换是靠自动装箱 与拆箱完成的</p>
+<ul>
+<li>基本类型 / 包装类</li>
+<li>boolean / Boolean</li>
+<li>char / Character</li>
+<li>int / Integer</li>
+<li>byte / Byte</li>
+<li>short / Short</li>
+<li>long / Long</li>
+<li>float / Float</li>
+<li>double / Double</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Integer i = <span class="number">12</span>;   <span class="comment">// 自动装箱，12是基本类型，赋给包装类后自动装箱，相当于掉用了Integer.valueOf(12)</span></span><br><span class="line"><span class="keyword">int</span> j = i; <span class="comment">// 自动拆箱，将Integer转为基本类型int，实际掉用了i.intValue()</span></span><br></pre></td></tr></table></figure>
+<h1 id="缓冲池">缓冲池</h1>
+<p>new Integer(123) 与 Integer.valueOf(123) 的区别在于， new Integer(123) 每次都会新建一个对象，而 Integer.valueOf(123) 可能会使用缓存对象，因此多次使用 Integer.valueOf(123) 会取得同一个对象的引用。</p>
+<p>在 Java 8 中，Integer 缓存池的大小默认为 -128~127。如 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Integer x = <span class="number">127</span>;</span><br><span class="line">Integer y = <span class="number">127</span>;</span><br><span class="line">System.out.println(x == y);  <span class="comment">// True</span></span><br><span class="line"></span><br><span class="line">Integer i = <span class="number">128</span>;</span><br><span class="line">Integer j = <span class="number">128</span>;</span><br><span class="line">System.out.println(i == j);  <span class="comment">// False</span></span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/07/21/java中equals和-的区别/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2223,146 +2392,6 @@ max(0, 1-(w^{T}x_{i} + b)) \tag{17}\]</span></p>
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/04/01/一文读懂NLP系列-附代码/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="sean lee">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="明天探索者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/01/一文读懂NLP系列-附代码/" itemprop="url">一文读懂NLP系列_附代码</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-01T16:58:30+08:00">
-                2018-04-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/04/01/一文读懂NLP系列-附代码/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/04/01/一文读懂NLP系列-附代码/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本系列教程主要受 Michael Collins 教授的 <a href="http://www.cs.columbia.edu/~cs4705/" target="_blank" rel="noopener">NLP教程</a>启发而编写</p>
-<p>所有代码放在我的github <a href="https://github.com/SeanLee97/nlp_learning" target="_blank" rel="noopener">nlp_learning</a> 上，还请关注！</p>
-<p><strong>目录：</strong></p>
-<ul>
-<li><a href="https://mp.weixin.qq.com/s?__biz=MzIwNDM1NjUzMA==&amp;mid=2247483658&amp;idx=1&amp;sn=9c5e7cc50b65cf31a08f1e2a0046ceb1&amp;chksm=96c02fd7a1b7a6c1bbabe19145665d370020f4a3e89ebdc1226a1ec4ed110ef089c6fb0212c4&amp;mpshare=1&amp;scene=1&amp;srcid=1114A1PGK4rDqKMMbsAmplr3#rd" target="_blank" rel="noopener">一文读懂NLP中的语言模型（附代码）</a></li>
-<li><a href="https://mp.weixin.qq.com/s?__biz=MzIwNDM1NjUzMA==&amp;mid=2247483662&amp;idx=1&amp;sn=cf463dde9af1844a3fd1e3e4fec26f5c&amp;chksm=96c02fd3a1b7a6c5cfabe53efbff54af33cd2f61d13064645fbff92ce1b024d82acb2375d9b0#rd" target="_blank" rel="noopener">一文读懂NLP中的HMM（附代码）</a></li>
-<li><a href="https://mp.weixin.qq.com/s?__biz=MzIwNDM1NjUzMA==&amp;mid=2247483666&amp;idx=1&amp;sn=708dcbce5be808b3be273838db298da7&amp;chksm=96c02fcfa1b7a6d99a69c35e0de413488d4da4dc13c4ab3d21c8a415c8f2310c141676a068e0#rd" target="_blank" rel="noopener">一文读懂NLP中的PCFG（附代码）</a></li>
-<li><a href="https://mp.weixin.qq.com/s?__biz=MzIwNDM1NjUzMA==&amp;mid=2247483670&amp;idx=1&amp;sn=6f1b300ce17a79628c2b277f1b4c876f&amp;chksm=96c02fcba1b7a6dda76524ef949ddac7ad9636b98213183b6262bf50c278070b2dd6bd145d5c#rd" target="_blank" rel="noopener">DeepNLP之Word2vec</a></li>
-<li><a href="https://mp.weixin.qq.com/s?__biz=MzIwNDM1NjUzMA==&amp;mid=2247483674&amp;idx=1&amp;sn=8b7e470b8a8222b057d715d3ec48dd74&amp;chksm=96c02fc7a1b7a6d1688351b4c2bc393ffdcd5d1686344f5a6500613b4e44f08bb696d830f45c#rd" target="_blank" rel="noopener">DeepNLP之阅读理解</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2417,7 +2446,7 @@ max(0, 1-(w^{T}x_{i} + b)) \tag{17}\]</span></p>
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2427,7 +2456,7 @@ max(0, 1-(w^{T}x_{i} + b)) \tag{17}\]</span></p>
               
               
               <div class="site-state-item site-state-categories">
-                <a href="/categories/index-1.html">
+                <a href="/categories/index.html">
                   <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
@@ -2438,8 +2467,8 @@ max(0, 1-(w^{T}x_{i} + b)) \tag{17}\]</span></p>
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/tags/index-1.html">
-                  <span class="site-state-item-count">10</span>
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
