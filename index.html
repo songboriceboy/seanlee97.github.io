@@ -262,6 +262,185 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/10/07/常用的相似度计算方法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/07/常用的相似度计算方法/" itemprop="url">常用的相似度计算方法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-07T23:50:57+08:00">
+                2018-10-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/07/常用的相似度计算方法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/10/07/常用的相似度计算方法/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>不同样本间相似度计算也可以认为是样本间距离的计算，本文主要总结几种常见的距离计算方法</p>
+<h2 id="闵可夫斯基距离minkowski">闵可夫斯基距离(Minkowski)</h2>
+<p><span class="math display">\[\begin{align*}
+distance(X, Y) = (\sum_{i=1}^{m}|x_{i} - y_{i}|^{p})^{\frac{1}{p}} \\\\
+where\ X = (x_{1}, ..., x_{m}), Y = (y_{1}, ..., y_{m})
+\tag{1}
+\end{align*}\]</span></p>
+<p>特别的当</p>
+<ul>
+<li><span class="math inline">\(p = 1\)</span> 时称为<code>曼哈顿距离</code></li>
+<li><span class="math inline">\(p = 2\)</span> 时称为 <code>欧式距离</code></li>
+<li>$p $ 时称为<code>切比雪夫距离</code></li>
+</ul>
+<h3 id="曼哈顿距离">曼哈顿距离</h3>
+<p><span class="math display">\[distance(X, Y) = \sum_{i=1}^{m}|x_{i} - y_{i}| \tag{2}\]</span></p>
+<p>曼哈顿距离又称<code>街区距离</code>，从起点到终点只能往东南西北四个方向走，不能斜着走</p>
+<h3 id="欧式距离">欧式距离</h3>
+<p><span class="math display">\[distance(X, Y) = (\sum_{i=1}^{m}|x_{i} - y_{i}|^{2})^{\frac{1}{2}} \tag{3}\]</span></p>
+<h3 id="曼哈顿距离-vs-欧式距离">曼哈顿距离 vs 欧式距离</h3>
+<p><img src="/images/posts/distances/01.png"></p>
+<p>其中红线代表曼哈顿距离，绿色代表欧氏距离，也就是直线距离，而蓝色和黄色代表等价的曼哈顿距离</p>
+<h2 id="余弦相似度-cosine-similarity">余弦相似度 (cosine similarity)</h2>
+<p><span class="math display">\[\begin{align*}
+cos(\theta) &amp;= \frac{\underset{a}{\rightarrow} \cdot \underset{b}{\rightarrow}}{\left \| \underset{a}{\rightarrow} \right \| \left \| \underset{b}{\rightarrow} \right \|} \\
+&amp;=  \frac{\sum_{i=1}^{m} x_{i} y_{i}}{\sqrt{\sum_{i=1}^{m} x_{i}^{2}} \sqrt{\sum_{i=1}^{m} y_{i}^{2}}} \\
+&amp; where \underset{a}{\rightarrow} = (x_{1}, x_{1}, ..., x_{n}),\ \underset{b}{\rightarrow} = (y_{2}, y_{2}, ..., y_{n})
+\end{align*} \tag{4}\]</span></p>
+<p>由于文档常用VSM形式表示，可以把文档当作高维向量，因此文档之间的相似度一般可以用余弦相似度计算</p>
+<h3 id="欧式距离-vs-余弦相似度">欧式距离 vs 余弦相似度</h3>
+<p><img src="/images/posts/distances/02.png"></p>
+<h2 id="皮尔逊相关系数">皮尔逊相关系数</h2>
+<p><span class="math display">\[\begin{align*}
+\rho_{XY} &amp; = \frac{cov(X, Y)}{\sigma_{X} \sigma_{Y}} \\
+&amp; = \frac{E[(X-E_{x})(Y-E_{Y})]}{\sigma_{X} \sigma_{Y}} \\
+&amp; = \frac{\sum_{i=1}^{m} (X_{i} - \mu_{X}) (Y_{i} - \mu_{Y})}{\sqrt{\sum_{i=1}^{m} (X_{i} - \mu_{X})^{2}} \sqrt{\sum_{i=1}^{m} (Y_{i} - \mu_{Y})^{2}}}
+\end{align*} \tag{5}\]</span></p>
+<p>其中 <span class="math inline">\(cov(X, Y)\)</span> 为 <span class="math inline">\(X\)</span> 与 <span class="math inline">\(Y\)</span> 的协方差, <span class="math inline">\(\sigma_{X}\)</span> 为 <span class="math inline">\(X\)</span> 的标准差, <span class="math inline">\(\sigma_{Y}\)</span> 为 <span class="math inline">\(Y\)</span> 的标准差</p>
+<p>皮尔逊相关系数是衡量随机变量 <span class="math inline">\(X\)</span> 与 $Y $ 相关程度的一种方法，相关系数的取值范围是[-1,1]。相关系数的绝对值越大，则表明X与Y相关度越高。当X与Y线性相关时，相关系数取值为1（正线性相关）或-1（负线性相关）</p>
+<h3 id="皮尔逊相关系数-vs-余弦相似度">皮尔逊相关系数 vs 余弦相似度</h3>
+<p>对比一下 <span class="math inline">\((4)\)</span> 式和 <span class="math inline">\((5)\)</span> 可以发现，其实相关系数和余弦相似度的关系是平移关系，也可以认为余弦相似度是相关系数<code>去均值化</code>的结果</p>
+<h2 id="杰卡德相似系数-jaccard">杰卡德相似系数 (Jaccard)</h2>
+<p><span class="math display">\[J(A, B) = \frac{|A\cap B|}{|A \cup B|} \tag{6}\]</span></p>
+<p>两个集合A和B的交集元素在A，B的并集中所占的比例，称为两个集合的杰卡德相似系数, 杰卡德系数一般用于度量两个集合的相似度</p>
+<h2 id="相对熵-kl距离">相对熵 / KL距离</h2>
+<p><span class="math display">\[D_{KL}(p||q) = \sum_{x} p(x) log \frac{p(x)}{q(x)} \tag{7}\]</span></p>
+<p>计算的是两个分布之间的距离，特别要注意<code>KL距离</code>是非对称的，也就是说 <span class="math inline">\(p\)</span> 跟 <span class="math inline">\(q\)</span> 互换位置得到的结果是不一致的，一般来说当 <span class="math inline">\(p\)</span> <span class="math inline">\(q\)</span> 是同分布时才能得到一样的结果</p>
+<h2 id="refrence">Refrence</h2>
+<p>[1] http://www.ehcoo.com/ManhattanDistance.html</p>
+<p>[2] https://www.cnblogs.com/heaad/archive/2011/03/08/1977733.html</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/10/03/使用numpy实现一个深度学习框架/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2349,224 +2528,6 @@ arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \u
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/08/07/python常用魔术方法概览/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="sean lee">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="明天探索者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/07/python常用魔术方法概览/" itemprop="url">python常用魔术方法概览</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-07T20:39:34+08:00">
-                2018-08-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index">
-                    <span itemprop="name">技术日志</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/08/07/python常用魔术方法概览/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/08/07/python常用魔术方法概览/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="构造和初始化">构造和初始化</h2>
-<h5 id="init__self-args">__init__(self, args)</h5>
-<p>构造函数</p>
-<h5 id="new__cls">__new__(cls)</h5>
-<p>传入的是类实例</p>
-<h5 id="del__self">__del__(self)</h5>
-<p>析构函数，调用 <code>del cls</code> 时会被调用</p>
-<h2 id="属性访问控制">属性访问控制</h2>
-<h5 id="getattr__self-name">__getattr__(self, name)</h5>
-<p>如果属性已经定义了那么不会再执行__getattr__()了，而是直接通过访问实例字典返回结果，__getattr__()只在访问未定义的属性时被触发</p>
-<h5 id="setattr__self-name-value">__setattr__(self, name, value)</h5>
-<p>直接给属性赋值 <code>cls.name = value</code>, 如果该函数内部内部使用<code>self.name = value</code> 时会产生<strong>“无限递归”</strong>的错误，正确的方式应该是 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__setattr__</span><span class="params">(self, name, value)</span>:</span></span><br><span class="line">    self.__dict__[name] = value</span><br></pre></td></tr></table></figure></p>
-<h5 id="delattr__self-name">__delattr__(self, name)</h5>
-<p><code>del cls.name</code> 时会被调用</p>
-<h2 id="描述器对象">描述器对象</h2>
-<h5 id="set__self-cls-value">__set__(self, cls, value)</h5>
-<p><code>cls.innercls = value</code> 用于类中的其他类对象赋值</p>
-<h5 id="get__self-cls">__get__(self, cls)</h5>
-<p><code>cls.innercls</code> 返回类中其他对象传回的值</p>
-<h5 id="delete__self-cls">__delete__(self, cls)</h5>
-<p><code>del cls.innercls</code></p>
-<h5 id="综合实例">综合实例</h5>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Meter</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">'''Descriptor for a meter.'''</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, value=<span class="number">0.0</span>)</span>:</span></span><br><span class="line">        self.value = float(value)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__get__</span><span class="params">(self, instance, owner)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.value</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__set__</span><span class="params">(self, instance, value)</span>:</span></span><br><span class="line">        self.value = float(value)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foot</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">'''Descriptor for a foot.'''</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__get__</span><span class="params">(self, instance, owner)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> instance.meter * <span class="number">3.2808</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__set__</span><span class="params">(self, instance, value)</span>:</span></span><br><span class="line">        instance.meter = float(value) / <span class="number">3.2808</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Distance</span><span class="params">(object)</span>:</span></span><br><span class="line">    meter = Meter()</span><br><span class="line">    foot = Foot()</span><br><span class="line"></span><br><span class="line">d = Distance()</span><br><span class="line"><span class="keyword">print</span> d.meter, d.foot  <span class="comment"># 0.0, 0.0</span></span><br><span class="line">d.meter = <span class="number">1</span></span><br><span class="line"><span class="keyword">print</span> d.meter, d.foot  <span class="comment"># 1.0 3.2808</span></span><br><span class="line">d.meter = <span class="number">2</span></span><br><span class="line"><span class="keyword">print</span> d.meter, d.foot  <span class="comment"># 2.0 6.5616</span></span><br></pre></td></tr></table></figure>
-<h2 id="自定义容器container">自定义容器(Container)</h2>
-<h5 id="len__self">__len__(self)</h5>
-<p><code>len(con)</code> 返回容器长度</p>
-<h5 id="setitem__self-name-value">__setitem__(self, name, value)</h5>
-<p><code>con[name] = value</code> 直接下标赋值</p>
-<h5 id="getitem__self-name">__getitem__(self, name)</h5>
-<p><code>con[name]</code> 直接下标访问</p>
-<h5 id="delitem__name">__delitem__(name)</h5>
-<p><code>del con[name]</code> 删除下标</p>
-<h5 id="iter__self">__iter__(self)</h5>
-<p>使得容器支持迭代器方式访问 <code>for x in con</code></p>
-<h5 id="contains__self-item">__contains__(self, item)</h5>
-<p><code>name in con</code> 可以返回布尔值</p>
-<h5 id="missing__self-name">__missing__(self, name)</h5>
-<p>容器中没有name时会被调用</p>
-<h2 id="上下文管理">上下文管理</h2>
-<p><code>with</code> 关键字可实现上下文(环境)管理</p>
-<h5 id="enter__self">__enter__(self)</h5>
-<p>进入环境时触发</p>
-<h5 id="exit__self-exception_type-exception_value-traceback">__exit__(self, exception_type, exception_value, traceback)</h5>
-<p>退出环境时触发，一般用来关闭资源</p>
-<h2 id="运算符重载">运算符重载</h2>
-<h5 id="eq__self-other">__eq__(self, other)</h5>
-<p>重载 <code>=</code></p>
-<h5 id="ne__self-other">__ne__(self, other)</h5>
-<p>重载 <code>!=</code></p>
-<h5 id="lt__self-other">__lt__(self, other)</h5>
-<p>重载 <code>&lt;</code></p>
-<h5 id="gt__self-other">__gt__(self, other)</h5>
-<p>重载 <code>&gt;</code></p>
-<h5 id="le__self-other">__le__(self, other)</h5>
-<p>重载 <code>&lt;=</code></p>
-<h5 id="ge__self-other">__ge__(self, other)</h5>
-<p>重载 <code>&gt;=</code></p>
-<h2 id="其他">其他</h2>
-<h5 id="str__self">__str__(self)</h5>
-<p><code>print(cls)</code> 和 <code>str(cls)</code> 时被调用，必须返回字符<code>str</code>类型</p>
-<h5 id="repr__self">__repr__(self)</h5>
-<p>对实例使用<code>repr()</code>时调用。<code>str()</code>和<code>repr()</code>都是返回一个代表该实例的字符串，主要区别在于: <code>str()</code>的返回值要方便人来看,而<code>repr()</code>的返回值方便计算机看。</p>
-<h5 id="call__self-args-kwargs">__call__(self, *args, **kwargs)</h5>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">XClass</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self, a, b)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> a + b</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(a, b)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> a + b</span><br><span class="line"></span><br><span class="line">x = XClass()</span><br><span class="line"><span class="keyword">print</span> <span class="string">'x(1, 2)'</span>, x(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">print</span> <span class="string">'callable(x)'</span>, callable(x)  <span class="comment"># True</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">'add(1, 2)'</span>, add(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">print</span> <span class="string">'callable(add)'</span>, callable(add)  <span class="comment"># True</span></span><br></pre></td></tr></table></figure>
-<h1 id="refrence">Refrence</h1>
-<p>https://segmentfault.com/a/1190000007256392#articleHeader3</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2621,7 +2582,7 @@ arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \u
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">26</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2631,7 +2592,7 @@ arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \u
               
               
               <div class="site-state-item site-state-categories">
-                <a href="/categories/index.html">
+                <a href="/categories/index-1.html">
                   <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
@@ -2642,7 +2603,7 @@ arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \u
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
+                <a href="/tags/index-1.html">
                   <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
