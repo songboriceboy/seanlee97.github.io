@@ -89,7 +89,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/distances/01.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/distances/02.png">
-<meta property="og:updated_time" content="2018-10-07T16:47:52.989Z">
+<meta property="og:updated_time" content="2018-10-07T16:50:16.765Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="常用的相似度计算方法">
 <meta name="twitter:description" content="不同样本间相似度计算也可以认为是样本间距离的计算，本文主要总结几种常见的距离计算方法 闵可夫斯基距离(Minkowski) \[\begin{align*} distance(X, Y) = (\sum_{i=1}^{m}|x_{i} - y_{i}|^{p})^{\frac{1}{p}} \\\\ where\ X = (x_{1}, ..., x_{m}), Y = (y_{1}, ...,">
@@ -355,7 +355,7 @@ where\ X = (x_{1}, ..., x_{m}), Y = (y_{1}, ..., y_{m})
 <ul>
 <li><span class="math inline">\(p = 1\)</span> 时称为<code>曼哈顿距离</code></li>
 <li><span class="math inline">\(p = 2\)</span> 时称为 <code>欧式距离</code></li>
-<li>$p $ 时称为<code>切比雪夫距离</code></li>
+<li><span class="math inline">\(p \rightarrow \infty\)</span> 时称为<code>切比雪夫距离</code></li>
 </ul>
 <h3 id="曼哈顿距离">曼哈顿距离</h3>
 <p><span class="math display">\[distance(X, Y) = \sum_{i=1}^{m}|x_{i} - y_{i}| \tag{2}\]</span></p>
