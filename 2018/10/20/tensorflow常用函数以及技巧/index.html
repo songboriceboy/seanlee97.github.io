@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DL,tensorflow," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="我常用的深度学习框架有两种 pytorch 和 tensorflow ,在学校的时候习惯用 pytorch ，实习工作时主要用 tensorflow. 本文主要记录我常用的 tensorflow 函数以及一些使用实例 常用函数 Casting 主要用于类型的转换，常用的函数有:  tf.cast(x, dtype, name=None)  Reduce  tf.reduce_sum(input_t">
+<meta name="keywords" content="DL,tensorflow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tensorflow常用函数以及技巧">
+<meta property="og:url" content="http://seanlee97.github.io/2018/10/20/tensorflow常用函数以及技巧/index.html">
+<meta property="og:site_name" content="明天探索者">
+<meta property="og:description" content="我常用的深度学习框架有两种 pytorch 和 tensorflow ,在学校的时候习惯用 pytorch ，实习工作时主要用 tensorflow. 本文主要记录我常用的 tensorflow 函数以及一些使用实例 常用函数 Casting 主要用于类型的转换，常用的函数有:  tf.cast(x, dtype, name=None)  Reduce  tf.reduce_sum(input_t">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-10-21T06:47:06.057Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="tensorflow常用函数以及技巧">
+<meta name="twitter:description" content="我常用的深度学习框架有两种 pytorch 和 tensorflow ,在学校的时候习惯用 pytorch ，实习工作时主要用 tensorflow. 本文主要记录我常用的 tensorflow 函数以及一些使用实例 常用函数 Casting 主要用于类型的转换，常用的函数有:  tf.cast(x, dtype, name=None)  Reduce  tf.reduce_sum(input_t">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://seanlee97.github.io/2018/10/20/tensorflow常用函数以及技巧/"/>
+
+
+
+
+
+  <title>tensorflow常用函数以及技巧 | 明天探索者</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">明天探索者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/10/20/tensorflow常用函数以及技巧/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">tensorflow常用函数以及技巧</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-20T14:52:21+08:00">
+                2018-10-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/20/tensorflow常用函数以及技巧/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/10/20/tensorflow常用函数以及技巧/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>我常用的深度学习框架有两种 pytorch 和 tensorflow ,在学校的时候习惯用 pytorch ，实习工作时主要用 tensorflow. 本文主要记录我常用的 tensorflow 函数以及一些使用实例</p>
+<h2 id="常用函数">常用函数</h2>
+<h3 id="casting">Casting</h3>
+<p>主要用于类型的转换，常用的函数有:</p>
+<ul>
+<li>tf.cast(x, dtype, name=None)</li>
+</ul>
+<h3 id="reduce">Reduce</h3>
+<ul>
+<li>tf.reduce_sum(input_tensor, reduction_indices=None, keep_dims=False, name=None) 在指定维度上求和</li>
+<li>tf.reduce_max(input_tensor, reduction_indices=None, keep_dims=False, name=None) 在指定维度上求最大值</li>
+<li>tf.reduce_min(input_tensor, reduction_indices=None, keep_dims=False, name=None) 在指定维度上求最小值</li>
+<li>tf.reduce_mean(input_tensor, reduction_indices=None, keep_dims=False, name=None) 在指定维度上求均值</li>
+</ul>
+<h3 id="实例一求张量的-mask-和长度">实例一：求张量的 mask 和长度</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line">sess = tf.InteractiveSession()</span><br><span class="line"></span><br><span class="line"><span class="comment"># placeholder</span></span><br><span class="line">inputs = tf.placeholder(tf.int32,</span><br><span class="line">                        shape=[<span class="keyword">None</span>, <span class="keyword">None</span>],</span><br><span class="line">                        name=<span class="string">'inputs'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取inputs的mask，</span></span><br><span class="line">inputs_mask = tf.cast(inputs, tf.bool)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取 inputs 在0轴的长度</span></span><br><span class="line">inputs_len = tf.reduce_sum(tf.cast(inputs_mask, tf.int32), axis=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">x = [[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</span><br><span class="line">     [<span class="number">4</span>, <span class="number">5</span>, <span class="number">0</span>],</span><br><span class="line">     [<span class="number">6</span>, <span class="number">0</span>, <span class="number">0</span>]]</span><br><span class="line"></span><br><span class="line">mask, lens = sess.run([inputs_mask, inputs_len],</span><br><span class="line">                     feed_dict=&#123;inputs: x&#125;)</span><br><span class="line"></span><br><span class="line">print(<span class="string">"Mask:\n"</span>, mask)</span><br><span class="line">print(<span class="string">"Length:\n"</span>, lens)</span><br></pre></td></tr></table></figure>
+<p>输出结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Mask:</span><br><span class="line"> [[ True  True  True]</span><br><span class="line"> [ True  True False]</span><br><span class="line"> [ True False False]]</span><br><span class="line">Length:</span><br><span class="line"> [3 2 1]</span><br></pre></td></tr></table></figure>
+<h3 id="shape-与-shape-变换">shape 与 shape 变换</h3>
+<ul>
+<li>tf.shape(input, name=None) 获取张量的形状</li>
+<li>tf.reshape(tensor, shape, name=None) 变换张量形状</li>
+<li>tf.squeeze(input, squeeze_dims=None, name=None) 压缩(去除)张量维度（压缩形状大小为1的维度）</li>
+<li>tf.expand_dims(input, dim, name=None) 扩充张量维度</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line">sess = tf.InteractiveSession()</span><br><span class="line"></span><br><span class="line">inputs = tf.placeholder(tf.int32, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], name=<span class="string">"inputs"</span>)</span><br><span class="line">print(sess.run(tf.shape(inputs)))  <span class="comment"># (1, 2, 3)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 挤压维度，因为第0维的大小为1故可以去除</span></span><br><span class="line">inputs1 = tf.squeeze(inputs, <span class="number">0</span>)</span><br><span class="line">print(sess.run(tf.shape(inputs1))) <span class="comment"># (2, 3)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 扩充维度</span></span><br><span class="line">inputs2 = tf.expand_dims(inputs1, <span class="number">0</span>)</span><br><span class="line">print(sess.run(tf.shape(inputs2))) <span class="comment"># (1, 2, 3)</span></span><br></pre></td></tr></table></figure>
+<h3 id="slicing-and-joining-切片和连接">Slicing and Joining 切片和连接</h3>
+<h4 id="tf.sliceinput_-begin-size-namenone">tf.slice(input_, begin, size, name=None)</h4>
+<p>tf的切片略难理解，先理解函数参数的意义</p>
+<ul>
+<li>input_：张量</li>
+<li>begin: n维列表，begin[i] 表示从inputs中第i轴抽取数据时，从第i轴的begin[i]个元素开始抽取数据</li>
+<li>size: n维列表，size[i]表示要抽取的第i轴元素的数目</li>
+</ul>
+<p>举个例子 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line">sess = tf.InteractiveSession()</span><br><span class="line">inputs = tf.constant([[[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], [<span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>]],</span><br><span class="line">                      [[<span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>], [<span class="number">4</span>, <span class="number">4</span>, <span class="number">4</span>]],</span><br><span class="line">                      [[<span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>], [<span class="number">6</span>, <span class="number">6</span>, <span class="number">6</span>]]])</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">slice_1: [[[3 3 3]]]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">第0轴： begin[0] = 1 代表从第1个元素开始取，size[0] = 1 代表取一个元素， </span></span><br><span class="line"><span class="string">        所以第0轴的结果是 [[[3, 3, 3], [4, 4, 4]]]</span></span><br><span class="line"><span class="string">第1轴： begin[1] = 0 代表从第0个元素开始取，size[1] = 1 代表取一个元素,</span></span><br><span class="line"><span class="string">        故得到 [[[3, 3, 3]]]</span></span><br><span class="line"><span class="string">第2轴： begin[2] = 0 代表从第0个元素开始取，size[2] = 3 代表取两个元素</span></span><br><span class="line"><span class="string">        故得到 [[[3, 3]]]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">所以最后结果为[[[3, 3]]]</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">print(<span class="string">"slice_1"</span>)</span><br><span class="line">print(sess.run(tf.slice(inputs, [<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>], [<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>], name=<span class="string">"slice_1"</span>)))</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">slice_2: [[[3 3 3]</span></span><br><span class="line"><span class="string">           [4 4 4]]</span></span><br><span class="line"><span class="string">          [[5 5 5]</span></span><br><span class="line"><span class="string">           [6 6 6]]]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-1 代表取完该维度的所有元素</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">print(<span class="string">"slice_2"</span>)</span><br><span class="line">print(sess.run(tf.slice(inputs, [<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>], [<span class="number">2</span>, <span class="number">-1</span>, <span class="number">-1</span>])))</span><br></pre></td></tr></table></figure></p>
+<h4 id="tf.splitvalue-num_or_size_splits-axis0-numnone-namesplit">tf.split(value, num_or_size_splits, axis=0, num=None, name=‘split’)</h4>
+<ul>
+<li>value: 张量</li>
+<li>num_or_size_splits：int / list / tensor 指定切割大小</li>
+<li>axis：指定切割维度</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line">sess = tf.InteractiveSession()</span><br><span class="line">inputs = tf.constant([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</span><br><span class="line">                      [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]])</span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">在第0轴上切割</span></span><br><span class="line"><span class="string">[[1 2 3]]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[[4 5 6]]</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">outputs = tf.split(inputs, <span class="number">2</span>, axis=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">在第1轴上切割</span></span><br><span class="line"><span class="string">[[1]</span></span><br><span class="line"><span class="string"> [4]]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[[2]</span></span><br><span class="line"><span class="string"> [5]]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[[3]</span></span><br><span class="line"><span class="string"> [6]]</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">outputs1 = tf.split(inputs, <span class="number">3</span>, axis=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">指定每个切割区间大小(各区间大小之和应该等于该维度大小)</span></span><br><span class="line"><span class="string">[[1]</span></span><br><span class="line"><span class="string"> [4]]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[[2 3]</span></span><br><span class="line"><span class="string"> [5 6]]</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">outputs2 = tf.split(inputs, [<span class="number">1</span>, <span class="number">2</span>], axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="tf.tileinput-multiples-namenone">tf.tile(input, multiples, name=None)</h4>
+<ul>
+<li>input：输入张量</li>
+<li>multiples：list 指定每个维度重复多少次</li>
+</ul>
+<p>第i维的输出为 input.dims(i) * multiples[i], tf.tile 常用于 <code>trilinear</code> 等操作上</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line">sess = tf.InteractiveSession()</span><br><span class="line">inputs = tf.constant([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], </span><br><span class="line">                      [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]])</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">在最后扩充一维，并重复三次</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[[[1 1 1]</span></span><br><span class="line"><span class="string">  [2 2 2]</span></span><br><span class="line"><span class="string">  [3 3 3]]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"> [[4 4 4]</span></span><br><span class="line"><span class="string">  [5 5 5]</span></span><br><span class="line"><span class="string">  [6 6 6]]]</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">expands = tf.tile(tf.expand_dims(inputs, <span class="number">2</span>), [<span class="number">1</span>, <span class="number">1</span>, <span class="number">3</span>])</span><br></pre></td></tr></table></figure>
+<h4 id="tf.padtensor-paddings-modeconstant-namenone-constant_values0">tf.pad(tensor, paddings, mode=‘CONSTANT’, name=None, constant_values=0)</h4>
+<ul>
+<li>paddings： 是一个张量，[N, 2]形式，N代表张量的阶，2代表必须是2列</li>
+<li>mode：可以取三个值
+<ul>
+<li>CONSTANT：常量填充，值可由 constant_value 设定</li>
+<li>REFLECT： 映射填充，上下（axis=0）填充顺序和paddings是相反的，左右（axis=1）顺序补齐</li>
+<li>SYMMETRIC：对称填充，上下（axis=0）填充顺序是和paddings相同的，左右（axis=1）对称补齐</li>
+</ul></li>
+</ul>
+<p>填充的方向一般是有<code>向前和向后</code>填充 ， pad函数也是类似的，paddings 必须是两列用于指定维度的前后填充大小</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line">sess = tf.InteractiveSession()</span><br><span class="line">inputs = tf.constant([[[<span class="number">1</span>, <span class="number">1</span>]], </span><br><span class="line">                      [[<span class="number">2</span>, <span class="number">2</span>]]])</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">第0轴：[1, 1] 指定向前和向后填充1个单位</span></span><br><span class="line"><span class="string">第1轴：[1, 1] 指定向前和向后填充1个单位</span></span><br><span class="line"><span class="string">第2轴：[1, 2] 指定向前填充1个单位向后填充2个单位</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[[[0 0 0 0 0]</span></span><br><span class="line"><span class="string">  [0 0 0 0 0]</span></span><br><span class="line"><span class="string">  [0 0 0 0 0]]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"> [[0 0 0 0 0]</span></span><br><span class="line"><span class="string">  [0 1 1 0 0]</span></span><br><span class="line"><span class="string">  [0 0 0 0 0]]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"> [[0 0 0 0 0]</span></span><br><span class="line"><span class="string">  [0 2 2 0 0]</span></span><br><span class="line"><span class="string">  [0 0 0 0 0]]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"> [[0 0 0 0 0]</span></span><br><span class="line"><span class="string">  [0 0 0 0 0]</span></span><br><span class="line"><span class="string">  [0 0 0 0 0]]] </span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">outputs = tf.pad(inputs, [[<span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">1</span>], [<span class="number">1</span>, <span class="number">2</span>]])</span><br></pre></td></tr></table></figure>
+<h4 id="tf.concatvalues-axis-nameconcat">tf.concat(values, axis, name=‘concat’)</h4>
+<p>在指定维度拼接.</p>
+<h4 id="tf.stackvalues-axis0-namepack">tf.stack(values, axis=0, name=”pack”)</h4>
+<p>将一个R维张量列表沿着axis轴组合成一个R+1维的张量。作用有点像 python 的 zip 函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line">sess = tf.InteractiveSession()</span><br><span class="line"></span><br><span class="line">x = [<span class="number">1</span>, <span class="number">2</span>]</span><br><span class="line">y = [<span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">[[1 3]</span></span><br><span class="line"><span class="string"> [2 4]]</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">outputs = tf.stack([x, y], axis=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">[[1 2]</span></span><br><span class="line"><span class="string"> [3 4]]</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">outputs = tf.stack([x, y], axis=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="tf.unstackvalue-numnone-axis0-nameunstack">tf.unstack(value, num=None, axis=0, name=‘unstack’)</h4>
+<p>tf.stack 的反过程</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line">sess = tf.InteractiveSession()</span><br><span class="line"></span><br><span class="line">x = [[<span class="number">1</span>, <span class="number">2</span>],</span><br><span class="line">     [<span class="number">3</span>, <span class="number">4</span>]]</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">[1 3]</span></span><br><span class="line"><span class="string">[2 4]</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">a, b = tf.unstack(x, axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="tf.reverse_sequenceinput-seq_lengths-seq_axisnone-batch_axisnone-namenone-seq_dimnone-batch_dimnone">tf.reverse_sequence(input, seq_lengths, seq_axis=None, batch_axis=None, name=None, seq_dim=None, batch_dim=None)</h4>
+<p>常用在双向的网络上，如双向的RNN</p>
+<h4 id="tf.transposea-permnone-nametranspose-conjugatefalse">tf.transpose(a, perm=None, name=‘transpose’, conjugate=False)</h4>
+<p>维度位置交换函数，此函数用的比较频繁</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line">sess = tf.InteractiveSession()</span><br><span class="line"></span><br><span class="line">x = tf.constant([[[<span class="number">1</span>, <span class="number">2</span>],</span><br><span class="line">                 [<span class="number">3</span>, <span class="number">4</span>]]])</span><br><span class="line"></span><br><span class="line">y = tf.transpose(x, [<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>])</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">x shape: [1 2 2]</span></span><br><span class="line"><span class="string">x: [[[1 2]</span></span><br><span class="line"><span class="string">  [3 4]]]</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">print(<span class="string">"x shape:"</span>, sess.run(tf.shape(x)))</span><br><span class="line">print(<span class="string">"x:"</span>, sess.run(x))</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">y shape: [2 1 2]</span></span><br><span class="line"><span class="string">y: [[[1 2]]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"> [[3 4]]]</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">print(<span class="string">"y shape:"</span>, sess.run(tf.shape(y)))</span><br><span class="line">print(<span class="string">"y:"</span>, sess.run(y))</span><br></pre></td></tr></table></figure>
+<h4 id="tf.gatherparams-indices-validate_indicesnone-namenone-axis0">tf.gather(params, indices, validate_indices=None, name=None, axis=0)</h4>
+<p>取得 axis 轴指定下标 indices 的值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line">sess = tf.InteractiveSession()</span><br><span class="line"></span><br><span class="line">x = tf.constant([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], </span><br><span class="line">                 [<span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]])</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">[[2 4]</span></span><br><span class="line"><span class="string"> [6 8]]</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">y = tf.gather(x, [<span class="number">1</span>, <span class="number">3</span>], axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="sequence">Sequence</h3>
+<h4 id="tf.sequence_masklengths-maxlennone-dtypetf.bool-namenone">tf.sequence_mask(lengths, maxlen=None, dtype=tf.bool, name=None)</h4>
+<p>构建序列<code>长度</code>的mask标志，是以长度来构建的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line">sess = tf.InteractiveSession()</span><br><span class="line"></span><br><span class="line">lens = tf.constant([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]) </span><br><span class="line">max_len = tf.reduce_max(lens)</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">[[ True False False]</span></span><br><span class="line"><span class="string"> [ True  True False]</span></span><br><span class="line"><span class="string"> [ True  True  True]]</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">mask = tf.sequence_mask(lens, max_len)</span><br></pre></td></tr></table></figure>
+<h2 id="常用技巧">常用技巧</h2>
+<h3 id="attention的计算">Attention的计算</h3>
+<p>attention其实并不是什么高大上的东西，从数学角度上看其实原理很简单，如果对Attention机制能有较深的理解且能实现，那么对于大部分的 paper 都可以实现了。</p>
+<h4 id="attention-机制的简单理解">Attention 机制的简单理解</h4>
+<p>假设有三个值 <span class="math inline">\(Q\)</span>、<span class="math inline">\(K\)</span>、<span class="math inline">\(V\)</span> (<span class="math inline">\(Q\)</span>代表 <span class="math inline">\(Query\)</span>, <span class="math inline">\(K\)</span>代表<span class="math inline">\(Key\)</span>，<span class="math inline">\(V\)</span>代表<span class="math inline">\(Value\)</span>)，其中 <span class="math inline">\(K\)</span> 跟 <span class="math inline">\(V\)</span> 是匹配的，那么Attention可以认为是通过 <span class="math inline">\(Query\)</span> 去注意 <span class="math inline">\(Value\)</span> 中重要的信息</p>
+<p><span class="math display">\[\begin{align*}
+&amp; sim = Similarity(Q, K) \\
+&amp; \alpha  = softmax(sim) \\ 
+&amp; V_{attn} = \alpha \cdot V
+\end{align*}\]</span></p>
+<p>其中 Simlarity 是计算相似度的函数，最简单的可通过MLP来计算，在NLP中一般有 <span class="math inline">\(K = V\)</span></p>
+<h4 id="一个简单的例子">一个简单的例子</h4>
+<p>实现一个简单的 self atttion，self attention中 <span class="math inline">\(Q = K = V\)</span> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line">sess = tf.InteractiveSession()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">attention</span><span class="params">(value)</span>:</span></span><br><span class="line">    Q = value</span><br><span class="line">    K = value</span><br><span class="line">    V = value</span><br><span class="line"></span><br><span class="line">    shape = V.get_shape().as_list()</span><br><span class="line"></span><br><span class="line">    W = tf.get_variable(<span class="string">'attn_W'</span>, </span><br><span class="line">                        shape=[shape[<span class="number">-1</span>], shape[<span class="number">-1</span>]],</span><br><span class="line">                        initializer=tf.truncated_normal_initializer(stddev=<span class="number">0.1</span>))</span><br><span class="line"></span><br><span class="line">    U = tf.get_variable(<span class="string">'attn_U'</span>,</span><br><span class="line">                        shape=[shape[<span class="number">-1</span>], shape[<span class="number">-1</span>]],</span><br><span class="line">                        initializer=tf.truncated_normal_initializer(stddev=<span class="number">0.1</span>))</span><br><span class="line"></span><br><span class="line">    P = tf.get_variable(<span class="string">'attn_P'</span>,</span><br><span class="line">                        shape=[shape[<span class="number">-1</span>], <span class="number">1</span>], </span><br><span class="line">                        initializer=tf.truncated_normal_initializer(stddev=<span class="number">0.1</span>))</span><br><span class="line"></span><br><span class="line">    Q = tf.reshape(Q, [<span class="number">-1</span>, shape[<span class="number">-1</span>]])</span><br><span class="line">    K = tf.reshape(K, [<span class="number">-1</span>, shape[<span class="number">-1</span>]])</span><br><span class="line">    </span><br><span class="line">    sim = tf.tanh(tf.add(</span><br><span class="line">        tf.matmul(Q, W), </span><br><span class="line">        tf.matmul(K, U)))</span><br><span class="line">    alpha = tf.nn.softmax(</span><br><span class="line">        tf.reshape(tf.matmul(sim, P), [<span class="number">-1</span>, shape[<span class="number">1</span>], <span class="number">1</span>]), axis=<span class="number">1</span>)</span><br><span class="line">    V_attn = tf.multiply(alpha, V)</span><br><span class="line">    <span class="keyword">return</span> V_attn, alpha</span><br><span class="line"></span><br><span class="line">inputs = tf.random_normal([<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>])</span><br><span class="line">attn, alpha = attention(inputs)</span><br><span class="line"></span><br><span class="line">init = tf.global_variables_initializer()</span><br><span class="line">sess.run(init)</span><br><span class="line"></span><br><span class="line">print(<span class="string">"inputs:\n"</span>, sess.run(inputs))</span><br><span class="line">print(<span class="string">"alpha:\n"</span>, sess.run(alpha))</span><br><span class="line">print(<span class="string">"attn applied:\n"</span>, sess.run(attn))</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechat-qcode.jpg" alt="sean lee wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎关注我的公众号！</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>感谢支持！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="sean lee 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DL/" rel="tag"># DL</a>
+          
+            <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/07/常用的相似度计算方法/" rel="next" title="常用的相似度计算方法">
+                <i class="fa fa-chevron-left"></i> 常用的相似度计算方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="sean lee" />
+            
+              <p class="site-author-name" itemprop="name">sean lee</p>
+              <p class="site-description motion-element" itemprop="description">NLP / DL / Python / C++ | 爱我所爱</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index-1.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/SeanLee97" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:xmlee97@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://plus.google.com/u/0/114423502510761945752" target="_blank" title="Google">
+                      
+                        <i class="fa fa-fw fa-google"></i>Google</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/xmlee97" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#常用函数"><span class="nav-number">1.</span> <span class="nav-text">常用函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#casting"><span class="nav-number">1.1.</span> <span class="nav-text">Casting</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reduce"><span class="nav-number">1.2.</span> <span class="nav-text">Reduce</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实例一求张量的-mask-和长度"><span class="nav-number">1.3.</span> <span class="nav-text">实例一：求张量的 mask 和长度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shape-与-shape-变换"><span class="nav-number">1.4.</span> <span class="nav-text">shape 与 shape 变换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#slicing-and-joining-切片和连接"><span class="nav-number">1.5.</span> <span class="nav-text">Slicing and Joining 切片和连接</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#tf.sliceinput_-begin-size-namenone"><span class="nav-number">1.5.1.</span> <span class="nav-text">tf.slice(input_, begin, size, name=None)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tf.splitvalue-num_or_size_splits-axis0-numnone-namesplit"><span class="nav-number">1.5.2.</span> <span class="nav-text">tf.split(value, num_or_size_splits, axis=0, num=None, name=‘split’)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tf.tileinput-multiples-namenone"><span class="nav-number">1.5.3.</span> <span class="nav-text">tf.tile(input, multiples, name=None)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tf.padtensor-paddings-modeconstant-namenone-constant_values0"><span class="nav-number">1.5.4.</span> <span class="nav-text">tf.pad(tensor, paddings, mode=‘CONSTANT’, name=None, constant_values=0)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tf.concatvalues-axis-nameconcat"><span class="nav-number">1.5.5.</span> <span class="nav-text">tf.concat(values, axis, name=‘concat’)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tf.stackvalues-axis0-namepack"><span class="nav-number">1.5.6.</span> <span class="nav-text">tf.stack(values, axis=0, name=”pack”)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tf.unstackvalue-numnone-axis0-nameunstack"><span class="nav-number">1.5.7.</span> <span class="nav-text">tf.unstack(value, num=None, axis=0, name=‘unstack’)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tf.reverse_sequenceinput-seq_lengths-seq_axisnone-batch_axisnone-namenone-seq_dimnone-batch_dimnone"><span class="nav-number">1.5.8.</span> <span class="nav-text">tf.reverse_sequence(input, seq_lengths, seq_axis=None, batch_axis=None, name=None, seq_dim=None, batch_dim=None)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tf.transposea-permnone-nametranspose-conjugatefalse"><span class="nav-number">1.5.9.</span> <span class="nav-text">tf.transpose(a, perm=None, name=‘transpose’, conjugate=False)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tf.gatherparams-indices-validate_indicesnone-namenone-axis0"><span class="nav-number">1.5.10.</span> <span class="nav-text">tf.gather(params, indices, validate_indices=None, name=None, axis=0)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sequence"><span class="nav-number">1.6.</span> <span class="nav-text">Sequence</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#tf.sequence_masklengths-maxlennone-dtypetf.bool-namenone"><span class="nav-number">1.6.1.</span> <span class="nav-text">tf.sequence_mask(lengths, maxlen=None, dtype=tf.bool, name=None)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用技巧"><span class="nav-number">2.</span> <span class="nav-text">常用技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#attention的计算"><span class="nav-number">2.1.</span> <span class="nav-text">Attention的计算</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#attention-机制的简单理解"><span class="nav-number">2.1.1.</span> <span class="nav-text">Attention 机制的简单理解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一个简单的例子"><span class="nav-number">2.1.2.</span> <span class="nav-text">一个简单的例子</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sean lee</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">&nbsp;总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客<span id="busuanzi_value_site_uv"></span>人</span>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://seanlee97.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://seanlee97.github.io/2018/10/20/tensorflow常用函数以及技巧/';
+          this.page.identifier = '2018/10/20/tensorflow常用函数以及技巧/';
+          this.page.title = 'tensorflow常用函数以及技巧';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://seanlee97.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
