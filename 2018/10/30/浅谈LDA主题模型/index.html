@@ -92,7 +92,7 @@
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/lda_topic/dirichlet-alpha.gif">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/lda_topic/corpus.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/lda_topic/bayes-model.png">
-<meta property="og:updated_time" content="2018-11-02T02:14:06.666Z">
+<meta property="og:updated_time" content="2018-11-02T02:22:23.965Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浅谈LDA主题模型(原理篇)">
 <meta name="twitter:description" content="首先声明，这里的 LDA 是指 Latent Dirichlet Allocation 隐含狄利克雷分布，而不是 Linear Discriminant Analysis 线性判别分析 (笔者有幸在 City University of HK 听过一堂机器学习课，里面讲到了线性判别，受益匪浅，有机会再做分享) 除了看原论文 Latent Dirichlet Allocation , 虽然论文一作不">
@@ -476,6 +476,12 @@ E(Beta(p|\alpha, \beta)) &amp; = \int_{0}^{1} t Beta(p|\alpha, \beta) dt \\
 <p align="center">
 图片来自维基百科
 </p>
+<h3 id="硬-软思维">硬 &amp; 软思维</h3>
+<p>举个例子，判断一个人的性别</p>
+<ul>
+<li>硬分类思想：这个人是男的（很果断，非0即1）</li>
+<li>软分类思想：这个人 70% 的可能是男的， 30% 的可能是女的，所以他应该是个男的</li>
+</ul>
 <h2 id="再话-lda">再话 LDA</h2>
 <p>在 <code>LDA 的解释</code> 部分已经解释了 LDA 的基本思想，这里结合背景知识再深入的讲解</p>
 <p>假设有 M 篇文档，对应第 d 个文档种有 <span class="math inline">\(N_{d}\)</span> 词</p>
@@ -511,6 +517,7 @@ E(Beta(p|\alpha, \beta)) &amp; = \int_{0}^{1} t Beta(p|\alpha, \beta) dt \\
 <li>[1] https://en.wikipedia.org/wiki/Dirichlet_distribution</li>
 <li>[2] http://www.flickering.cn/%E6%95%B0%E5%AD%A6%E4%B9%8B%E7%BE%8E/2014/06/lda%E6%95%B0%E5%AD%A6%E5%85%AB%E5%8D%A6%E6%96%87%E6%9C%AC%E5%BB%BA%E6%A8%A1/</li>
 <li>[3] https://www.cnblogs.com/pinard/p/6831308.html</li>
+<li>[4] http://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf</li>
 </ul>
 
       
@@ -756,7 +763,7 @@ E(Beta(p|\alpha, \beta)) &amp; = \int_{0}^{1} t Beta(p|\alpha, \beta) dt \\
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#lda-的解释"><span class="nav-number">1.</span> <span class="nav-text">LDA 的解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景知识"><span class="nav-number">2.</span> <span class="nav-text">背景知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#gamma-函数"><span class="nav-number">2.1.</span> <span class="nav-text">Gamma 函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#gamma-分布"><span class="nav-number">2.1.1.</span> <span class="nav-text">Gamma 分布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拓gamma-分布与-poisson-分布"><span class="nav-number">2.1.2.</span> <span class="nav-text">【拓】Gamma 分布与 Poisson 分布</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#共轭先验分布"><span class="nav-number">2.2.</span> <span class="nav-text">共轭先验分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二项分布和-beta-分布"><span class="nav-number">2.3.</span> <span class="nav-text">二项分布和 Beta 分布</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#beta分布的期望"><span class="nav-number">2.3.1.</span> <span class="nav-text">Beta分布的期望</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多项分布和-dirichlet-分布"><span class="nav-number">2.4.</span> <span class="nav-text">多项分布和 Dirichlet 分布</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对称-dirichlet-分布"><span class="nav-number">2.4.1.</span> <span class="nav-text">对称 Dirichlet 分布</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#再话-lda"><span class="nav-number">3.</span> <span class="nav-text">再话 LDA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#refrence"><span class="nav-number">4.</span> <span class="nav-text">Refrence</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#lda-的解释"><span class="nav-number">1.</span> <span class="nav-text">LDA 的解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景知识"><span class="nav-number">2.</span> <span class="nav-text">背景知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#gamma-函数"><span class="nav-number">2.1.</span> <span class="nav-text">Gamma 函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#gamma-分布"><span class="nav-number">2.1.1.</span> <span class="nav-text">Gamma 分布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拓gamma-分布与-poisson-分布"><span class="nav-number">2.1.2.</span> <span class="nav-text">【拓】Gamma 分布与 Poisson 分布</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#共轭先验分布"><span class="nav-number">2.2.</span> <span class="nav-text">共轭先验分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二项分布和-beta-分布"><span class="nav-number">2.3.</span> <span class="nav-text">二项分布和 Beta 分布</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#beta分布的期望"><span class="nav-number">2.3.1.</span> <span class="nav-text">Beta分布的期望</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多项分布和-dirichlet-分布"><span class="nav-number">2.4.</span> <span class="nav-text">多项分布和 Dirichlet 分布</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对称-dirichlet-分布"><span class="nav-number">2.4.1.</span> <span class="nav-text">对称 Dirichlet 分布</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#硬-软思维"><span class="nav-number">2.5.</span> <span class="nav-text">硬 &amp; 软思维</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#再话-lda"><span class="nav-number">3.</span> <span class="nav-text">再话 LDA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#refrence"><span class="nav-number">4.</span> <span class="nav-text">Refrence</span></a></li></ol></div>
             
 
           </div>
