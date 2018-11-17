@@ -262,6 +262,214 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/08/23/谈谈python中的元类以及实现一个简单的ORM框架/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/23/谈谈python中的元类以及实现一个简单的ORM框架/" itemprop="url">谈谈python中的元类以及实现一个简单的ORM框架</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-23T00:15:27+08:00">
+                2018-08-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">技术日志</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/08/23/谈谈python中的元类以及实现一个简单的ORM框架/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/08/23/谈谈python中的元类以及实现一个简单的ORM框架/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>大家都说python中的元类(metaclass)在真实场景中99%的几率都用不到，但是最大熵理论告诉我们，面对未知风险，我们不能报侥幸心理，我们应该平权看待所有潜在风险，不应该放过任何一处潜在风险。</p>
+<p>So，本文主要讲讲python的元类，为了不枯燥无味，本文以一个初级ORM框架例子来讲解。</p>
+<h3 id="什么是orm">什么是ORM</h3>
+<p>Object Relational Mapping 即 对象-关系映射，在关系型数据库中就是把关系数据库的一行映射为一个对象，即一个类对应一个表，这样，你就不需要每次都用pymysql去封装每条sql了，把重复的操作交给<code>ORM</code>，如<code>sqlalchemy</code>就是一个 <code>ORM</code>框架</p>
+<p>可能这个解释有点牵强，在此举个例子把，比如说你要向一个数据表<code>user</code>插入数据，你可能会写: <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">user</span>(<span class="keyword">name</span>, age) <span class="keyword">values</span>(<span class="string">'seanlee'</span>, <span class="number">21</span>)</span><br></pre></td></tr></table></figure></p>
+<p>当插入数据到其他表时比如说<code>course</code>时，你又要: <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> course(<span class="keyword">name</span>, teacher) <span class="keyword">values</span>(<span class="string">'computer sicence'</span>, <span class="string">'Mr.Gates'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>这时你发现每次插入数据都要自己写完所有语句，且要处理完整个逻辑过程。这真的很累，于是乎，如果有一个框架能把这些复杂的工作给做了，使用者只需封装好模型类即可自动完成复杂的流程。 你的想法可能是这样的： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span><span class="params">(ORM)</span>:</span></span><br><span class="line">    <span class="comment"># 定义数据表的字段</span></span><br><span class="line">    name = CharField()</span><br><span class="line">    age = IntField()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    user = User()</span><br><span class="line">    user.name = <span class="string">"seanlee"</span></span><br><span class="line">    user.age = <span class="number">21</span></span><br><span class="line">    user.save()   <span class="comment"># 调用save函数框架自动将数据插入到数据库中</span></span><br></pre></td></tr></table></figure></p>
+<p>好了，上面就是<code>ORM</code>的大致思路了，本文要实现的目标就是完成上面代码的内部逻辑。</p>
+<h3 id="什么是元类">什么是元类</h3>
+<p>元类<code>metaclass</code>是类的类，简单的说就是元类是用来生产类的，可以说元类是<strong>最上层</strong>的类。可能还是很难理解，举几个例子把</p>
+<h4 id="object类">1. object类</h4>
+<p>平时大家定义类时可能会继承<code>object</code>类，大家下意识的认为<code>object</code>就是最上层的类了，其实不是，我们输出<code>object</code>的类型看看 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(type(object)) <span class="comment"># &lt;type 'type'&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到<code>object</code>类的类型是<code>type</code>类型，那么<code>type</code>类型又是什么呢？<code>type</code>类型就是指<code>type</code>类，大家都以为<code>type()</code>是一个函数，其实它是一个<strong>类</strong>，当只传一个参数时它会返回参数的类型。</p>
+<p><strong>其实<code>type</code>就是python的元类</strong>，看下面程序： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(type(type))  <span class="comment"># &lt;type 'type'&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到<code>type</code>的类型就是<code>type</code></p>
+<h4 id="基本数据类型">2. 基本数据类型</h4>
+<p>python中的基本数据类型也可看为对象，它们的直属类型的类就是 <code>type</code>，看下面例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">print(type(type(<span class="number">97</span>)))   <span class="comment"># 整型</span></span><br><span class="line">print(type(type(<span class="number">97.0</span>))) <span class="comment"># 浮点</span></span><br><span class="line">print(type(type(<span class="string">"seanlee"</span>))) <span class="comment"># 字符串</span></span><br><span class="line">print(type(type((<span class="number">9</span>, <span class="number">7</span>))))    <span class="comment"># 元组</span></span><br><span class="line">print(type(type([<span class="number">9</span>, <span class="number">7</span>])))    <span class="comment"># 列表</span></span><br><span class="line">print(type(type(&#123;<span class="string">"key"</span>: <span class="string">"val"</span>&#125;))) <span class="comment"># 字典</span></span><br></pre></td></tr></table></figure>
+<p>输出结果为： <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;type &apos;type&apos;&gt;</span><br><span class="line">&lt;type &apos;type&apos;&gt;</span><br><span class="line">&lt;type &apos;type&apos;&gt;</span><br><span class="line">&lt;type &apos;type&apos;&gt;</span><br><span class="line">&lt;type &apos;type&apos;&gt;</span><br></pre></td></tr></table></figure></p>
+<h4 id="元类的作用">元类的作用</h4>
+<p>掌握了元类，你就是“类”的老大了，你可以按照你的方式去修改类，就好比你得到了Linux的root帐号，你可以为所欲为了。也好比你是微信群的群主，拥有直接拉人入群、踢人出群的权力，python中的元类也类似可以用于对类属性的增删操作。</p>
+<p>好啦，到这里你应该理解元类的概念了</p>
+<h3 id="type类">type类</h3>
+<p>从此刻起一定要更正观念<code>type</code>是一个类，它有三个参数： <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type(what [, bases, dict])</span><br></pre></td></tr></table></figure></p>
+<p>可见后两个参数是可选的，各参数的意义：</p>
+<ul>
+<li>what: 输入的实例</li>
+<li>bases：类的基类，传入的是元组</li>
+<li>dict：类的属性、方法</li>
+</ul>
+<p>举几个例子说明，type的用法</p>
+<h4 id="直接生产类">直接生产类</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">User = type(<span class="string">'User'</span>, (object, ), &#123;<span class="string">'name'</span>: <span class="string">'seanlee'</span>, <span class="string">'age'</span>: <span class="number">21</span>&#125;)</span><br><span class="line">user = User()</span><br><span class="line">print(user.name)  <span class="comment"># seanlee</span></span><br><span class="line">print(user.age)   <span class="comment"># 21</span></span><br></pre></td></tr></table></figure>
+<h4 id="修改类属性">修改类属性</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span><span class="params">(object)</span>:</span></span><br><span class="line">    name = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">user = User()</span><br><span class="line">print(user.name) <span class="comment"># None</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_name</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> self.name</span><br><span class="line"></span><br><span class="line">User = type(<span class="string">'User'</span>, (object, ), &#123;<span class="string">'name'</span>:<span class="string">'seanlee'</span>, <span class="string">'get_name'</span>: get_name&#125;)</span><br><span class="line">user = User()</span><br><span class="line">print(user.name)  <span class="comment"># seanlee</span></span><br><span class="line">print(user.get_name())   <span class="comment"># seanlee</span></span><br></pre></td></tr></table></figure>
+<h3 id="python中类的创建">python中类的创建</h3>
+<ul>
+<li>如果类中没有定义metaclass，那么直接用type创建</li>
+<li>如果用户定义了metaclass那么以metaclass的方式创建</li>
+</ul>
+<h3 id="自定义元类的创建">自定义元类的创建</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Metaclass</span><span class="params">(type)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__new__</span><span class="params">(cls, name, bases, attrs, **kwargs)</span>:</span></span><br><span class="line">        <span class="comment"># do something here.</span></span><br><span class="line">        print(<span class="string">"call Metaclass"</span>)</span><br><span class="line">        <span class="keyword">return</span> super(Metaclass, cls).__new__(cls, name, bases, attrs, **kwargs)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span><span class="params">(metaclass=Metaclass)</span>:</span></span><br><span class="line">    <span class="comment"># __metaclass__ = Metaclass # python2支持的方式</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(<span class="string">"call User"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    User()</span><br></pre></td></tr></table></figure>
+<p>输出： <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">call Metaclass</span><br><span class="line">call User</span><br></pre></td></tr></table></figure></p>
+<h3 id="开始打造orm">开始打造ORM</h3>
+<h4 id="使用描述器定义字段属性">1. 使用描述器定义字段属性</h4>
+<p>如果不了解描述器，请阅读<a href="https://seanlee97.github.io/2018/08/21/python%E4%B8%AD%E7%9A%84%E6%8F%8F%E8%BF%B0%E5%99%A8/">python中的描述器</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 定义字段属性的基类Field，它的用处主要用于识别类属性中属于字段的那些属性</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Field</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 整型字段属性</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IntField</span><span class="params">(Field)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, db_column=<span class="string">""</span>)</span>:</span></span><br><span class="line">        self._value = <span class="keyword">None</span> <span class="comment"># 表的数据</span></span><br><span class="line">        self.db_column = db_column</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__set__</span><span class="params">(self, instance, value)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> isinstance(value, int):</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">"input should be a Integer"</span>)</span><br><span class="line">        self._value = value</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__get__</span><span class="params">(self, instance, owner)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self._value</span><br><span class="line"></span><br><span class="line"><span class="comment"># 字符型字段属性</span></span><br><span class="line"><span class="class"><span class="keyword">class</span>  <span class="title">CharField</span><span class="params">(Field)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, db_column=<span class="string">""</span>)</span>:</span></span><br><span class="line">        self._value  = <span class="keyword">None</span> </span><br><span class="line">        self.db_column = db_column</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__get__</span><span class="params">(self, instance, owner)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self._value</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__set__</span><span class="params">(self, instance, value)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> isinstance(value, str):</span><br><span class="line">            <span class="keyword">raise</span> ValueError(<span class="string">"input should be a String"</span>)</span><br><span class="line">        self._value = value</span><br></pre></td></tr></table></figure>
+<h4 id="定义元类">2. 定义元类</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MetaModel</span><span class="params">(type)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__new__</span><span class="params">(cls, name, bases, attrs, **kwargs)</span>:</span></span><br><span class="line">        fields = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> key, val <span class="keyword">in</span> attrs.items():</span><br><span class="line">            <span class="comment"># 把attrs中与数据库表字段有关的列提取出来</span></span><br><span class="line">            <span class="keyword">if</span> isinstance(val, Field):</span><br><span class="line">                fields[key] = val   <span class="comment"># value 直接走描述器__get__()</span></span><br><span class="line"></span><br><span class="line">        _meta = &#123;&#125;</span><br><span class="line">        db_table = name.lower()  <span class="comment"># 数据表名称默认取小写类名称</span></span><br><span class="line">        _meta[<span class="string">'db_table'</span>] = db_table</span><br><span class="line">        attrs[<span class="string">'_meta'</span>] = _meta</span><br><span class="line">        attrs[<span class="string">'_fields'</span>] = fields</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 以上过程相当于对类进行了修改</span></span><br><span class="line">        <span class="keyword">return</span> super(MetaModel, cls).__new__(cls, name, bases, attrs, **kwargs)</span><br></pre></td></tr></table></figure>
+<h4 id="定义模型基类">3. 定义模型基类</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Model</span><span class="params">(metaclass=MetaModel)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, *args, **kwargs)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> key, val <span class="keyword">in</span> kwargs.items():</span><br><span class="line">            setattr(self, key, val)</span><br><span class="line">        <span class="keyword">return</span> super(Model, self).__init__()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">save</span><span class="params">(self)</span>:</span></span><br><span class="line">        fields = []</span><br><span class="line">        values = []</span><br><span class="line">        <span class="keyword">for</span> key, val <span class="keyword">in</span> self._fields.items():</span><br><span class="line">            db_column = val.db_column</span><br><span class="line">            <span class="keyword">if</span> db_column <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">                db_column = key.lower()</span><br><span class="line">            fields.append(db_column)</span><br><span class="line">            value = getattr(self, key) <span class="comment"># 字段的值</span></span><br><span class="line">            values.append(str(value))</span><br><span class="line">        sql = <span class="string">"insert &#123;name&#125; (&#123;field&#125;) values (&#123;value&#125;)"</span>.format(name=self._meta[<span class="string">'db_table'</span>],</span><br><span class="line">                                                             field=<span class="string">','</span>.join(fields),</span><br><span class="line">                                                             value=<span class="string">','</span>.join(values))</span><br><span class="line">        <span class="keyword">return</span> sql</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">select</span><span class="params">(self)</span>:</span></span><br><span class="line">        fields = []</span><br><span class="line">        where = []</span><br><span class="line">        <span class="keyword">for</span> key, val <span class="keyword">in</span> self._fields.items():</span><br><span class="line">            db_column = val.db_column</span><br><span class="line">            <span class="keyword">if</span> db_column <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">                db_column = key.lower()</span><br><span class="line">            fields.append(db_column)</span><br><span class="line">            v = getattr(self, key, <span class="keyword">None</span>)</span><br><span class="line">            <span class="keyword">if</span> v <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">                where.append([key, str(v)])</span><br><span class="line"></span><br><span class="line">        sql = <span class="string">'select &#123;fields&#125; from &#123;name&#125; where &#123;where&#125;'</span>.format(name=self._meta[<span class="string">'db_table'</span>],</span><br><span class="line">                                                                 fields=<span class="string">','</span>.join(fields),</span><br><span class="line">                                                                 where=<span class="string">' and '</span>.join([<span class="string">'='</span>.join(x) <span class="keyword">for</span> x <span class="keyword">in</span> where]),</span><br><span class="line">                                                                 )</span><br><span class="line">        <span class="keyword">return</span> sql</span><br></pre></td></tr></table></figure>
+<p>上述三步就完成了简单orm的搭建了，为了简单没封装真实的数据库操作，仅返回SQL语句而已。</p>
+<h4 id="操作实例">4. 操作实例</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span><span class="params">(Model)</span>:</span></span><br><span class="line">    name = CharField(db_column=<span class="string">"name"</span>, max_length=<span class="number">10</span>)</span><br><span class="line">    age = IntField(db_column=<span class="string">"age"</span>, min=<span class="number">0</span>, max=<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span> <span class="comment"># 使用内部类来定义数据表的其他属性</span></span><br><span class="line">        db_table = <span class="string">"db_user"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    user = User(name=<span class="string">'seanlee'</span>, age=<span class="number">15</span>)</span><br><span class="line">    user.name = <span class="string">'sean'</span></span><br><span class="line">    print(user.save())</span><br><span class="line">    print(user.select())</span><br></pre></td></tr></table></figure>
+<p>输出 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">insert user (name,age) values (sean,15)</span><br><span class="line">select name,age from user where name=sean and age=15</span><br></pre></td></tr></table></figure></p>
+<p>上述代码放在了Github中，欢迎查阅<a href="https://github.com/SeanLee97/python_intermediate/blob/master/metaclass/orm.py" target="_blank" rel="noopener">python_intermediate / metaclass / orm</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/08/21/python中的描述器/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2351,207 +2559,6 @@ max(0, 1-(w^{T}x_{i} + b)) \tag{17}\]</span></p>
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/05/23/二叉树的四种遍历方式递归非递归实现/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="sean lee">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="明天探索者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/23/二叉树的四种遍历方式递归非递归实现/" itemprop="url">二叉树的四种遍历方式递归非递归实现</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-23T00:18:14+08:00">
-                2018-05-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index">
-                    <span itemprop="name">技术日志</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/05/23/二叉树的四种遍历方式递归非递归实现/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/05/23/二叉树的四种遍历方式递归非递归实现/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本文主要实现了二叉树的前序、中序、后序、层序以及求树的深度。每一种方式都使用了递归和非递归实现。</p>
-<h2 id="递归非递归的转化">递归非递归的转化</h2>
-<p>一般来说递归函数算法简洁，代码量比较小，但是往往时间复杂度、空间复杂度一般较差，因为处理递归的过程系统内部需要反复进栈出栈，故对于一些常驻内存或对资源紧张的程序，需要把递归转为非递归算法实现。转换过程一般要用到栈。</p>
-<p>下文中大部分都用到了栈，除了层序遍历用到了队列外。</p>
-<p>先给出二叉树的数据结构</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> datatype;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">BTNode</span>&#123;</span></span><br><span class="line">    datatype data;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">BTNode</span>* <span class="title">left</span>, *<span class="title">right</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>注意本文的代码均为C++编写，请注意与C的区别</p>
-<h2 id="求树的深度">求树的深度</h2>
-<p>递归方式</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">depth</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> left = depth(pRoot-&gt;left);</span><br><span class="line">    <span class="keyword">int</span> right = depth(pRoot-&gt;right);</span><br><span class="line">    <span class="keyword">return</span> left &gt; right ? left +<span class="number">1</span> : right + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>非递归方式, 使用中序遍历非递归方式实现 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">depth_iter</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> curr_depth = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> max_depth = <span class="number">-1</span>;</span><br><span class="line">    <span class="built_in">stack</span>&lt;BTNode* &gt;S1;</span><br><span class="line">    <span class="built_in">stack</span>&lt;<span class="keyword">int</span>&gt;S2;</span><br><span class="line">    BTNode* p;</span><br><span class="line">    p = pRoot;</span><br><span class="line">    <span class="keyword">while</span> (p!=<span class="literal">NULL</span> || !S1.empty())&#123;</span><br><span class="line">        <span class="keyword">while</span> (p!=<span class="literal">NULL</span>)&#123;</span><br><span class="line">            S1.push(p);</span><br><span class="line">            S2.push(curr_depth);</span><br><span class="line">            p = p-&gt;left;</span><br><span class="line">            curr_depth++;</span><br><span class="line">        &#125;</span><br><span class="line">        p = S1.top();</span><br><span class="line">        S1.pop();</span><br><span class="line">        curr_depth = S2.top();</span><br><span class="line">        S2.pop();</span><br><span class="line">        <span class="keyword">if</span> (p-&gt;left == <span class="literal">NULL</span> &amp;&amp; p-&gt;right == <span class="literal">NULL</span>)&#123;</span><br><span class="line">            <span class="comment">// 叶子结点的时候更新</span></span><br><span class="line">            max_depth = curr_depth &gt; max_depth ? curr_depth : max_depth;</span><br><span class="line">        &#125;</span><br><span class="line">        p = p-&gt;right;</span><br><span class="line">        curr_depth++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> max_depth;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="前序遍历">前序遍历</h2>
-<p>访问过程如下：</p>
-<ul>
-<li>访问根结点</li>
-<li>遍历左子树</li>
-<li>遍历右子树</li>
-</ul>
-<p>递归实现： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">preorder</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;pRoot-&gt;data&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">        preorder(pRoot-&gt;left);</span><br><span class="line">        preorder(pRoot-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>递归形式简单明了，非递归方式需要借助辅辅助栈实现</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">preorder_iter</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        BTNode* p;</span><br><span class="line">        p = pRoot;</span><br><span class="line">        <span class="built_in">stack</span>&lt;BTNode *&gt; S;</span><br><span class="line">        S.push(p);</span><br><span class="line">        <span class="keyword">while</span> (! S.empty())&#123;</span><br><span class="line">            p = S.top();</span><br><span class="line">            S.pop();</span><br><span class="line">            <span class="keyword">while</span> (p != <span class="literal">NULL</span>)&#123;</span><br><span class="line">                <span class="built_in">cout</span>&lt;&lt;p-&gt;data&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">                <span class="keyword">if</span> (p-&gt;right != <span class="literal">NULL</span>)&#123;</span><br><span class="line">                    S.push(p-&gt;right);</span><br><span class="line">                &#125;</span><br><span class="line">                p = p-&gt;left;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="中序遍历">中序遍历</h2>
-<p>遍历规则：</p>
-<ul>
-<li>遍历左子树</li>
-<li>访问根结点</li>
-<li>遍历右子树</li>
-</ul>
-<p>递归方式</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">inorder</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        inorder(pRoot-&gt;left);</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;pRoot-&gt;data&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">        inorder(pRoot-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>非递归方式</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">inorder_iter</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        BTNode* p;</span><br><span class="line">        p = pRoot;</span><br><span class="line">        <span class="built_in">stack</span>&lt;BTNode *&gt;S;</span><br><span class="line">        <span class="keyword">while</span> (p || !S.empty())&#123;</span><br><span class="line">            <span class="keyword">while</span> (p)&#123;</span><br><span class="line">               S.push(p);</span><br><span class="line">               p = p-&gt;left;</span><br><span class="line">            &#125;</span><br><span class="line">            p = S.top();</span><br><span class="line">            S.pop();</span><br><span class="line">            <span class="built_in">cout</span>&lt;&lt;p-&gt;data&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">            p = p-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="后序遍历">后序遍历</h2>
-<p>遍历规则：</p>
-<ul>
-<li>遍历左子树</li>
-<li>遍历右子树</li>
-<li>访问根结点</li>
-</ul>
-<p>递归方式</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">postorder</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        postorder(pRoot-&gt;left);</span><br><span class="line">        postorder(pRoot-&gt;right);</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;pRoot-&gt;data&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>非递归方式较前两种方式复杂，需要添加标志位</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sdata</span>&#123;</span></span><br><span class="line">    BTNode* q;</span><br><span class="line">    <span class="keyword">int</span> tag;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">postorder_iter</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        BTNode* p;</span><br><span class="line">        p = pRoot;</span><br><span class="line">        sdata* sd;</span><br><span class="line">        <span class="keyword">int</span> tag;</span><br><span class="line">        <span class="built_in">stack</span>&lt;sdata*&gt;S;</span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (p != <span class="literal">NULL</span>)&#123;</span><br><span class="line">                sd = <span class="keyword">new</span> sdata;</span><br><span class="line">                sd-&gt;q = p;</span><br><span class="line">                sd-&gt;tag = <span class="number">0</span>;</span><br><span class="line">                S.push(sd);</span><br><span class="line">                p = p-&gt;left;</span><br><span class="line">            &#125;</span><br><span class="line">            sd = S.top();</span><br><span class="line">            S.pop();</span><br><span class="line">            p = sd-&gt;q;</span><br><span class="line">            tag = sd-&gt;tag;</span><br><span class="line">            <span class="keyword">if</span> (tag == <span class="number">0</span>)&#123;</span><br><span class="line">                sd-&gt;q = p;</span><br><span class="line">                sd-&gt;tag = <span class="number">1</span>;</span><br><span class="line">                S.push(sd);</span><br><span class="line">                p = p-&gt;right;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="built_in">cout</span>&lt;&lt;p-&gt;data&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">                p = <span class="literal">NULL</span>; <span class="comment">// 访问后必须置NULL，否则将陷入死循环</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">while</span> (p != <span class="literal">NULL</span> || !S.empty());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="层序遍历">层序遍历</h2>
-<p>递归方式，层序遍历的递归方式较非递归方式复杂，本文的实现方式还有待优化。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> _layerorder(BTNode* pRoot, <span class="keyword">int</span> level)&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot == <span class="literal">NULL</span> || level &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">if</span> (level == <span class="number">1</span>)</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;pRoot-&gt;data&lt;&lt;<span class="string">" "</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pRoot-&gt;left)</span><br><span class="line">        _layerorder(pRoot-&gt;left, level<span class="number">-1</span>);</span><br><span class="line">    <span class="keyword">if</span> (pRoot-&gt;right)</span><br><span class="line">        _layerorder(pRoot-&gt;right, level<span class="number">-1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">layerorder</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">int</span> d = depth_iter(pRoot);   <span class="comment">// 求树的深度</span></span><br><span class="line">    <span class="comment">// 逐层输出</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> level=<span class="number">1</span>; level&lt;=d; level++)&#123;</span><br><span class="line">        _layerorder(pRoot, level);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>非递归方式，使用队列很快搞定</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">layerorder_iter</span><span class="params">(BTNode* pRoot)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pRoot != <span class="literal">NULL</span>)&#123;</span><br><span class="line">        BTNode* p;</span><br><span class="line">        p = pRoot;</span><br><span class="line">        <span class="built_in">queue</span>&lt;BTNode*&gt;Q;</span><br><span class="line">        Q.push(p);</span><br><span class="line">        <span class="keyword">while</span> (! Q.empty())&#123;</span><br><span class="line">            p = Q.front();</span><br><span class="line">            <span class="built_in">cout</span>&lt;&lt;p-&gt;data&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">            Q.pop();</span><br><span class="line">            <span class="keyword">if</span> (p-&gt;left != <span class="literal">NULL</span>)</span><br><span class="line">                Q.push(p-&gt;left);</span><br><span class="line">            <span class="keyword">if</span> (p-&gt;right != <span class="literal">NULL</span>)</span><br><span class="line">                Q.push(p-&gt;right);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><a href="https://github.com/SeanLee97/datastruct_and_algorithms/blob/cpp/bitree.cpp" target="_blank" rel="noopener">完整代码地址GitHub</a> 欢迎查阅</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2606,7 +2613,7 @@ max(0, 1-(w^{T}x_{i} + b)) \tag{17}\]</span></p>
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-count">29</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
