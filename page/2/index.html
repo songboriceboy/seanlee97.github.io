@@ -262,215 +262,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/08/25/为朴素贝叶斯加入TF-IDF特征/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="sean lee">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="明天探索者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/25/为朴素贝叶斯加入TF-IDF特征/" itemprop="url">为朴素贝叶斯加入tf-idf特征</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-25T19:49:59+08:00">
-                2018-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index">
-                    <span itemprop="name">技术日志</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/08/25/为朴素贝叶斯加入TF-IDF特征/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/08/25/为朴素贝叶斯加入TF-IDF特征/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>平时都说给分类器加入XX特征效果就好了，于是乎就用工具包懒人式操作几下（无外乎改改参数），很快tf-idf就加好了，但是如果让你完全手写实现那么到底怎么加呢？本文就来结合tf-idf和朴素贝叶斯谈谈加特征的方式。</p>
-<h3 id="背景知识">背景知识</h3>
-<h4 id="常用的vsm模型">常用的VSM模型</h4>
-<p>VSM(vector space model)即向量空间模型，是将文档映射到向量空间上，这样文档就可以计算了（总不可能用一堆文字去计算把）</p>
-<ul>
-<li>词集模型(set of word): 文档单词构成的集合，词集中的每个单词如果出现就置1没有就置0（也就是没有词频的概念）</li>
-<li>词袋模型(bag of word)：文档单词构成的集合，但统计词频，也就是说各个单词的权重不一样的，由词频决定</li>
-<li>tf-idf：单词的权重是对应单词的tf-idf值</li>
-</ul>
-<p>以上的概念很难理解的话看了下面的例子应该就能明白个大概：</p>
-<p>假设从语料库中得到一个字典<code>dict</code>: <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[I, CS, like, NLP, and]</span><br></pre></td></tr></table></figure></p>
-<p>现在有语料库中有两个文档 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">doc1: [I, like, NLP]</span><br><span class="line"></span><br><span class="line">doc2: [I, like, CS, and, like, NLP]</span><br></pre></td></tr></table></figure></p>
-<h5 id="词集模型">词集模型</h5>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">doc1: [1, 0, 1, 1, 0]</span><br><span class="line">doc2: [1, 1, 1, 1, 1]</span><br></pre></td></tr></table></figure>
-<h5 id="词袋模型">词袋模型</h5>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">doc1: [1, 0, 1, 1, 0]</span><br><span class="line">doc2: [1, 1, 2, 1, 1]  # like出现了两次故词频为2</span><br></pre></td></tr></table></figure>
-<h5 id="tf-idf">tf-idf</h5>
-<p><span class="math display">\[tf_{term} = \frac{该文章中出现词term的次数}{该文章总词数}\]</span></p>
-<p><span class="math display">\[idf_{term} = log(\frac{文档总数}{出现词term的文档数 + 1})\]</span></p>
-<p><span class="math display">\[tf-idf = tf \times idf\]</span></p>
-<p>根据上述公式得到计算<code>doc1</code>的tf-idf</p>
-<p><span class="math display">\[\begin{align*}
-tf &amp;= [\frac{1}{3},\ 0,\ \frac{1}{3},\ \frac{1}{3},\ 0] \\
-idf &amp;= [log(\frac{2}{2+1}),\ 0,\ log(\frac{2}{2+1}),\ log(\frac{2}{2+1}),\ 0] \\
-tf-idf &amp;= [\frac{1}{3} \times log(\frac{2}{2+1}),\ 0,\ \frac{1}{3} \times  log(\frac{2}{2+1}),\ \frac{1}{3} \times log(\frac{2}{2+1}),\ 0]
-\end{align*}\]</span></p>
-<p>同理可得<code>doc2</code>的tf-idf:</p>
-<p><span class="math display">\[\begin{align*}
-tf &amp;= [\frac{1}{6},\ \frac{1}{6},\ \frac{2}{6},\ \frac{1}{6},\ \frac{1}{6}] \\
-idf &amp;= [log(\frac{2}{2+1}),\ log(\frac{2}{1+1}),\ log(\frac{2}{2+1}),\ log(\frac{2}{2+1}),\ log(\frac{2}{1+1})] \\
-tf-idf &amp;= [\frac{1}{6} \times log(\frac{2}{2+1}),\ \frac{1}{6} \times \frac{2}{1+1},\ \frac{2}{6} \times  log(\frac{2}{2+1}),\ \frac{1}{6} \times log(\frac{2}{2+1}),\ \frac{1}{6} \times log(\frac{2}{1+1})]
-\end{align*}\]</span></p>
-<h3 id="朴素贝叶斯nb">朴素贝叶斯(NB)</h3>
-<p><code>NB</code>属于生成模型，生成模型学习的是联合概率<code>p(x, y)</code>, 它是利用先验概率<code>p(y)</code>和<code>p(x|y)</code>来训练的，最后预测时使用贝叶斯定理来预测:</p>
-<p><span class="math display">\[p(y|x_{1}...x_{m}) = \frac{p(y)p(x_{1}...x_{m}|y)}{\sum_{y{}&#39; \epsilon \gamma} p(y{}&#39;)p(x_{1}...p_{m}|y{}&#39;)}\]</span></p>
-<p>为了简化问题，<code>NB</code>做了一个朴素的假设，假设输入之间是独立的，因此可得</p>
-<p><span class="math display">\[p(y|x_{1}...x_{m}) = \frac{p(y)\prod_{i}^{m} p(x_{i}|y)}{\sum_{y{}&#39; \epsilon \gamma} p(y{}&#39;)p(x_{1}...p_{m}|y{}&#39;)}\]</span></p>
-<p>朴素贝叶斯分类器的求解目标为:</p>
-<p><span class="math display">\[\underset{y}{argmax} \sum _{y \epsilon \gamma}p(y|x_{1}...x_{m})\]</span></p>
-<p>最终求得的<code>y</code>即为分类结果</p>
-<h3 id="代码部分">代码部分</h3>
-<p>有前文可知tf-idf是用一个向量来表示的，为了方便添加特征我们只能用BOW的方式去构建输入，放了方便向量运算我们使用<code>numpy</code>来构建</p>
-<p>为了对比，我们实现两种特征<code>词袋</code>和<code>tf-idf</code>作为模型的输入</p>
-<h4 id="语料处理部分">语料处理部分</h4>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np </span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Corpus</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, data)</span>:</span></span><br><span class="line">        self.tags = defaultdict(int)</span><br><span class="line">        self.vocabs = set()</span><br><span class="line">        self.docs = []</span><br><span class="line">        </span><br><span class="line">        self.build_vocab(data)</span><br><span class="line">        self.v_l = len(self.vocabs) <span class="comment"># 字典的大小</span></span><br><span class="line">        self.d_l = len(self.docs)   <span class="comment"># 文档数</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 分词器</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">tokenizer</span><span class="params">(self, sent)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> jieba.lcut(sent)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 构建字典，获取分类标记集</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">build_vocab</span><span class="params">(self, data)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> (tag, doc) <span class="keyword">in</span> data:</span><br><span class="line">            words = self.tokenizer(doc)</span><br><span class="line">            self.vocabs.update(words)</span><br><span class="line">            self.tags[tag] += <span class="number">1</span></span><br><span class="line">            self.docs.append((tag, words))</span><br><span class="line">        self.vocabs = list(self.vocabs)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 计算词袋模型</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">calc_bow</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># shape为 [d_l, v_l]，每一行存放文档的词袋向量</span></span><br><span class="line">        self.bow = np.zeros([self.d_l, self.v_l])</span><br><span class="line">        <span class="keyword">for</span> idx <span class="keyword">in</span> range(self.d_l):</span><br><span class="line">            <span class="keyword">for</span> word <span class="keyword">in</span> self.docs[idx][<span class="number">1</span>]:</span><br><span class="line">                <span class="keyword">if</span> word <span class="keyword">in</span> self.vocabs:</span><br><span class="line">                    self.bow[idx, self.vocabs.index(word)] += <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 计算tf-idf</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">calc_tfidf</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># 先计算bow，再用bow来计算tf</span></span><br><span class="line">        self.calc_bow()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 初始化tf、df、idf</span></span><br><span class="line">        self.tf = np.zeros([self.d_l, self.v_l])</span><br><span class="line">        self.idf = np.ones([<span class="number">1</span>, self.v_l])</span><br><span class="line">        self.tf_idf = np.ones([self.d_l, self.v_l])</span><br><span class="line">        <span class="keyword">for</span> idx <span class="keyword">in</span> range(self.d_l):</span><br><span class="line">            self.tf[idx] = self.bow[idx] /np.sum(self.bow[idx])</span><br><span class="line">            <span class="keyword">for</span> word <span class="keyword">in</span> self.docs[idx]:</span><br><span class="line">                <span class="keyword">if</span> word <span class="keyword">in</span> self.vocabs:</span><br><span class="line">                    self.idf[<span class="number">0</span>, self.vocabs.index(word)] += <span class="number">1</span></span><br><span class="line">        self.idf = np.log(float(self.d_l) / self.idf)</span><br><span class="line">        self.tfidf = self.tf * self.idf</span><br><span class="line">        </span><br><span class="line">    <span class="comment"># 计算输入的bow向量，words代表输入序列（已分词）</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_idx</span><span class="params">(self, words)</span>:</span></span><br><span class="line">        bow = np.zeros([<span class="number">1</span>, self.v_l])</span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">            <span class="keyword">if</span> word <span class="keyword">in</span> self.vocabs:</span><br><span class="line">                bow[<span class="number">0</span>, self.vocabs.index(word)] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> bow</span><br></pre></td></tr></table></figure>
-<p>上述代码主要计算了<code>tf-idf</code>，词袋模型<code>bow</code></p>
-<h4 id="实现nb">实现NB</h4>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># NB继承了语料类Corpus</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NBayes</span><span class="params">(Corpus)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, data, kernel=<span class="string">"tfidf"</span>)</span>:</span></span><br><span class="line">        super(NBayes, self).__init__(data)</span><br><span class="line">    </span><br><span class="line">        <span class="comment"># kernel 代表使用哪种特征，默认是tfidf，赋其他值代表使用bow</span></span><br><span class="line">        self.kernel = kernel</span><br><span class="line">        self.y_prob = &#123;&#125; <span class="comment"># p(y_i)</span></span><br><span class="line">        self.c_prob = <span class="keyword">None</span> <span class="comment"># p(x|y_i) , 计算条件概率</span></span><br><span class="line">        self.feature = <span class="keyword">None</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 训练，主要计算 p(y_i)和条件概率 p(x|y_i)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> self.kernel == <span class="string">"tfidf"</span>:</span><br><span class="line">            self.calc_tfidf()</span><br><span class="line">            self.feature = self.tfidf</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.calc_bow()</span><br><span class="line">            self.feature = self.bow</span><br><span class="line">    </span><br><span class="line">        <span class="comment"># 采用极大似然估计计算p(y)</span></span><br><span class="line">        <span class="keyword">for</span> tag <span class="keyword">in</span> self.tags:</span><br><span class="line">            self.y_prob[tag] = float(self.tags[tag])/ self.d_l</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 计算条件概率 p(x|y_i)</span></span><br><span class="line">        self.c_prob = np.zeros([len(self.tags), self.v_l])</span><br><span class="line">        Z = np.zeros([len(self.tags), <span class="number">1</span>]) <span class="comment"># 归一化参数</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> idx <span class="keyword">in</span> range(self.d_l):</span><br><span class="line">            <span class="comment"># 获得类别标签id</span></span><br><span class="line">            tid = list(self.tags.keys()).index(self.docs[idx][<span class="number">0</span>])</span><br><span class="line">            self.c_prob[tid] += self.feature[idx]</span><br><span class="line">            Z[tid] = np.sum(self.c_prob[tid])</span><br><span class="line"></span><br><span class="line">        self.c_prob /= Z  <span class="comment"># 归一化</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 解码部分，返回使得概率值最大的类别y</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, inp)</span>:</span></span><br><span class="line">        words = self.tokenizer(inp)</span><br><span class="line">        idx = self.get_idx(words)</span><br><span class="line"></span><br><span class="line">        tag, score = <span class="keyword">None</span>, <span class="number">-1</span></span><br><span class="line">        <span class="keyword">for</span> (p_c, y) <span class="keyword">in</span> zip(self.c_prob, self.y_prob):</span><br><span class="line">            tmp = np.sum(idx * p_c * self.y_prob[y])</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> tmp &gt; score:</span><br><span class="line">                tag = y</span><br><span class="line">                score = tmp</span><br><span class="line">        <span class="keyword">return</span> tag, <span class="number">1.0</span> - score</span><br></pre></td></tr></table></figure>
-<h4 id="测试">测试</h4>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">trainSet = [(<span class="string">"pos"</span>, <span class="string">"good job !"</span>),</span><br><span class="line">                (<span class="string">"pos"</span>, <span class="string">"表现不错哦"</span>), </span><br><span class="line">                (<span class="string">"pos"</span>, <span class="string">"厉害咯"</span>), </span><br><span class="line">                (<span class="string">"pos"</span>, <span class="string">"做的很好啊"</span>), </span><br><span class="line">                (<span class="string">"pos"</span>, <span class="string">"做得不错继续努力"</span>),</span><br><span class="line">                (<span class="string">"pos"</span>, <span class="string">"不错！点赞"</span>),</span><br><span class="line">                (<span class="string">"neg"</span>, <span class="string">"太差了"</span>), </span><br><span class="line">                (<span class="string">"neg"</span>, <span class="string">"太糟糕了"</span>), </span><br><span class="line">                (<span class="string">"neg"</span>, <span class="string">"你做的一点都不好"</span>), </span><br><span class="line">                (<span class="string">"neg"</span>, <span class="string">"不行，重做"</span>),</span><br><span class="line">                (<span class="string">"neg"</span>, <span class="string">"so bad"</span>),</span><br><span class="line">                (<span class="string">"non"</span>, <span class="string">"一般般吧，还过的去"</span>), </span><br><span class="line">                (<span class="string">"non"</span>, <span class="string">"不算太好，也不算太差"</span>), </span><br><span class="line">                (<span class="string">"non"</span>, <span class="string">"继续努力吧"</span>)</span><br><span class="line">               ]</span><br><span class="line">               </span><br><span class="line">    nb = NBayes(trainSet)</span><br><span class="line">    nb.train()</span><br><span class="line">    print(nb.predict(<span class="string">"不错哦"</span>)) <span class="comment"># ('pos', 0.9142857142857143)</span></span><br></pre></td></tr></table></figure>
-<h3 id="扩展">扩展</h3>
-<p>神经网络分类器模型一般如何添加特征呢？笔者一般使用两种方式：</p>
-<ul>
-<li>在词嵌入层 (Word Embedding)进行拼接</li>
-<li>通过Attention计算引入</li>
-</ul>
-<p>本文完整代码放在 <a href="https://github.com/SeanLee97/nlp_learning/tree/master/nbayes" target="_blank" rel="noopener">github/nlp_learning/nbayes</a> 欢迎查阅</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/08/23/谈谈python中的元类以及实现一个简单的ORM框架/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2379,6 +2170,395 @@ max(0, 1-(w^{T}x_{i} + b)) \tag{17}\]</span></p>
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/05/23/常用排序算法实现合集/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/23/常用排序算法实现合集/" itemprop="url">常用排序算法实现合集</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-23T21:45:45+08:00">
+                2018-05-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/23/常用排序算法实现合集/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/05/23/常用排序算法实现合集/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本文记录了冒泡、插入、选择、希尔排序、快排、堆排、归并排序的C++实现</p>
+<h2 id="概述">概述</h2>
+<p>排序一般分为内排序和外排序</p>
+<ul>
+<li>内排序：通俗地说排序的过程在内存中执行，没有与外存产生数据交换</li>
+<li>外排序：排序的文件存入外存储器，排序过程是借助于内外存数据交换（或归并）来完成</li>
+</ul>
+<h3 id="排序的种类">排序的种类</h3>
+<p>排序一般分为：插入排序、交换排序、选择排序、归并排序、基数排序</p>
+<p>插入排序一般是通过移动把数据插入到合适位置来完成排序的，这类排序有：</p>
+<ul>
+<li>直接插入排序</li>
+<li>折半插入排序</li>
+<li>希尔排序</li>
+</ul>
+<p>交换排序一般是通过比较交换两个位置的值来达到排序的目的，这类排序有：</p>
+<ul>
+<li>冒泡排序</li>
+<li>快速排序</li>
+</ul>
+<p>选择排序一般是先选择某个数放到某个位置，这类排序有：</p>
+<ul>
+<li>直接选择排序</li>
+<li>堆选择排序</li>
+</ul>
+<h2 id="冒泡排序">冒泡排序</h2>
+<p>重复遍历过要排序的数列，依次比较两个元素，如果他们的顺序错误（在此错误取决于升序或降序）就把他们交换过来。 遍历的工作是重复的进行直到没有再交换，也即是排序完成。</p>
+<table>
+<thead>
+<tr class="header">
+<th>item</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>平均时间复杂度</td>
+<td><span class="math inline">\(O(n^{2})\)</span></td>
+</tr>
+<tr class="even">
+<td>最优时间复杂度</td>
+<td><span class="math inline">\(O(n)\)</span></td>
+</tr>
+<tr class="odd">
+<td>最差时间复杂度</td>
+<td><span class="math inline">\(O(n^{2})\)</span></td>
+</tr>
+<tr class="even">
+<td>空间复杂度</td>
+<td>总共<span class="math inline">\(O(n)\)</span> ，需要辅助空间 <span class="math inline">\(O(1)\)</span></td>
+</tr>
+<tr class="odd">
+<td>稳定性</td>
+<td>稳定</td>
+</tr>
+</tbody>
+</table>
+<p>算法助记 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">i∈[0,N-1)               //循环N-1遍</span><br><span class="line">  j∈[0,N-1-i)           //每遍循环要处理的无序部分</span><br><span class="line">    swap(j,j+1)          //两两排序（升序/降序）</span><br></pre></td></tr></table></figure></p>
+<h3 id="c实现">C++实现</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bubble_sort</span><span class="params">(<span class="keyword">int</span> *arr, <span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j;</span><br><span class="line">    <span class="keyword">for</span> (i=<span class="number">0</span>; i&lt;n<span class="number">-1</span>; i++)&#123;</span><br><span class="line">        <span class="keyword">for</span> (j=<span class="number">0</span>; j&lt;n-i<span class="number">-1</span>; j++)&#123;</span><br><span class="line">            <span class="keyword">if</span> (*(arr+j) &gt; *(arr+j+<span class="number">1</span>))&#123;</span><br><span class="line">                swap(arr, j, j+<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="插入排序">插入排序</h2>
+<p>通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。</p>
+<table>
+<thead>
+<tr class="header">
+<th>item</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>平均时间复杂度</td>
+<td><span class="math inline">\(O(n^{2})\)</span></td>
+</tr>
+<tr class="even">
+<td>最优时间复杂度</td>
+<td><span class="math inline">\(O(n)\)</span></td>
+</tr>
+<tr class="odd">
+<td>最差时间复杂度</td>
+<td><span class="math inline">\(O(n^{2})\)</span></td>
+</tr>
+<tr class="even">
+<td>空间复杂度</td>
+<td>总共<span class="math inline">\(O(n)\)</span> ，需要辅助空间 <span class="math inline">\(O(1)\)</span></td>
+</tr>
+<tr class="odd">
+<td>稳定性</td>
+<td>稳定</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert_sort</span><span class="params">(<span class="keyword">int</span> *arr, <span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j, k;</span><br><span class="line">    <span class="keyword">for</span> (i=<span class="number">1</span>; i&lt;n; i++)&#123;</span><br><span class="line">        j = i<span class="number">-1</span>;</span><br><span class="line">        k = *(arr+i);</span><br><span class="line">        <span class="keyword">while</span> (j&gt;=<span class="number">0</span> &amp;&amp; k &lt; *(arr+j))&#123;</span><br><span class="line">            *(arr+j+<span class="number">1</span>) = *(arr+j);</span><br><span class="line">            j--;</span><br><span class="line">        &#125;</span><br><span class="line">        *(arr+j+<span class="number">1</span>) = k;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="选择排序">选择排序</h2>
+<p>首先在未排序序列中找到最小（大）元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小（大）元素，然后放到已排序序列的末尾，以此类推，直到所有元素均排序完毕。</p>
+<table>
+<thead>
+<tr class="header">
+<th>item</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>平均时间复杂度</td>
+<td><span class="math inline">\(O(n^{2})\)</span></td>
+</tr>
+<tr class="even">
+<td>最优时间复杂度</td>
+<td><span class="math inline">\(O(n^{2})\)</span></td>
+</tr>
+<tr class="odd">
+<td>最差时间复杂度</td>
+<td><span class="math inline">\(O(n^{2})\)</span></td>
+</tr>
+<tr class="even">
+<td>空间复杂度</td>
+<td>总共<span class="math inline">\(O(n)\)</span> ，需要辅助空间 <span class="math inline">\(O(1)\)</span></td>
+</tr>
+<tr class="odd">
+<td>稳定性</td>
+<td>稳定</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">select_sort</span><span class="params">(<span class="keyword">int</span> *arr, <span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j, min_idx;</span><br><span class="line">    <span class="keyword">for</span> (i=<span class="number">0</span>; i&lt;n; i++)&#123;</span><br><span class="line">        min_idx = i;</span><br><span class="line">        <span class="keyword">for</span> (j=i+<span class="number">1</span>; j&lt;n; j++)&#123;</span><br><span class="line">            <span class="keyword">if</span> (*(arr+j) &lt; *(arr+min_idx))&#123;</span><br><span class="line">                min_idx = j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (min_idx != i)</span><br><span class="line">            <span class="comment">// swap</span></span><br><span class="line">            swap(arr, i, min_idx);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="希尔排序">希尔排序</h2>
+<p>递减增量排序算法，是插入排序的一种更高效的改进版本。</p>
+<table>
+<thead>
+<tr class="header">
+<th>item</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>平均时间复杂度</td>
+<td>根据步长序列的不同而不同</td>
+</tr>
+<tr class="even">
+<td>最优时间复杂度</td>
+<td><span class="math inline">\(O(n)\)</span></td>
+</tr>
+<tr class="odd">
+<td>最差时间复杂度</td>
+<td>根据步长序列的不同而不同</td>
+</tr>
+<tr class="even">
+<td>空间复杂度</td>
+<td><span class="math inline">\(O(n)\)</span></td>
+</tr>
+<tr class="odd">
+<td>稳定性</td>
+<td>不稳定</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">shell_sort</span><span class="params">(<span class="keyword">int</span> *arr, <span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> d, i, j, k;</span><br><span class="line">    d = n/<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">while</span> (d&gt;<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">for</span> (i=d; i&lt;n; i++)&#123;</span><br><span class="line">            k = *(arr+i);</span><br><span class="line">            j = i-d;</span><br><span class="line">            <span class="keyword">while</span> (j&gt;=<span class="number">0</span> &amp;&amp; *(arr+j) &gt; k)&#123;</span><br><span class="line">                *(arr+j+d) = *(arr+j);</span><br><span class="line">                j -= d;</span><br><span class="line">            &#125;</span><br><span class="line">            *(arr+j+d) = k;</span><br><span class="line">        &#125;</span><br><span class="line">        d /= <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="快速排序">快速排序</h2>
+<p>快排是一种很重要的排序，故单独叙述，请查看文章<a href="https://seanlee97.github.io/2018/04/14/详解快速排序/">快速排序</a></p>
+<table>
+<thead>
+<tr class="header">
+<th>item</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>平均时间复杂度</td>
+<td><span class="math inline">\(O(nlogn)\)</span></td>
+</tr>
+<tr class="even">
+<td>最优时间复杂度</td>
+<td><span class="math inline">\(O(nlogn)\)</span></td>
+</tr>
+<tr class="odd">
+<td>最差时间复杂度</td>
+<td><span class="math inline">\(O(n^{2})\)</span>, 退化为冒泡排序</td>
+</tr>
+<tr class="even">
+<td>空间复杂度</td>
+<td><span class="math inline">\(O(logn)\)</span></td>
+</tr>
+<tr class="odd">
+<td>稳定性</td>
+<td>不稳定</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span> *arr, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span></span>&#123;</span><br><span class="line">    <span class="comment">//  选择随机数作为哨兵</span></span><br><span class="line">    <span class="keyword">int</span> randint = rand()%high + low;</span><br><span class="line">    swap(arr, randint, high);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> store_idx=low, i, j, privot= *(arr+high);</span><br><span class="line">    <span class="keyword">for</span> (i=low; i&lt;high; i++)&#123;</span><br><span class="line">        <span class="keyword">if</span> (*(arr+i) &lt; privot)&#123;</span><br><span class="line">            swap(arr, i, store_idx);</span><br><span class="line">            store_idx++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    swap(arr, store_idx, high);</span><br><span class="line">    <span class="keyword">return</span> store_idx;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">quick_sort</span><span class="params">(<span class="keyword">int</span> *arr, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (low &lt; high)&#123;</span><br><span class="line">        <span class="keyword">int</span> mid = partition(arr, low, high);</span><br><span class="line">        quick_sort(arr, low, mid<span class="number">-1</span>);</span><br><span class="line">        quick_sort(arr, mid+<span class="number">1</span>, high);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="堆排序">堆排序</h2>
+<p>利用堆所设计的排序算法，堆是一个近似完全二叉数的结构，并同时满足堆的性质：子结点的键值或索引总是小于（或大于）它的父节点</p>
+<table>
+<thead>
+<tr class="header">
+<th>item</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>平均时间复杂度</td>
+<td><span class="math inline">\(O(nlogn)\)</span></td>
+</tr>
+<tr class="even">
+<td>最优时间复杂度</td>
+<td><span class="math inline">\(O(nlogn)\)</span></td>
+</tr>
+<tr class="odd">
+<td>最差时间复杂度</td>
+<td><span class="math inline">\(O(nlogn)\)</span>,</td>
+</tr>
+<tr class="even">
+<td>空间复杂度</td>
+<td>总共<span class="math inline">\(O(n)\)</span>, 辅助空间 <span class="math inline">\(O(1)\)</span></td>
+</tr>
+<tr class="odd">
+<td>稳定性</td>
+<td>不稳定</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 构建大顶堆</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">build_maxheap</span><span class="params">(<span class="keyword">int</span> *arr, <span class="keyword">int</span> root, <span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> L, R, largest;</span><br><span class="line">    L = <span class="number">2</span>*root+<span class="number">1</span>;</span><br><span class="line">    R = <span class="number">2</span>*root+<span class="number">2</span>;</span><br><span class="line">    largest = root;</span><br><span class="line">    <span class="keyword">if</span> (L &lt; n &amp;&amp; *(arr+L) &gt; *(arr+largest))&#123;</span><br><span class="line">        largest = L;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (R &lt; n &amp;&amp; *(arr+R) &gt; *(arr+largest))&#123;</span><br><span class="line">        largest = R;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (largest != root)&#123;</span><br><span class="line">        swap(arr, largest, root);</span><br><span class="line">        build_maxheap(arr, largest, n);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">heap_sort</span><span class="params">(<span class="keyword">int</span> *arr, <span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">for</span> (i=n/<span class="number">2</span>; i&gt;=<span class="number">0</span>; i--)&#123;</span><br><span class="line">        <span class="comment">// 构建初始大顶堆</span></span><br><span class="line">        build_maxheap(arr, i, n);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (i=n<span class="number">-1</span>; i&gt;=<span class="number">0</span>; i--)&#123;</span><br><span class="line">        swap(arr, <span class="number">0</span>, i);</span><br><span class="line">        build_maxheap(arr, <span class="number">0</span>, i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="归并排序">归并排序</h2>
+<p>是建立在归并操作上的一种有效的排序算法，该算法是采用分治法（Divide and Conquer）的一个非常典型的应用，且各层分治递归可以同时进行。且是一种<strong>稳定</strong>的排序算法，归并排序即是内排序也可作为外排序</p>
+<table>
+<thead>
+<tr class="header">
+<th>item</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>平均时间复杂度</td>
+<td><span class="math inline">\(O(nlogn)\)</span></td>
+</tr>
+<tr class="even">
+<td>最优时间复杂度</td>
+<td><span class="math inline">\(O(n)\)</span></td>
+</tr>
+<tr class="odd">
+<td>最差时间复杂度</td>
+<td><span class="math inline">\(O(nlogn)\)</span>,</td>
+</tr>
+<tr class="even">
+<td>空间复杂度</td>
+<td><span class="math inline">\(O(n)\)</span></td>
+</tr>
+<tr class="odd">
+<td>稳定性</td>
+<td>稳定</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span> *arr, <span class="keyword">int</span> low, <span class="keyword">int</span> mid, <span class="keyword">int</span> high)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n1, n2, i, j, k;</span><br><span class="line">    n1 = mid - low + <span class="number">1</span>;</span><br><span class="line">    n2 = high - mid;</span><br><span class="line">    <span class="keyword">int</span> *L = <span class="keyword">new</span> <span class="keyword">int</span>[n1];</span><br><span class="line">    <span class="keyword">int</span> *R = <span class="keyword">new</span> <span class="keyword">int</span>[n2];</span><br><span class="line">    <span class="keyword">for</span> (i=<span class="number">0</span>; i&lt;n1; i++)&#123;</span><br><span class="line">        *(L+i) = *(arr+low+i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (j=<span class="number">0</span>; j&lt;n2; j++)&#123;</span><br><span class="line">        *(R+j) = *(arr+mid+j+<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    k = low;</span><br><span class="line">    i = <span class="number">0</span>;</span><br><span class="line">    j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (i&lt;n1 &amp;&amp; j&lt;n2)&#123;</span><br><span class="line">        <span class="keyword">if</span> (*(L+i) &lt; *(R+j))&#123;</span><br><span class="line">            *(arr+k) = *(L+i);</span><br><span class="line">            i++;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            *(arr+k) = *(R+j);</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">        k++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (i&lt;n1)&#123;</span><br><span class="line">        *(arr+k) = *(L+i);</span><br><span class="line">        i++;</span><br><span class="line">        k++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (j&lt;n2)&#123;</span><br><span class="line">        *(arr+k) = *(R+j);</span><br><span class="line">        j++;</span><br><span class="line">        k++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge_sort</span><span class="params">(<span class="keyword">int</span> *arr, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (low &lt; high)&#123;</span><br><span class="line">        <span class="keyword">int</span> mid = (low+high) / <span class="number">2</span>;</span><br><span class="line">        merge_sort(arr, low, mid);</span><br><span class="line">        merge_sort(arr, mid+<span class="number">1</span>, high);</span><br><span class="line">        merge(arr, low, mid, high);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://github.com/SeanLee97/datastruct_and_algorithms/blob/cpp/sort.cpp" target="_blank" rel="noopener">本文所有代码均放在GitHub上</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -2433,7 +2613,7 @@ max(0, 1-(w^{T}x_{i} + b)) \tag{17}\]</span></p>
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">29</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
