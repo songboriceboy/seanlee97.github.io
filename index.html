@@ -262,6 +262,189 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/11/18/基于kd树的knn实现/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/18/基于kd树的knn实现/" itemprop="url">基于kd树的knn实现</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-18T10:39:49+08:00">
+                2018-11-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/11/18/基于kd树的knn实现/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/11/18/基于kd树的knn实现/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>K-NN(K-Nearest Neighbor) 是一种经典的分类算法，相信你已经对算法有所了解了。KNN有一种经典实现 —— KD 树实现，但是却不是太好理解，因为 KD 树涉及到了高维空间描述，大家都知道三维空间的生物理解高维空间的事物都是很困难的。</p>
+<p>本文主要讲解 KD 树版 KNN 实现，代码主要使用 Python.</p>
+<h2 id="knn-的简单理解">KNN 的简单理解</h2>
+<p>形象地说 KNN 利用的是 <code>近朱者赤近墨者黑</code> 的原理，比如要判断一个人的性格，KNN 不对这个人本身直接分析判断，而是分析这个人所在的群体进行判断（因为往往群体的信息量更大，更好地采集数据）。</p>
+<p><img src="/images/posts/knn_kd/knn.png"></p>
+<h2 id="kd-树的简单理解">KD 树的简单理解</h2>
+<blockquote>
+<p>在计算机科学里，k-d树（ k-dimension tree）是在k维欧几里德空间组织点的数据结构。 — 维基百科</p>
+</blockquote>
+<p>k-d 树是每个节点都为 k 维点的<strong>二叉树</strong>，简单理解就是原始的二叉树存储的是一个值，但现在存储的是一个在 k 维空间上的点，作为三维空间的人类为了保护脑细胞<strong>本文均以二维空间举例</strong>，也就是说本文中二叉树结点存储的是二维空间上的点，即平面直角坐标系上的点 (x, y)</p>
+<p>k-d 树中所有<strong>非叶子节点</strong>可以视作用一个超平面把空间分割成两个半空间 (也就是左右子树分别存储着两个半空间)：节点左边的子树代表在超平面左边的点，节点右边的子树代表在超平面右边的点。</p>
+<p>选择超平面的方法如下： 每个节点都与 k 维中<strong>垂直于</strong>超平面的那一维有关。 因此，如果选择按照 x 轴划分，所有 x 值小于指定值 (为了高效的利用二叉树的空间，这个值一般是<strong>中位数</strong>) 的节点都会出现在左子树，所有 x 值大于指定值的节点都会出现在右子树。 这样，超平面可以用该x值来确定，其法线为x轴的单位向量。</p>
+<p><strong>为了使得构造的 kd 树尽量平衡，一般会依次切换坐标轴</strong>，也就是说：如果当前结点是按 x 轴切分，那么它的子结点是按 y 轴切分的 (再次声明，本文是建立在二维空间基础上的)</p>
+<h2 id="算法流程">算法流程</h2>
+<p><strong>输入:</strong> 二维空间的数据集 T = { <span class="math inline">\((x_{1}, y_{1})\)</span>, <span class="math inline">\((x_{2}, y_{2})\)</span>, …, <span class="math inline">\((x_{n}, y_{y})\)</span> }</p>
+<h3 id="kd-树构造过程">KD 树构造过程:</h3>
+<ol type="1">
+<li>构造根结点：先选择 x 轴作为最初的坐标轴，对当前空间上的点按照 x 坐标值进行排序，选择中位数所在的 y 轴作为切分超平面，超平面左边的点由左子树存储，右边的点由右子树存储</li>
+</ol>
+<p><img src="/images/posts/knn_kd/01.gif"></p>
+<ol start="2" type="1">
+<li>递归：对左右子树进行和 1. 一样的递归操作，不过坐标轴要切换 (父节点选择的坐标轴是 x 轴的话，那么子结点是 y 轴，反之是 x 轴)</li>
+<li>结束：直到两个子区域没有实例了即可停止</li>
+</ol>
+<p>整个过程如下图所示</p>
+<p><img src="/images/posts/knn_kd/02.png"></p>
+<h2 id="实现步骤">实现步骤</h2>
+<h3 id="构建-kd-树">构建 kd 树</h3>
+<p>既然 kd 树是一棵二叉树，那么首先想到的是递归构造了，之前已经说了根结点取当前子空间在所选坐标轴上的中位数，所以我们要对当前子空间上的点的所选轴坐标的值进行排序，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_kdtree</span><span class="params">(points, depth=<span class="number">0</span>)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    在这里我们用depth来保存当前结点的深度，</span></span><br><span class="line"><span class="string">    深度主要用来进行坐标轴的切换</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    </span><br><span class="line">    n = len(points)</span><br><span class="line">    <span class="keyword">if</span> n &lt;= <span class="number">0</span>:</span><br><span class="line">        <span class="comment"># 如果当前子空间已经没有点了则构建过程结束</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 计算当前选择的坐标轴</span></span><br><span class="line">    axis = depth % <span class="number">2</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 对当前子空间的点根据当前选择轴的值进行排序</span></span><br><span class="line">    sorted_points = sorted(points, key=<span class="keyword">lambda</span> point: point[axis])</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 中位数取排序后坐标点的中间位置的数</span></span><br><span class="line">    median = n // <span class="number">2</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="comment"># 当前根结点</span></span><br><span class="line">        <span class="string">"point"</span>: sorted_points[median],</span><br><span class="line">        <span class="comment"># 将超平面左边的点交由左子结点递归操作</span></span><br><span class="line">        <span class="string">"left"</span>: build_kdtree(sorted[:median], depth+<span class="number">1</span>),</span><br><span class="line">        <span class="comment"># 同理，将超平面右边的点交由右子结点递归操作</span></span><br><span class="line">        <span class="string">"right"</span>: build_kdtree(sorted_points[median+<span class="number">1</span>:], depth+<span class="number">1</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="找邻近点1距离计算">找邻近点1：距离计算</h3>
+<p>因为要找邻近的点，所以需要距离来很衡量，平面直角坐标系中两点 <span class="math inline">\(p_{1}(x_{1}, y_{1}), p2(x_{2}, y_{2})\)</span> 距离的计算公式为:</p>
+<p><span class="math display">\[dist = \sqrt{(x_{2} - x_{1})^{2} + (y_{2} - y_{1})^{2}}\]</span></p>
+<p>Python 实现也很简单</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">distance</span><span class="params">(point1, point2)</span>:</span></span><br><span class="line">    x1, y1 = point1</span><br><span class="line">    x2, y2 = point2</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># math 的 sqrt(*) 用来计算平方根</span></span><br><span class="line">    dist = math.sqrt( (x2-x1)**<span class="number">2</span> + (y2-y1)**<span class="number">2</span> )</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> dist</span><br></pre></td></tr></table></figure>
+<h3 id="找邻近点2找到两结点离当前点更近的结点">找邻近点2：找到两结点离当前点更近的结点</h3>
+<p>为什么要做这一步呢？因为遍历二叉树的时候我们需要将当前点分别和根结点、左子结点、右子结点的距离进行比较。该函数实现如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">closer_distance</span><span class="params">(point, p1, p2)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> p1 <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">        <span class="keyword">return</span> p2</span><br><span class="line">    <span class="keyword">if</span> p2 <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">        <span class="keyword">return</span> p1</span><br><span class="line">        </span><br><span class="line">    d1 = distance(point, p1)</span><br><span class="line">    d2 = distance(point, p2)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> p1 <span class="keyword">if</span> d1 &lt; d2 <span class="keyword">else</span> p2</span><br></pre></td></tr></table></figure>
+<h3 id="找邻近点3从根结点出发遍历-kd-树找到与给定点最近的结点">找邻近点3：从根结点出发，遍历 kd 树，找到与给定点最近的结点</h3>
+<p>这一步是找邻近点最后一步，不做过多解释，代码看懂了也就理解了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">kdtree_closest_point</span><span class="params">(root, point, depth=<span class="number">0</span>)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> root <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 确定当前轴</span></span><br><span class="line">    axis = depth % <span class="number">2</span></span><br><span class="line"></span><br><span class="line">    next_branch = <span class="keyword">None</span></span><br><span class="line">    opposite_branch = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> point[axis] &lt; root[<span class="string">'point'</span>][axis]:</span><br><span class="line">        next_branch = root[<span class="string">'left'</span>]</span><br><span class="line">        opposite_branch = root[<span class="string">'right'</span>]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        next_branch = root[<span class="string">'right'</span>]</span><br><span class="line">        opposite_branch = root[<span class="string">'left'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 以下主要是比较当前点到根结点和两个子结点之间的距离</span></span><br><span class="line"></span><br><span class="line">    best = closer_distance(</span><br><span class="line">    	point,</span><br><span class="line">        kdtree_closest_point(</span><br><span class="line">            next_branch,</span><br><span class="line">            point,</span><br><span class="line">            depth + <span class="number">1</span>),</span><br><span class="line">        root[<span class="string">'point'</span>]</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 当前结点和根结点在所选轴上的距离</span></span><br><span class="line">    <span class="comment"># abs(*) ： 取绝对值</span></span><br><span class="line">    cnt_dist = abs(point[axis] - root[<span class="string">'point'</span>][axis])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> distance(point, best) &gt; cnt_dist:</span><br><span class="line"></span><br><span class="line">        best = closer_distance(</span><br><span class="line">            point,</span><br><span class="line">            kdtree_closest_point(</span><br><span class="line">                opposite_branch,</span><br><span class="line">                point,</span><br><span class="line">                depth + <span class="number">1</span>),</span><br><span class="line">            best</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> best</span><br></pre></td></tr></table></figure>
+<h3 id="完整代码">完整代码</h3>
+<p>knn 预测时往往不是拿最邻近点的标签作为最后的预测（避免出现<code>鹤立鸡群</code>的情况），而是取 topk 个距离最近的点通过投票的机制来选择票数最高的标签作为最后的输出</p>
+<p><img src="/images/posts/knn_kd/03.png"></p>
+<p>完整的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">KNN</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, topk=<span class="number">3</span>)</span>:</span></span><br><span class="line">        self.data = <span class="keyword">None</span></span><br><span class="line">        self.store = &#123;&#125;</span><br><span class="line">        self.topk = topk</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">build_kdtree</span><span class="params">(self, points, depth=<span class="number">0</span>)</span>:</span></span><br><span class="line">        n = len(points)</span><br><span class="line">        <span class="keyword">if</span> n &lt;= <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># 如果当前子空间已经没有点了则构建过程结束</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 计算当前选择的坐标轴</span></span><br><span class="line">        axis = depth % <span class="number">2</span></span><br><span class="line">        <span class="comment"># 对当前子空间的点根据当前选择轴的值进行排序</span></span><br><span class="line">        sorted_points = sorted(points, key=<span class="keyword">lambda</span> point: point[axis])</span><br><span class="line">        <span class="comment"># 中位数取排序后坐标点的中间位置的数</span></span><br><span class="line">        median = n // <span class="number">2</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="comment"># 当前根结点</span></span><br><span class="line">            <span class="string">'point'</span>: sorted_points[median],</span><br><span class="line">            <span class="comment"># 将超平面左边的点交由左子结点递归操作</span></span><br><span class="line">            <span class="string">'left'</span>: self.build_kdtree(sorted_points[:median], depth+<span class="number">1</span>),</span><br><span class="line">            <span class="comment"># 同理，将超平面右边的点交由右子结点递归操作</span></span><br><span class="line">            <span class="string">'right'</span>: self.build_kdtree(sorted_points[median+<span class="number">1</span>:], depth+<span class="number">1</span>)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">distance</span><span class="params">(self, p1, p2)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> p1 <span class="keyword">is</span> <span class="keyword">None</span> <span class="keyword">or</span> p2 <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        x1, y1 = p1</span><br><span class="line">        x2, y2 = p2</span><br><span class="line"></span><br><span class="line">        x_ = x2 - x1</span><br><span class="line">        y_ = y2 - y1</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> math.sqrt(x_**<span class="number">2</span> + y_**<span class="number">2</span>)    </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">closer_distance</span><span class="params">(self, point, p1, p2)</span>:</span></span><br><span class="line"></span><br><span class="line">        d1 = self.distance(point, p1)</span><br><span class="line">        d2 = self.distance(point, p2)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> p1 <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            <span class="keyword">return</span> (p2, d2)</span><br><span class="line">        <span class="keyword">if</span> p2 <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            <span class="keyword">return</span> (p1, d1)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (p1, d1) <span class="keyword">if</span> d1 &lt; d2 <span class="keyword">else</span> (p2, d2)</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">kdtree_closest_point</span><span class="params">(self, root, point, depth=<span class="number">0</span>)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> root <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">None</span></span><br><span class="line">            </span><br><span class="line">        axis = depth % <span class="number">2</span></span><br><span class="line"></span><br><span class="line">        next_branch = <span class="keyword">None</span></span><br><span class="line">        opposite_branch = <span class="keyword">None</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 以下主要是比较当前点到根结点和两个子结点之间的距离</span></span><br><span class="line">        <span class="keyword">if</span> point[axis] &lt; root[<span class="string">'point'</span>][axis]:</span><br><span class="line">            next_branch = root[<span class="string">'left'</span>]</span><br><span class="line">            opposite_branch = root[<span class="string">'right'</span>]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            next_branch = root[<span class="string">'right'</span>]</span><br><span class="line">            opposite_branch = root[<span class="string">'left'</span>]</span><br><span class="line">        </span><br><span class="line">        best, closer_dist = self.closer_distance(</span><br><span class="line">            point, </span><br><span class="line">            self.kdtree_closest_point(</span><br><span class="line">                next_branch, </span><br><span class="line">                point, </span><br><span class="line">                depth + <span class="number">1</span>),</span><br><span class="line">            root[<span class="string">'point'</span>]</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self.distance(point, best) &gt; abs(point[axis] - root[<span class="string">'point'</span>][axis]):</span><br><span class="line"></span><br><span class="line">            best, closer_dist = self.closer_distance(</span><br><span class="line">                point, </span><br><span class="line">                self.kdtree_closest_point(</span><br><span class="line">                    opposite_branch,</span><br><span class="line">                    point,</span><br><span class="line">                    depth + <span class="number">1</span>),</span><br><span class="line">                best</span><br><span class="line">            )</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 储存距离，留作投票用</span></span><br><span class="line">        <span class="keyword">if</span> best <span class="keyword">in</span> self.store <span class="keyword">and</span> self.store[best] &gt; closer_dist:</span><br><span class="line">            self.store[best] =  closer_dist</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.store[best] = closer_dist</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> best</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fit</span><span class="params">(self, X, y)</span>:</span></span><br><span class="line">        self.data = dict(zip(X, y))</span><br><span class="line">        self.kdtree = self.build_kdtree(X)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, point)</span>:</span></span><br><span class="line">        <span class="comment"># best 是最邻近的点</span></span><br><span class="line">        best = self.kdtree_closest_point(self.kdtree, point)</span><br><span class="line"></span><br><span class="line">        sorted_stores = sorted(self.store.items(), key=<span class="keyword">lambda</span> x: x[<span class="number">1</span>])[:self.topk]</span><br><span class="line">        counter = defaultdict(int)</span><br><span class="line">        <span class="keyword">for</span> candidates, score <span class="keyword">in</span> sorted_stores:</span><br><span class="line">            counter[self.data[candidates]] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 按照投票数降序排列</span></span><br><span class="line">        sorted_counter = sorted(counter.items(), key=<span class="keyword">lambda</span> x: -x[<span class="number">1</span>])</span><br><span class="line">        counter = list(counter.items())</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> len(counter) &gt; <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">if</span> counter[<span class="number">0</span>][<span class="number">1</span>] != counter[<span class="number">1</span>][<span class="number">1</span>]:</span><br><span class="line">                best = counter[<span class="number">0</span>][<span class="number">1</span>]</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> self.data[best]</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 训练数据</span></span><br><span class="line">    points = [(<span class="number">1</span>, <span class="number">1</span>), (<span class="number">1</span>, <span class="number">1.2</span>), (<span class="number">0</span>, <span class="number">0</span>), (<span class="number">0</span>, <span class="number">0.2</span>), (<span class="number">3</span>, <span class="number">0.5</span>), (<span class="number">3.3</span>, <span class="number">0.9</span>)]</span><br><span class="line">    labels = [<span class="string">'A'</span>, <span class="string">'A'</span>, <span class="string">'B'</span>, <span class="string">'B'</span>, <span class="string">'C'</span>, <span class="string">'C'</span>]</span><br><span class="line"></span><br><span class="line">    knn = KNN(topk=<span class="number">3</span>)</span><br><span class="line">    <span class="comment"># 开始训练</span></span><br><span class="line">    knn.fit(points, labels)</span><br><span class="line">    <span class="comment"># 预测</span></span><br><span class="line">    label = knn.predict((<span class="number">0.9</span>,<span class="number">0.9</span>))</span><br><span class="line">    print(label)</span><br></pre></td></tr></table></figure>
+<p>代码也可查看 <a href="https://github.com/SeanLee97/datastruct_and_algorithms/tree/master/ml/knn" target="_blank" rel="noopener">github / knn</a></p>
+<h2 id="refrence">Refrence</h2>
+<ul>
+<li>《统计学习方法》</li>
+<li><a href="https://www.datasciencecentral.com/profiles/blogs/implementing-kd-tree-for-fast-range-search-nearest-neighbor" target="_blank" rel="noopener">implementing-kd-tree-for-fast-range-search-nearest-neighbor</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/K-d%E6%A0%91" target="_blank" rel="noopener">k-d 树</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/11/15/深度学习那些事/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2953,215 +3136,6 @@ cos(\theta) &amp;= \frac{\underset{a}{\rightarrow} \cdot \underset{b}{\rightarro
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/08/25/为朴素贝叶斯加入TF-IDF特征/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="sean lee">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="明天探索者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/08/25/为朴素贝叶斯加入TF-IDF特征/" itemprop="url">为朴素贝叶斯加入tf-idf特征</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-25T19:49:59+08:00">
-                2018-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index">
-                    <span itemprop="name">技术日志</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/08/25/为朴素贝叶斯加入TF-IDF特征/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/08/25/为朴素贝叶斯加入TF-IDF特征/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>平时都说给分类器加入XX特征效果就好了，于是乎就用工具包懒人式操作几下（无外乎改改参数），很快tf-idf就加好了，但是如果让你完全手写实现那么到底怎么加呢？本文就来结合tf-idf和朴素贝叶斯谈谈加特征的方式。</p>
-<h3 id="背景知识">背景知识</h3>
-<h4 id="常用的vsm模型">常用的VSM模型</h4>
-<p>VSM(vector space model)即向量空间模型，是将文档映射到向量空间上，这样文档就可以计算了（总不可能用一堆文字去计算把）</p>
-<ul>
-<li>词集模型(set of word): 文档单词构成的集合，词集中的每个单词如果出现就置1没有就置0（也就是没有词频的概念）</li>
-<li>词袋模型(bag of word)：文档单词构成的集合，但统计词频，也就是说各个单词的权重不一样的，由词频决定</li>
-<li>tf-idf：单词的权重是对应单词的tf-idf值</li>
-</ul>
-<p>以上的概念很难理解的话看了下面的例子应该就能明白个大概：</p>
-<p>假设从语料库中得到一个字典<code>dict</code>: <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[I, CS, like, NLP, and]</span><br></pre></td></tr></table></figure></p>
-<p>现在有语料库中有两个文档 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">doc1: [I, like, NLP]</span><br><span class="line"></span><br><span class="line">doc2: [I, like, CS, and, like, NLP]</span><br></pre></td></tr></table></figure></p>
-<h5 id="词集模型">词集模型</h5>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">doc1: [1, 0, 1, 1, 0]</span><br><span class="line">doc2: [1, 1, 1, 1, 1]</span><br></pre></td></tr></table></figure>
-<h5 id="词袋模型">词袋模型</h5>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">doc1: [1, 0, 1, 1, 0]</span><br><span class="line">doc2: [1, 1, 2, 1, 1]  # like出现了两次故词频为2</span><br></pre></td></tr></table></figure>
-<h5 id="tf-idf">tf-idf</h5>
-<p><span class="math display">\[tf_{term} = \frac{该文章中出现词term的次数}{该文章总词数}\]</span></p>
-<p><span class="math display">\[idf_{term} = log(\frac{文档总数}{出现词term的文档数 + 1})\]</span></p>
-<p><span class="math display">\[tf-idf = tf \times idf\]</span></p>
-<p>根据上述公式得到计算<code>doc1</code>的tf-idf</p>
-<p><span class="math display">\[\begin{align*}
-tf &amp;= [\frac{1}{3},\ 0,\ \frac{1}{3},\ \frac{1}{3},\ 0] \\
-idf &amp;= [log(\frac{2}{2+1}),\ 0,\ log(\frac{2}{2+1}),\ log(\frac{2}{2+1}),\ 0] \\
-tf-idf &amp;= [\frac{1}{3} \times log(\frac{2}{2+1}),\ 0,\ \frac{1}{3} \times  log(\frac{2}{2+1}),\ \frac{1}{3} \times log(\frac{2}{2+1}),\ 0]
-\end{align*}\]</span></p>
-<p>同理可得<code>doc2</code>的tf-idf:</p>
-<p><span class="math display">\[\begin{align*}
-tf &amp;= [\frac{1}{6},\ \frac{1}{6},\ \frac{2}{6},\ \frac{1}{6},\ \frac{1}{6}] \\
-idf &amp;= [log(\frac{2}{2+1}),\ log(\frac{2}{1+1}),\ log(\frac{2}{2+1}),\ log(\frac{2}{2+1}),\ log(\frac{2}{1+1})] \\
-tf-idf &amp;= [\frac{1}{6} \times log(\frac{2}{2+1}),\ \frac{1}{6} \times \frac{2}{1+1},\ \frac{2}{6} \times  log(\frac{2}{2+1}),\ \frac{1}{6} \times log(\frac{2}{2+1}),\ \frac{1}{6} \times log(\frac{2}{1+1})]
-\end{align*}\]</span></p>
-<h3 id="朴素贝叶斯nb">朴素贝叶斯(NB)</h3>
-<p><code>NB</code>属于生成模型，生成模型学习的是联合概率<code>p(x, y)</code>, 它是利用先验概率<code>p(y)</code>和<code>p(x|y)</code>来训练的，最后预测时使用贝叶斯定理来预测:</p>
-<p><span class="math display">\[p(y|x_{1}...x_{m}) = \frac{p(y)p(x_{1}...x_{m}|y)}{\sum_{y{}&#39; \epsilon \gamma} p(y{}&#39;)p(x_{1}...p_{m}|y{}&#39;)}\]</span></p>
-<p>为了简化问题，<code>NB</code>做了一个朴素的假设，假设输入之间是独立的，因此可得</p>
-<p><span class="math display">\[p(y|x_{1}...x_{m}) = \frac{p(y)\prod_{i}^{m} p(x_{i}|y)}{\sum_{y{}&#39; \epsilon \gamma} p(y{}&#39;)p(x_{1}...p_{m}|y{}&#39;)}\]</span></p>
-<p>朴素贝叶斯分类器的求解目标为:</p>
-<p><span class="math display">\[\underset{y}{argmax} \sum _{y \epsilon \gamma}p(y|x_{1}...x_{m})\]</span></p>
-<p>最终求得的<code>y</code>即为分类结果</p>
-<h3 id="代码部分">代码部分</h3>
-<p>有前文可知tf-idf是用一个向量来表示的，为了方便添加特征我们只能用BOW的方式去构建输入，放了方便向量运算我们使用<code>numpy</code>来构建</p>
-<p>为了对比，我们实现两种特征<code>词袋</code>和<code>tf-idf</code>作为模型的输入</p>
-<h4 id="语料处理部分">语料处理部分</h4>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> jieba</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np </span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Corpus</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, data)</span>:</span></span><br><span class="line">        self.tags = defaultdict(int)</span><br><span class="line">        self.vocabs = set()</span><br><span class="line">        self.docs = []</span><br><span class="line">        </span><br><span class="line">        self.build_vocab(data)</span><br><span class="line">        self.v_l = len(self.vocabs) <span class="comment"># 字典的大小</span></span><br><span class="line">        self.d_l = len(self.docs)   <span class="comment"># 文档数</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 分词器</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">tokenizer</span><span class="params">(self, sent)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> jieba.lcut(sent)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 构建字典，获取分类标记集</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">build_vocab</span><span class="params">(self, data)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> (tag, doc) <span class="keyword">in</span> data:</span><br><span class="line">            words = self.tokenizer(doc)</span><br><span class="line">            self.vocabs.update(words)</span><br><span class="line">            self.tags[tag] += <span class="number">1</span></span><br><span class="line">            self.docs.append((tag, words))</span><br><span class="line">        self.vocabs = list(self.vocabs)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 计算词袋模型</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">calc_bow</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># shape为 [d_l, v_l]，每一行存放文档的词袋向量</span></span><br><span class="line">        self.bow = np.zeros([self.d_l, self.v_l])</span><br><span class="line">        <span class="keyword">for</span> idx <span class="keyword">in</span> range(self.d_l):</span><br><span class="line">            <span class="keyword">for</span> word <span class="keyword">in</span> self.docs[idx][<span class="number">1</span>]:</span><br><span class="line">                <span class="keyword">if</span> word <span class="keyword">in</span> self.vocabs:</span><br><span class="line">                    self.bow[idx, self.vocabs.index(word)] += <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 计算tf-idf</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">calc_tfidf</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># 先计算bow，再用bow来计算tf</span></span><br><span class="line">        self.calc_bow()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 初始化tf、df、idf</span></span><br><span class="line">        self.tf = np.zeros([self.d_l, self.v_l])</span><br><span class="line">        self.idf = np.ones([<span class="number">1</span>, self.v_l])</span><br><span class="line">        self.tf_idf = np.ones([self.d_l, self.v_l])</span><br><span class="line">        <span class="keyword">for</span> idx <span class="keyword">in</span> range(self.d_l):</span><br><span class="line">            self.tf[idx] = self.bow[idx] /np.sum(self.bow[idx])</span><br><span class="line">            <span class="keyword">for</span> word <span class="keyword">in</span> self.docs[idx]:</span><br><span class="line">                <span class="keyword">if</span> word <span class="keyword">in</span> self.vocabs:</span><br><span class="line">                    self.idf[<span class="number">0</span>, self.vocabs.index(word)] += <span class="number">1</span></span><br><span class="line">        self.idf = np.log(float(self.d_l) / self.idf)</span><br><span class="line">        self.tfidf = self.tf * self.idf</span><br><span class="line">        </span><br><span class="line">    <span class="comment"># 计算输入的bow向量，words代表输入序列（已分词）</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_idx</span><span class="params">(self, words)</span>:</span></span><br><span class="line">        bow = np.zeros([<span class="number">1</span>, self.v_l])</span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">            <span class="keyword">if</span> word <span class="keyword">in</span> self.vocabs:</span><br><span class="line">                bow[<span class="number">0</span>, self.vocabs.index(word)] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> bow</span><br></pre></td></tr></table></figure>
-<p>上述代码主要计算了<code>tf-idf</code>，词袋模型<code>bow</code></p>
-<h4 id="实现nb">实现NB</h4>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># NB继承了语料类Corpus</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NBayes</span><span class="params">(Corpus)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, data, kernel=<span class="string">"tfidf"</span>)</span>:</span></span><br><span class="line">        super(NBayes, self).__init__(data)</span><br><span class="line">    </span><br><span class="line">        <span class="comment"># kernel 代表使用哪种特征，默认是tfidf，赋其他值代表使用bow</span></span><br><span class="line">        self.kernel = kernel</span><br><span class="line">        self.y_prob = &#123;&#125; <span class="comment"># p(y_i)</span></span><br><span class="line">        self.c_prob = <span class="keyword">None</span> <span class="comment"># p(x|y_i) , 计算条件概率</span></span><br><span class="line">        self.feature = <span class="keyword">None</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 训练，主要计算 p(y_i)和条件概率 p(x|y_i)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> self.kernel == <span class="string">"tfidf"</span>:</span><br><span class="line">            self.calc_tfidf()</span><br><span class="line">            self.feature = self.tfidf</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.calc_bow()</span><br><span class="line">            self.feature = self.bow</span><br><span class="line">    </span><br><span class="line">        <span class="comment"># 采用极大似然估计计算p(y)</span></span><br><span class="line">        <span class="keyword">for</span> tag <span class="keyword">in</span> self.tags:</span><br><span class="line">            self.y_prob[tag] = float(self.tags[tag])/ self.d_l</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 计算条件概率 p(x|y_i)</span></span><br><span class="line">        self.c_prob = np.zeros([len(self.tags), self.v_l])</span><br><span class="line">        Z = np.zeros([len(self.tags), <span class="number">1</span>]) <span class="comment"># 归一化参数</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> idx <span class="keyword">in</span> range(self.d_l):</span><br><span class="line">            <span class="comment"># 获得类别标签id</span></span><br><span class="line">            tid = list(self.tags.keys()).index(self.docs[idx][<span class="number">0</span>])</span><br><span class="line">            self.c_prob[tid] += self.feature[idx]</span><br><span class="line">            Z[tid] = np.sum(self.c_prob[tid])</span><br><span class="line"></span><br><span class="line">        self.c_prob /= Z  <span class="comment"># 归一化</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 解码部分，返回使得概率值最大的类别y</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, inp)</span>:</span></span><br><span class="line">        words = self.tokenizer(inp)</span><br><span class="line">        idx = self.get_idx(words)</span><br><span class="line"></span><br><span class="line">        tag, score = <span class="keyword">None</span>, <span class="number">-1</span></span><br><span class="line">        <span class="keyword">for</span> (p_c, y) <span class="keyword">in</span> zip(self.c_prob, self.y_prob):</span><br><span class="line">            tmp = np.sum(idx * p_c * self.y_prob[y])</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> tmp &gt; score:</span><br><span class="line">                tag = y</span><br><span class="line">                score = tmp</span><br><span class="line">        <span class="keyword">return</span> tag, <span class="number">1.0</span> - score</span><br></pre></td></tr></table></figure>
-<h4 id="测试">测试</h4>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">trainSet = [(<span class="string">"pos"</span>, <span class="string">"good job !"</span>),</span><br><span class="line">                (<span class="string">"pos"</span>, <span class="string">"表现不错哦"</span>), </span><br><span class="line">                (<span class="string">"pos"</span>, <span class="string">"厉害咯"</span>), </span><br><span class="line">                (<span class="string">"pos"</span>, <span class="string">"做的很好啊"</span>), </span><br><span class="line">                (<span class="string">"pos"</span>, <span class="string">"做得不错继续努力"</span>),</span><br><span class="line">                (<span class="string">"pos"</span>, <span class="string">"不错！点赞"</span>),</span><br><span class="line">                (<span class="string">"neg"</span>, <span class="string">"太差了"</span>), </span><br><span class="line">                (<span class="string">"neg"</span>, <span class="string">"太糟糕了"</span>), </span><br><span class="line">                (<span class="string">"neg"</span>, <span class="string">"你做的一点都不好"</span>), </span><br><span class="line">                (<span class="string">"neg"</span>, <span class="string">"不行，重做"</span>),</span><br><span class="line">                (<span class="string">"neg"</span>, <span class="string">"so bad"</span>),</span><br><span class="line">                (<span class="string">"non"</span>, <span class="string">"一般般吧，还过的去"</span>), </span><br><span class="line">                (<span class="string">"non"</span>, <span class="string">"不算太好，也不算太差"</span>), </span><br><span class="line">                (<span class="string">"non"</span>, <span class="string">"继续努力吧"</span>)</span><br><span class="line">               ]</span><br><span class="line">               </span><br><span class="line">    nb = NBayes(trainSet)</span><br><span class="line">    nb.train()</span><br><span class="line">    print(nb.predict(<span class="string">"不错哦"</span>)) <span class="comment"># ('pos', 0.9142857142857143)</span></span><br></pre></td></tr></table></figure>
-<h3 id="扩展">扩展</h3>
-<p>神经网络分类器模型一般如何添加特征呢？笔者一般使用两种方式：</p>
-<ul>
-<li>在词嵌入层 (Word Embedding)进行拼接</li>
-<li>通过Attention计算引入</li>
-</ul>
-<p>本文完整代码放在 <a href="https://github.com/SeanLee97/nlp_learning/tree/master/nbayes" target="_blank" rel="noopener">github/nlp_learning/nbayes</a> 欢迎查阅</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3216,7 +3190,7 @@ tf-idf &amp;= [\frac{1}{6} \times log(\frac{2}{2+1}),\ \frac{1}{6} \times \frac{
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
