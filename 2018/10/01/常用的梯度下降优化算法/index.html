@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="梯度下降是常用的优化方式，具体的算法有：  梯度下降法  批梯度下降(Batch Gradient Descent, BGD) 随机梯度下降(Stochastic Gradient Decent, SGD) 小批量梯度下降(Mini-Batch Gradient Decent, MBGD)  梯度下降优化  动量梯度下降(Gradient Descent with Momentum) 均方根支(R">
+<meta name="description" content="梯度下降是常用的优化方式，具体的算法有：  梯度下降法  批梯度下降(Batch Gradient Descent, BGD) 随机梯度下降(Stochastic Gradient Decent, SGD) 小批量梯度下降(Mini-Batch Gradient Decent, MBGD)   梯度下降优化  动量梯度下降(Gradient Descent with Momentum) 均方根支(">
 <meta name="keywords" content="ML">
 <meta property="og:type" content="article">
 <meta property="og:title" content="常用的梯度下降优化算法">
 <meta property="og:url" content="http://seanlee97.github.io/2018/10/01/常用的梯度下降优化算法/index.html">
 <meta property="og:site_name" content="明天探索者">
-<meta property="og:description" content="梯度下降是常用的优化方式，具体的算法有：  梯度下降法  批梯度下降(Batch Gradient Descent, BGD) 随机梯度下降(Stochastic Gradient Decent, SGD) 小批量梯度下降(Mini-Batch Gradient Decent, MBGD)  梯度下降优化  动量梯度下降(Gradient Descent with Momentum) 均方根支(R">
+<meta property="og:description" content="梯度下降是常用的优化方式，具体的算法有：  梯度下降法  批梯度下降(Batch Gradient Descent, BGD) 随机梯度下降(Stochastic Gradient Decent, SGD) 小批量梯度下降(Mini-Batch Gradient Decent, MBGD)   梯度下降优化  动量梯度下降(Gradient Descent with Momentum) 均方根支(">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/gradient_descent/01.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/gradient_descent/02.png">
@@ -100,7 +100,7 @@
 <meta property="og:updated_time" content="2018-10-02T04:21:08.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="常用的梯度下降优化算法">
-<meta name="twitter:description" content="梯度下降是常用的优化方式，具体的算法有：  梯度下降法  批梯度下降(Batch Gradient Descent, BGD) 随机梯度下降(Stochastic Gradient Decent, SGD) 小批量梯度下降(Mini-Batch Gradient Decent, MBGD)  梯度下降优化  动量梯度下降(Gradient Descent with Momentum) 均方根支(R">
+<meta name="twitter:description" content="梯度下降是常用的优化方式，具体的算法有：  梯度下降法  批梯度下降(Batch Gradient Descent, BGD) 随机梯度下降(Stochastic Gradient Decent, SGD) 小批量梯度下降(Mini-Batch Gradient Decent, MBGD)   梯度下降优化  动量梯度下降(Gradient Descent with Momentum) 均方根支(">
 <meta name="twitter:image" content="http://seanlee97.github.io/images/posts/gradient_descent/01.png">
 
 
@@ -354,183 +354,101 @@
       
         <p>梯度下降是常用的优化方式，具体的算法有：</p>
 <ul>
-<li>梯度下降法
+<li><p>梯度下降法</p>
 <ul>
 <li>批梯度下降(Batch Gradient Descent, BGD)</li>
 <li>随机梯度下降(Stochastic Gradient Decent, SGD)</li>
 <li>小批量梯度下降(Mini-Batch Gradient Decent, MBGD)</li>
-</ul></li>
-<li>梯度下降优化
+</ul>
+</li>
+<li><p>梯度下降优化</p>
 <ul>
 <li>动量梯度下降(Gradient Descent with Momentum)</li>
 <li>均方根支(Root Mean Square Prop, RMSprop)</li>
 <li>自适应矩估计(Adaptive Moment Estimation, Adam)</li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <p>本文主要简单介绍上述优化方法</p>
-<h2 id="知识储备">知识储备</h2>
-<h3 id="梯度下降法">梯度下降法</h3>
-<p>梯度下降法(gradient descent)是求解无约束最优化问题的一种最常用方法，它是一种迭代算法，每一步需要求解目标函数的梯度向量。它的优点是实现简单，缺点是一般情况下不能保证解是全局最优的</p>
-<h4 id="导数">导数</h4>
-<p><img src="/images/posts/gradient_descent/01.png"></p>
-<p><strong>方向导数定义：</strong> 如上图, <span class="math inline">\(p{}&#39;\)</span> 沿着 <span class="math inline">\(l\)</span> 趋于 <span class="math inline">\(p\)</span> 时，如果函数的增量 <span class="math inline">\(f(x+\Delta x, y+\Delta y) - f(x, y)\)</span> 与 <span class="math inline">\(pp{}&#39;\)</span> 两点间的距离 <span class="math inline">\(\rho = \sqrt{(\Delta x)^{2} + (\Delta y)^{2}}\)</span> 的比值的极限存在，则称此极限为 <span class="math inline">\(p\)</span> 沿着 <span class="math inline">\(l\)</span> 方向的导数，记作</p>
-<p><span class="math display">\[\frac{\partial f}{\partial l} = \lim_{\rho \rightarrow 0} \frac{f(x+\Delta x, y+\Delta y) - f(x, y)}{\rho } \\\\
-\tag{1}\]</span></p>
-<p>更一般的，对于函数 <span class="math inline">\(f(x)\)</span> , 在 <span class="math inline">\(x_{0}\)</span> 处的导数为</p>
-<p><span class="math display">\[\begin{align*}
-f{}&#39;(x_{0}) &amp; = \lim_{x \rightarrow x_{0}} \frac{f(x) - f(x_{0})}{x-x_{0}} \\\\
-&amp; = \lim_{\Delta x \rightarrow 0} \frac{f(x_{0}+\Delta x) - f(x_{0})}{\Delta x} \\\\
-\tag{2}
-\end{align*}\]</span></p>
-<h4 id="梯度">梯度</h4>
-<p>函数在某点的梯度的方向与取得最大方向导数的方向一致，而它的模为方向导数的最大值</p>
-<p><strong>定义：</strong> 设函数 <span class="math inline">\(z = f(x, y)\)</span> 在平面区域D内，具有<strong>一阶连续偏导数</strong>，则对于每一点 <span class="math inline">\(p(x, y) \in D\)</span> , 都可定义一个向量 <span class="math inline">\(\frac{\partial f}{\partial x} \underset{i}{\rightarrow} + \frac{\partial f}{\partial y} \underset{j}{\rightarrow}\)</span> 满足梯度的条件，则这向量称为 <span class="math inline">\(z=f(x, y)\)</span> 在点 <span class="math inline">\(p(x, y)\)</span> 的梯度，记作</p>
-<p><span class="math display">\[\begin{align*}gradf(x, y) = \frac{\partial f}{\partial x} \underset{i}{\rightarrow} + \frac{\partial f}{\partial y} \underset{j}{\rightarrow} \\\\
-\tag{3}
-\end{align*}\]</span></p>
-<h3 id="牛顿法和拟牛顿法">牛顿法和拟牛顿法</h3>
-<p>牛顿法和拟牛顿法也是求解无约束最优化问题的常用方法，它的优点是收敛速度快。一般用来求解大规模数据的优化问题</p>
-<h4 id="海森矩阵hessian-matrix">海森矩阵(Hessian Matrix)</h4>
-<p>海森矩阵是一个<strong>多变量实值函数</strong>的<strong>二阶偏导数</strong>组成的<strong>方块矩阵</strong>,假设有一实数函数 <span class="math inline">\(f(x_{1}, x_{2}, ..., x_{n})\)</span> ，如果 <span class="math inline">\(f\)</span> 所有的二阶偏导数都存在，那么海森矩阵为对称矩阵， <span class="math inline">\(f\)</span> 的海森矩阵的第 <span class="math inline">\(ij\)</span> 项即为 <span class="math inline">\(H(f)_{ij}(x) = D_{i}D_{j}f(x)\)</span> ，其中 <span class="math inline">\(x=(x_{1}, x_{2}, ..., x_{n})\)</span> 即</p>
-<p><img src="/images/posts/gradient_descent/02.png"></p>
+<h2 id="知识储备"><a href="#知识储备" class="headerlink" title="知识储备"></a>知识储备</h2><h3 id="梯度下降法"><a href="#梯度下降法" class="headerlink" title="梯度下降法"></a>梯度下降法</h3><p>梯度下降法(gradient descent)是求解无约束最优化问题的一种最常用方法，它是一种迭代算法，每一步需要求解目标函数的梯度向量。它的优点是实现简单，缺点是一般情况下不能保证解是全局最优的</p>
+<h4 id="导数"><a href="#导数" class="headerlink" title="导数"></a>导数</h4><p><img src="/images/posts/gradient_descent/01.png" alt=""></p>
+<p><strong>方向导数定义：</strong> 如上图, $p{}’$  沿着 $l$ 趋于 $p$ 时，如果函数的增量 $f(x+\Delta x, y+\Delta y) - f(x, y)$ 与 $pp{}’$ 两点间的距离 $\rho =  \sqrt{(\Delta x)^{2} + (\Delta y)^{2}}$ 的比值的极限存在，则称此极限为 $p$ 沿着 $l$ 方向的导数，记作</p>
+<p>$$\frac{\partial f}{\partial l} = \lim_{\rho \rightarrow 0} \frac{f(x+\Delta x, y+\Delta y) - f(x, y)}{\rho } \\<br>\tag{1}$$</p>
+<p>更一般的，对于函数 $f(x)$ , 在 $x_{0}$ 处的导数为</p>
+<p>$$\begin{align<em>}<br>f{}’(x_{0}) &amp; = \lim_{x \rightarrow x_{0}} \frac{f(x) - f(x_{0})}{x-x_{0}} \\<br>&amp; = \lim_{\Delta x \rightarrow 0} \frac{f(x_{0}+\Delta x) - f(x_{0})}{\Delta x} \\<br>\tag{2}<br>\end{align</em>}$$</p>
+<h4 id="梯度"><a href="#梯度" class="headerlink" title="梯度"></a>梯度</h4><p>函数在某点的梯度的方向与取得最大方向导数的方向一致，而它的模为方向导数的最大值</p>
+<p><strong>定义：</strong> 设函数 $z = f(x, y)$ 在平面区域D内，具有<strong>一阶连续偏导数</strong>，则对于每一点 $p(x, y) \in D$ , 都可定义一个向量 $\frac{\partial f}{\partial x} \underset{i}{\rightarrow} + \frac{\partial f}{\partial y} \underset{j}{\rightarrow}$ 满足梯度的条件，则这向量称为 $z=f(x, y)$ 在点 $p(x, y)$ 的梯度，记作</p>
+<p>$$\begin{align<em>}gradf(x, y) = \frac{\partial f}{\partial x} \underset{i}{\rightarrow} + \frac{\partial f}{\partial y} \underset{j}{\rightarrow} \\<br>\tag{3}<br>\end{align</em>}$$</p>
+<h3 id="牛顿法和拟牛顿法"><a href="#牛顿法和拟牛顿法" class="headerlink" title="牛顿法和拟牛顿法"></a>牛顿法和拟牛顿法</h3><p>牛顿法和拟牛顿法也是求解无约束最优化问题的常用方法，它的优点是收敛速度快。一般用来求解大规模数据的优化问题</p>
+<h4 id="海森矩阵-Hessian-Matrix"><a href="#海森矩阵-Hessian-Matrix" class="headerlink" title="海森矩阵(Hessian Matrix)"></a>海森矩阵(Hessian Matrix)</h4><p>海森矩阵是一个<strong>多变量实值函数</strong>的<strong>二阶偏导数</strong>组成的<strong>方块矩阵</strong>,假设有一实数函数 $f(x_{1}, x_{2}, …, x_{n})$ ，如果 $f$ 所有的二阶偏导数都存在，那么海森矩阵为对称矩阵， $f$ 的海森矩阵的第 $ij$ 项即为 $H(f)<em>{ij}(x) = D</em>{i}D_{j}f(x)$ ，其中 $x=(x_{1}, x_{2}, …, x_{n})$ 即</p>
+<p><img src="/images/posts/gradient_descent/02.png" alt=""></p>
 <p>更一般的海森矩阵也可表示为</p>
-<p><span class="math display">\[\begin{align*}
-H(x) = \begin{bmatrix}
-\frac{\partial ^{2} f}{\partial x_{i} \partial x_{j}}
-\end{bmatrix} _{n\times n} \\\\
-\tag{4}
-\end{align*}\]</span></p>
-<h4 id="正定半正定矩阵">正定半正定矩阵</h4>
-<ul>
-<li>正定矩阵：所有特征值大于0 (&gt;0)</li>
+<p>$$\begin{align<em>}<br>H(x) = \begin{bmatrix}<br>\frac{\partial ^{2} f}{\partial x_{i} \partial x_{j}}<br>\end{bmatrix} _{n\times n} \\<br>\tag{4}<br>\end{align</em>}$$</p>
+<h4 id="正定半正定矩阵"><a href="#正定半正定矩阵" class="headerlink" title="正定半正定矩阵"></a>正定半正定矩阵</h4><ul>
+<li>正定矩阵：所有特征值大于0  (&gt;0)</li>
 <li>负定矩阵：所有特征值小于0 (&lt;0)</li>
 <li>半正定矩阵： 所有特征值为非负（&gt;=0）</li>
 <li>半负定矩阵：所有特征值为非正（&lt;=0）</li>
 <li>不定矩阵：特征值有正有负</li>
 </ul>
-<h4 id="牛顿法">牛顿法</h4>
-<p>牛顿法是迭代算法，每一步需要求解目标函数的海森矩阵的逆矩阵，计算方法比较复杂，这里不详细叙述，具体可阅读<a href="https://en.wikipedia.org/wiki/Newton%27s_method_in_optimization" target="_blank" rel="noopener">Newton’s method in optimization</a></p>
-<h4 id="拟牛顿法">拟牛顿法</h4>
-<p>拟牛顿法是通过正定矩阵近似的海森矩阵的逆矩阵来简化牛顿法的计算过程，常用算法有 <code>DFP</code>, <code>BFGS</code></p>
-<h3 id="等高线">等高线</h3>
-<p>在几何上 <span class="math inline">\(z=f(x, y)\)</span> 表示一个曲面，当曲面被平面 <span class="math inline">\(z = c\)</span> 所截，得到的曲线 <span class="math inline">\(\left\{\begin{matrix} z = f(x, y) \\\\ z = c \end{matrix}\right.\)</span> 在 <span class="math inline">\(xoy\)</span> 面上的投影方程 <span class="math inline">\(f(x, y)=c\)</span> 称为等值线，几何上称为等高线</p>
-<p><img src="/images/posts/gradient_descent/03.png"></p>
-<h2 id="梯度下降法-1">梯度下降法</h2>
-<h3 id="批梯度下降batch-gradient-descent-bgd">批梯度下降(Batch Gradient Descent, BGD)</h3>
-<p>批梯度下降法在更新参数时使用所有样本来进行更新</p>
-<p><span class="math display">\[\begin{align*}
-J(w, b) = \frac{1}{m}\sum_{i=1}^{m} L (\hat{y^{(i)}}, y^{(i)}) + \frac{\lambda }{2m}\sum \left \| w \right \|_{F}^{2} \\\\
-w_{j} := w_{j} - \alpha \frac{\partial J(w, b)}{\partial w_{j}} \\\\
-b_{j} := b_{j} - \alpha \frac{\partial J(w, b)}{\partial b_{j}} \\\\
-\tag{5}
-\end{align*}\]</span></p>
-<p>其中 <span class="math inline">\(\frac{\lambda }{2m}\sum \left \| w \right \|_{F}^{2}\)</span> 是L2正则项, <span class="math inline">\(\alpha\)</span> 是学习速率 <code>learning rate</code></p>
-<h4 id="bgd的梯度下降图">BGD的梯度下降图</h4>
-<p><img src="/images/posts/gradient_descent/04.png"></p>
-<h4 id="bgd的优缺点">BGD的优缺点</h4>
-<ul>
+<h4 id="牛顿法"><a href="#牛顿法" class="headerlink" title="牛顿法"></a>牛顿法</h4><p>牛顿法是迭代算法，每一步需要求解目标函数的海森矩阵的逆矩阵，计算方法比较复杂，这里不详细叙述，具体可阅读<a href="https://en.wikipedia.org/wiki/Newton%27s_method_in_optimization" target="_blank" rel="noopener">Newton’s method in optimization</a></p>
+<h4 id="拟牛顿法"><a href="#拟牛顿法" class="headerlink" title="拟牛顿法"></a>拟牛顿法</h4><p>拟牛顿法是通过正定矩阵近似的海森矩阵的逆矩阵来简化牛顿法的计算过程，常用算法有 <code>DFP</code>, <code>BFGS</code></p>
+<h3 id="等高线"><a href="#等高线" class="headerlink" title="等高线"></a>等高线</h3><p>在几何上 $z=f(x, y)$ 表示一个曲面，当曲面被平面 $z = c$ 所截，得到的曲线 $\left{\begin{matrix}<br>z = f(x, y) \\<br>z = c<br>\end{matrix}\right.$ 在 $xoy$ 面上的投影方程 $f(x, y)=c$ 称为等值线，几何上称为等高线</p>
+<p><img src="/images/posts/gradient_descent/03.png" alt=""></p>
+<h2 id="梯度下降法-1"><a href="#梯度下降法-1" class="headerlink" title="梯度下降法"></a>梯度下降法</h2><h3 id="批梯度下降-Batch-Gradient-Descent-BGD"><a href="#批梯度下降-Batch-Gradient-Descent-BGD" class="headerlink" title="批梯度下降(Batch Gradient Descent, BGD)"></a>批梯度下降(Batch Gradient Descent, BGD)</h3><p>批梯度下降法在更新参数时使用所有样本来进行更新</p>
+<p>$$\begin{align<em>}<br>J(w, b) = \frac{1}{m}\sum_{i=1}^{m} L (\hat{y^{(i)}}, y^{(i)}) + \frac{\lambda }{2m}\sum \left | w \right |<em>{F}^{2} \\<br>w</em>{j} := w_{j} - \alpha \frac{\partial J(w, b)}{\partial w_{j}} \\<br>b_{j} := b_{j} - \alpha \frac{\partial J(w, b)}{\partial b_{j}} \\<br>\tag{5}<br>\end{align</em>}$$</p>
+<p>其中 $\frac{\lambda }{2m}\sum \left | w \right |_{F}^{2}$ 是L2正则项, $\alpha$ 是学习速率 <code>learning rate</code></p>
+<h4 id="BGD的梯度下降图"><a href="#BGD的梯度下降图" class="headerlink" title="BGD的梯度下降图"></a>BGD的梯度下降图</h4><p><img src="/images/posts/gradient_descent/04.png" alt=""></p>
+<h4 id="BGD的优缺点"><a href="#BGD的优缺点" class="headerlink" title="BGD的优缺点"></a>BGD的优缺点</h4><ul>
 <li>优点：最小化<strong>所有训练样本</strong>的损失函数得到全局最优</li>
 <li>缺点：当样本数目很多时，训练过程很慢</li>
 </ul>
-<h4 id="python伪代码">Python伪代码</h4>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(epochs):</span><br><span class="line">    <span class="comment"># 是对每个epoch的所有数据进行计算的</span></span><br><span class="line">    grad = loss_fn(*args, **kwargs)</span><br><span class="line">    params = params - learning_rate * grad</span><br></pre></td></tr></table></figure>
-<h3 id="随机梯度下降stochastic-gradient-decent-sgd">随机梯度下降(Stochastic Gradient Decent, SGD)</h3>
-<p>每次通过一个样本来迭代更新</p>
-<p><span class="math display">\[\begin{align*}
-J(w, b) = L (\hat{y^{(i)}}, y^{(i)}) + \frac{\lambda }{2}\sum \left \| w \right \|_{F}^{2} \\\\
-w_{j} := w_{j} - \alpha \frac{\partial J(w, b)}{\partial w_{j}} \\\\
-b_{j} := b_{j} - \alpha \frac{\partial J(w, b)}{\partial b_{j}} \\\\
-\tag{6}
-\end{align*}\]</span></p>
-<h4 id="sgd的梯度下降图">SGD的梯度下降图</h4>
-<p><img src="/images/posts/gradient_descent/05.png"></p>
-<h4 id="sgd的优缺点">SGD的优缺点</h4>
-<ul>
+<h4 id="Python伪代码"><a href="#Python伪代码" class="headerlink" title="Python伪代码"></a>Python伪代码</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(epochs):</span><br><span class="line">    <span class="comment"># 是对每个epoch的所有数据进行计算的</span></span><br><span class="line">    grad = loss_fn(*args, **kwargs)</span><br><span class="line">    params = params - learning_rate * grad</span><br></pre></td></tr></table></figure>
+<h3 id="随机梯度下降-Stochastic-Gradient-Decent-SGD"><a href="#随机梯度下降-Stochastic-Gradient-Decent-SGD" class="headerlink" title="随机梯度下降(Stochastic Gradient Decent, SGD)"></a>随机梯度下降(Stochastic Gradient Decent, SGD)</h3><p>每次通过一个样本来迭代更新</p>
+<p>$$\begin{align<em>}<br>J(w, b) = L (\hat{y^{(i)}}, y^{(i)}) + \frac{\lambda }{2}\sum \left | w \right |<em>{F}^{2} \\<br>w</em>{j} := w_{j} - \alpha \frac{\partial J(w, b)}{\partial w_{j}} \\<br>b_{j} := b_{j} - \alpha \frac{\partial J(w, b)}{\partial b_{j}} \\<br>\tag{6}<br>\end{align</em>}$$</p>
+<h4 id="SGD的梯度下降图"><a href="#SGD的梯度下降图" class="headerlink" title="SGD的梯度下降图"></a>SGD的梯度下降图</h4><p><img src="/images/posts/gradient_descent/05.png" alt=""></p>
+<h4 id="SGD的优缺点"><a href="#SGD的优缺点" class="headerlink" title="SGD的优缺点"></a>SGD的优缺点</h4><ul>
 <li>优点：训练速度快</li>
 <li>缺点：不易找到全局最优</li>
 </ul>
-<h4 id="python伪代码-1">Python伪代码</h4>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(epochs):</span><br><span class="line">    shuffle(data)</span><br><span class="line">    <span class="keyword">for</span> example <span class="keyword">in</span> data:</span><br><span class="line">        grad = loss_fn(*args, **kwarga)</span><br><span class="line">        params = params - learning_rate * grad</span><br></pre></td></tr></table></figure>
-<h3 id="小批量梯度下降算法mini-batch-gradient-decent-mbgd">小批量梯度下降算法(Mini-Batch Gradient Decent, MBGD)</h3>
-<p>对随机梯度下降和批梯度下降进行了折衷， 每次用 <span class="math inline">\(t (1 &lt; t &lt; m)\)</span> 个样本进行更新</p>
-<p><span class="math display">\[\begin{align*}
-J(w, b) = \frac{1}{k}\sum_{i=1}^{k} L (\hat{y^{(i)}}, y^{(i)}) + \frac{\lambda }{2k}\sum \left \| w \right \|_{F}^{2} \\\\
-w_{j} := w_{j} - \alpha \frac{\partial J(w, b)}{\partial w_{j}} \\\\
-b_{j} := b_{j} - \alpha \frac{\partial J(w, b)}{\partial b_{j}} \\\\
-\tag{7}
-\end{align*}\]</span></p>
-<h4 id="mbgd的梯度下降图">MBGD的梯度下降图</h4>
-<p><img src="/images/posts/gradient_descent/06.png"></p>
-<h4 id="python伪代码-2">Python伪代码</h4>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(epochs):</span><br><span class="line">    shuffle(data)</span><br><span class="line">    <span class="keyword">for</span> batch <span class="keyword">in</span> next_batch(data, batch_size):</span><br><span class="line">        grad = loss_fn(*args, **kwargs)</span><br><span class="line">        params = params - learning_rate * grad</span><br></pre></td></tr></table></figure>
-<h2 id="梯度下降优化">梯度下降优化</h2>
-<p>优化的方式一般有两种：</p>
+<h4 id="Python伪代码-1"><a href="#Python伪代码-1" class="headerlink" title="Python伪代码"></a>Python伪代码</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(epochs):</span><br><span class="line">    shuffle(data)</span><br><span class="line">    <span class="keyword">for</span> example <span class="keyword">in</span> data:</span><br><span class="line">        grad = loss_fn(*args, **kwarga)</span><br><span class="line">        params = params - learning_rate * grad</span><br></pre></td></tr></table></figure>
+<h3 id="小批量梯度下降算法-Mini-Batch-Gradient-Decent-MBGD"><a href="#小批量梯度下降算法-Mini-Batch-Gradient-Decent-MBGD" class="headerlink" title="小批量梯度下降算法(Mini-Batch Gradient Decent, MBGD)"></a>小批量梯度下降算法(Mini-Batch Gradient Decent, MBGD)</h3><p>对随机梯度下降和批梯度下降进行了折衷， 每次用 $t (1 &lt; t &lt; m)$ 个样本进行更新</p>
+<p>$$\begin{align<em>}<br>J(w, b) = \frac{1}{k}\sum_{i=1}^{k} L (\hat{y^{(i)}}, y^{(i)}) + \frac{\lambda }{2k}\sum \left | w \right |<em>{F}^{2} \\<br>w</em>{j} := w_{j} - \alpha \frac{\partial J(w, b)}{\partial w_{j}} \\<br>b_{j} := b_{j} - \alpha \frac{\partial J(w, b)}{\partial b_{j}} \\<br>\tag{7}<br>\end{align</em>}$$</p>
+<h4 id="MBGD的梯度下降图"><a href="#MBGD的梯度下降图" class="headerlink" title="MBGD的梯度下降图"></a>MBGD的梯度下降图</h4><p><img src="/images/posts/gradient_descent/06.png" alt=""></p>
+<h4 id="Python伪代码-2"><a href="#Python伪代码-2" class="headerlink" title="Python伪代码"></a>Python伪代码</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(epochs):</span><br><span class="line">    shuffle(data)</span><br><span class="line">    <span class="keyword">for</span> batch <span class="keyword">in</span> next_batch(data, batch_size):</span><br><span class="line">        grad = loss_fn(*args, **kwargs)</span><br><span class="line">        params = params - learning_rate * grad</span><br></pre></td></tr></table></figure>
+<h2 id="梯度下降优化"><a href="#梯度下降优化" class="headerlink" title="梯度下降优化"></a>梯度下降优化</h2><p>优化的方式一般有两种：</p>
 <ul>
 <li>算法</li>
 <li>优化方法的选择，比如大数据量下采用牛顿法/拟牛顿法进行优化</li>
 </ul>
-<h3 id="指数加权平均">指数加权平均</h3>
-<p>是一种常用的序列数据处理方式</p>
-<p><span class="math display">\[\begin{align*}
-S_{t} = \begin{cases}
-Y_{1} &amp; \text{ if } t=1\\ 
-\beta S_{t-1} + (1-\beta)Y_{t} &amp; \text{ if } t&gt;1 
-\end{cases} \\\\
-\tag{8}
-\end{align*}\]</span></p>
-<p><span class="math inline">\(Y_{t}\)</span> 为 <span class="math inline">\(t\)</span>下的实际值， <span class="math inline">\(S_{t}\)</span> 为 <span class="math inline">\(t\)</span> 下加权平均后的值， <span class="math inline">\(\beta\)</span> 为权重</p>
-<h3 id="动量梯度下降gradient-descent-with-momentum">动量梯度下降（Gradient Descent with Momentum）</h3>
-<p>是计算梯度的指数加权平均数，并利用该值来更新参数值</p>
-<p><span class="math display">\[\begin{align*}
-&amp; \upsilon_{dw} = \beta \upsilon_{dw} + (1-\beta) dw \\\\
-&amp; \upsilon_{db} = \beta \upsilon_{db} + (1-\beta) db \\\\
-&amp; w := w - \alpha \upsilon_{dw} \\\\
-&amp; b := b - \alpha \upsilon_{db} \\\\
-\tag{9}
-\end{align*}\]</span></p>
+<h3 id="指数加权平均"><a href="#指数加权平均" class="headerlink" title="指数加权平均"></a>指数加权平均</h3><p>是一种常用的序列数据处理方式</p>
+<p>$$\begin{align<em>}<br>S_{t} = \begin{cases}<br>Y_{1} &amp; \text{ if } t=1\<br>\beta S_{t-1} + (1-\beta)Y_{t} &amp; \text{ if } t&gt;1<br>\end{cases} \\<br>\tag{8}<br>\end{align</em>}$$</p>
+<p>$Y_{t}$ 为 $t$下的实际值， $S_{t}$ 为 $t$ 下加权平均后的值， $\beta$ 为权重</p>
+<h3 id="动量梯度下降（Gradient-Descent-with-Momentum）"><a href="#动量梯度下降（Gradient-Descent-with-Momentum）" class="headerlink" title="动量梯度下降（Gradient Descent with Momentum）"></a>动量梯度下降（Gradient Descent with Momentum）</h3><p>是计算梯度的指数加权平均数，并利用该值来更新参数值</p>
+<p>$$\begin{align<em>}<br>&amp; \upsilon_{dw} = \beta \upsilon_{dw} + (1-\beta) dw \\<br>&amp; \upsilon_{db} = \beta \upsilon_{db} + (1-\beta) db \\<br>&amp; w := w - \alpha \upsilon_{dw} \\<br>&amp; b := b - \alpha \upsilon_{db} \\<br>\tag{9}<br>\end{align</em>}$$</p>
 <p>SGD 在局部沟壑中很容易发生振荡，所以在这种情况下下降速度会很慢，而动量能在一定程度上抑制这种震荡，使得SGD的下降更平稳</p>
 <p>如下图为不加Momentum和加了Momentum的区别</p>
-<img src="/images/posts/gradient_descent/07.gif">
-<p align="center">
-未加Momentum的SGD
-</p>
-<img src="/images/posts/gradient_descent/08.gif">
-<p align="center">
-加了Momentum的SGD
-</p>
+<p><img src="/images/posts/gradient_descent/07.gif" alt=""></p>
+<p align="center">未加Momentum的SGD</p>
+
+<p><img src="/images/posts/gradient_descent/08.gif" alt=""></p>
+<p align="center">加了Momentum的SGD</p>
+
 <p><strong>特点：</strong>当前后梯度方向一致时，Momentum梯度下降能够<strong>加速学习</strong>；前后梯度方向不一致时,Momentum梯度下降能够<strong>抑制震荡</strong></p>
-<h3 id="均方根支root-mean-square-prop-rmsprop">均方根支(Root Mean Square Prop, RMSProp)</h3>
-<p>在梯度进行指数加权平均的基础上引入了平方和平方根</p>
-<p><span class="math display">\[\begin{align*}
-&amp; S_{dw} = \beta S_{dw} + (1-\beta) dw^{2} \\\\
-&amp; S_{db} = \beta S_{db} + (1-\beta) db^{2} \\\\
-&amp; w := w - \alpha \frac{dw}{\sqrt{S_{dw} + \epsilon }} \\\\
-&amp; b := b - \alpha \frac{dw}{\sqrt{S_{db} + \epsilon }} \\\\
-\tag{10}
-\end{align*}\]</span></p>
-<p><span class="math inline">\(\epsilon\)</span> 一般值很小，主要是用来提高数值稳定性，防止分母过小</p>
-<p><strong>特点：</strong> 当 <span class="math inline">\(dw\)</span> 或 <span class="math inline">\(db\)</span> 较大时，<span class="math inline">\(dw^{2}\)</span> 和 <span class="math inline">\(db^{2}\)</span> 也会较大，因此 <span class="math inline">\(S_{dw}\)</span> <span class="math inline">\(S_{db}\)</span> 也是较大的，最终使得 <span class="math inline">\(\frac{dw}{\sqrt{S_{dw} + \epsilon}}\)</span> <span class="math inline">\(\frac{db}{\sqrt{S_{db} + \epsilon}}\)</span> 较小，这也减少了振荡</p>
-<h3 id="自适应矩估计adaptive-moment-estimation-adam">自适应矩估计(Adaptive Moment Estimation, Adam)</h3>
-<p>可以认为是 <code>Momentum</code> 和 <code>RMSProp</code> 的结合</p>
-<p><span class="math display">\[\begin{align*}
-&amp; \upsilon_{dw} = \beta_{1} \upsilon_{dw} + (1-\beta _{1}) dw, \upsilon _{db} = \beta_{1} \upsilon_{db} + (1-\beta _{1}) db \\\\
-&amp; S_{dw} = \beta_{2} S_{dw} + (1-\beta _{2}) dw^{2}, S_{db} = \beta_{2} S_{db} + (1-\beta _{2}) db^{2} \\\\
-&amp; \upsilon_{dw}^{correct} = \frac{\upsilon _{dw}}{1-\beta_{1}^{t}}, \upsilon_{db}^{correct} = \frac{\upsilon_{db}}{1-\beta_{1}^{t}} \\\\
-&amp; S_{dw}^{correct} = \frac{S_{dw}}{1-\beta_{2}^{t}}, S_{db}^{correct} = \frac{S_{db}}{1-\beta_{2}^{t}} \\\\
-&amp; w := w - \alpha \frac{\upsilon_{dw}^{correct}}{\sqrt{S_{dw}^{correct}} + \epsilon} \\\\
-&amp; b := b - \alpha \frac{\upsilon_{db}^{correct}}{\sqrt{S_{db}^{correct}} + \epsilon} \\\\
-\tag{11}
-\end{align*}\]</span></p>
-<p><span class="math inline">\(\beta _{1}\)</span>为第一阶矩，<span class="math inline">\(\beta _{2}\)</span> 为第二阶矩</p>
-<h3 id="各优化算法的比较">各优化算法的比较</h3>
-<p><img src="/images/posts/gradient_descent/09.gif"> <img src="/images/posts/gradient_descent/10.gif"></p>
-<h2 id="reference">Reference</h2>
-<p>[1]李航《统计学习方法》</p>
-<p>[2] https://wenku.baidu.com/view/d3dbe40903d8ce2f00662358.html</p>
-<p>[3] https://wenku.baidu.com/view/23aca9eab8f67c1cfad6b84f.html</p>
-<p>[4] https://zh.wikipedia.org/wiki/%E6%B5%B7%E6%A3%AE%E7%9F%A9%E9%98%B5</p>
-<p>[5] http://binweber.top/2017/10/06/deep_learning_4/</p>
-<p>[6] http://ruder.io/optimizing-gradient-descent/</p>
+<h3 id="均方根支-Root-Mean-Square-Prop-RMSProp"><a href="#均方根支-Root-Mean-Square-Prop-RMSProp" class="headerlink" title="均方根支(Root Mean Square Prop, RMSProp)"></a>均方根支(Root Mean Square Prop, RMSProp)</h3><p>在梯度进行指数加权平均的基础上引入了平方和平方根</p>
+<p>$$\begin{align<em>}<br>&amp; S_{dw} = \beta S_{dw} + (1-\beta) dw^{2} \\<br>&amp; S_{db} = \beta S_{db} + (1-\beta) db^{2} \\<br>&amp; w := w - \alpha \frac{dw}{\sqrt{S_{dw} + \epsilon }} \\<br>&amp; b := b - \alpha \frac{dw}{\sqrt{S_{db} + \epsilon }} \\<br>\tag{10}<br>\end{align</em>}$$</p>
+<p>$\epsilon$ 一般值很小，主要是用来提高数值稳定性，防止分母过小</p>
+<p><strong>特点：</strong> 当 $dw$ 或 $db$ 较大时，$dw^{2}$ 和 $db^{2}$ 也会较大，因此 $S_{dw}$ $S_{db}$ 也是较大的，最终使得 $\frac{dw}{\sqrt{S_{dw} + \epsilon}}$ $\frac{db}{\sqrt{S_{db} + \epsilon}}$ 较小，这也减少了振荡</p>
+<h3 id="自适应矩估计-Adaptive-Moment-Estimation-Adam"><a href="#自适应矩估计-Adaptive-Moment-Estimation-Adam" class="headerlink" title="自适应矩估计(Adaptive Moment Estimation, Adam)"></a>自适应矩估计(Adaptive Moment Estimation, Adam)</h3><p>可以认为是 <code>Momentum</code> 和 <code>RMSProp</code> 的结合</p>
+<p>$$\begin{align<em>}<br>&amp; \upsilon_{dw} = \beta_{1} \upsilon_{dw} + (1-\beta _{1}) dw, \upsilon <em>{db} = \beta</em>{1} \upsilon_{db} + (1-\beta <em>{1}) db \\<br>&amp; S</em>{dw} = \beta_{2} S_{dw} + (1-\beta <em>{2}) dw^{2}, S</em>{db} = \beta_{2} S_{db} + (1-\beta <em>{2}) db^{2} \\<br>&amp; \upsilon</em>{dw}^{correct} = \frac{\upsilon <em>{dw}}{1-\beta</em>{1}^{t}}, \upsilon_{db}^{correct} = \frac{\upsilon_{db}}{1-\beta_{1}^{t}} \\<br>&amp; S_{dw}^{correct} = \frac{S_{dw}}{1-\beta_{2}^{t}}, S_{db}^{correct} = \frac{S_{db}}{1-\beta_{2}^{t}} \\<br>&amp; w := w - \alpha \frac{\upsilon_{dw}^{correct}}{\sqrt{S_{dw}^{correct}} + \epsilon} \\<br>&amp; b := b - \alpha \frac{\upsilon_{db}^{correct}}{\sqrt{S_{db}^{correct}} + \epsilon} \\<br>\tag{11}<br>\end{align</em>}$$</p>
+<p>$\beta _{1}$为第一阶矩，$\beta _{2}$ 为第二阶矩</p>
+<h3 id="各优化算法的比较"><a href="#各优化算法的比较" class="headerlink" title="各优化算法的比较"></a>各优化算法的比较</h3><p><img src="/images/posts/gradient_descent/09.gif" alt=""><br><img src="/images/posts/gradient_descent/10.gif" alt=""></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1]李航《统计学习方法》</p>
+<p>[2] <a href="https://wenku.baidu.com/view/d3dbe40903d8ce2f00662358.html" target="_blank" rel="noopener">https://wenku.baidu.com/view/d3dbe40903d8ce2f00662358.html</a></p>
+<p>[3] <a href="https://wenku.baidu.com/view/23aca9eab8f67c1cfad6b84f.html" target="_blank" rel="noopener">https://wenku.baidu.com/view/23aca9eab8f67c1cfad6b84f.html</a></p>
+<p>[4] <a href="https://zh.wikipedia.org/wiki/%E6%B5%B7%E6%A3%AE%E7%9F%A9%E9%98%B5" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/%E6%B5%B7%E6%A3%AE%E7%9F%A9%E9%98%B5</a></p>
+<p>[5] <a href="http://binweber.top/2017/10/06/deep_learning_4/" target="_blank" rel="noopener">http://binweber.top/2017/10/06/deep_learning_4/</a></p>
+<p>[6] <a href="http://ruder.io/optimizing-gradient-descent/" target="_blank" rel="noopener">http://ruder.io/optimizing-gradient-descent/</a></p>
 
       
     </div>
@@ -779,7 +697,7 @@ Y_{1} &amp; \text{ if } t=1\\
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#知识储备"><span class="nav-number">1.</span> <span class="nav-text">知识储备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#梯度下降法"><span class="nav-number">1.1.</span> <span class="nav-text">梯度下降法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#导数"><span class="nav-number">1.1.1.</span> <span class="nav-text">导数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#梯度"><span class="nav-number">1.1.2.</span> <span class="nav-text">梯度</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#牛顿法和拟牛顿法"><span class="nav-number">1.2.</span> <span class="nav-text">牛顿法和拟牛顿法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#海森矩阵hessian-matrix"><span class="nav-number">1.2.1.</span> <span class="nav-text">海森矩阵(Hessian Matrix)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#正定半正定矩阵"><span class="nav-number">1.2.2.</span> <span class="nav-text">正定半正定矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#牛顿法"><span class="nav-number">1.2.3.</span> <span class="nav-text">牛顿法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拟牛顿法"><span class="nav-number">1.2.4.</span> <span class="nav-text">拟牛顿法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#等高线"><span class="nav-number">1.3.</span> <span class="nav-text">等高线</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#梯度下降法-1"><span class="nav-number">2.</span> <span class="nav-text">梯度下降法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#批梯度下降batch-gradient-descent-bgd"><span class="nav-number">2.1.</span> <span class="nav-text">批梯度下降(Batch Gradient Descent, BGD)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#bgd的梯度下降图"><span class="nav-number">2.1.1.</span> <span class="nav-text">BGD的梯度下降图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bgd的优缺点"><span class="nav-number">2.1.2.</span> <span class="nav-text">BGD的优缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#python伪代码"><span class="nav-number">2.1.3.</span> <span class="nav-text">Python伪代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#随机梯度下降stochastic-gradient-decent-sgd"><span class="nav-number">2.2.</span> <span class="nav-text">随机梯度下降(Stochastic Gradient Decent, SGD)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sgd的梯度下降图"><span class="nav-number">2.2.1.</span> <span class="nav-text">SGD的梯度下降图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sgd的优缺点"><span class="nav-number">2.2.2.</span> <span class="nav-text">SGD的优缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#python伪代码-1"><span class="nav-number">2.2.3.</span> <span class="nav-text">Python伪代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小批量梯度下降算法mini-batch-gradient-decent-mbgd"><span class="nav-number">2.3.</span> <span class="nav-text">小批量梯度下降算法(Mini-Batch Gradient Decent, MBGD)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mbgd的梯度下降图"><span class="nav-number">2.3.1.</span> <span class="nav-text">MBGD的梯度下降图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#python伪代码-2"><span class="nav-number">2.3.2.</span> <span class="nav-text">Python伪代码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#梯度下降优化"><span class="nav-number">3.</span> <span class="nav-text">梯度下降优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#指数加权平均"><span class="nav-number">3.1.</span> <span class="nav-text">指数加权平均</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动量梯度下降gradient-descent-with-momentum"><span class="nav-number">3.2.</span> <span class="nav-text">动量梯度下降（Gradient Descent with Momentum）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#均方根支root-mean-square-prop-rmsprop"><span class="nav-number">3.3.</span> <span class="nav-text">均方根支(Root Mean Square Prop, RMSProp)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自适应矩估计adaptive-moment-estimation-adam"><span class="nav-number">3.4.</span> <span class="nav-text">自适应矩估计(Adaptive Moment Estimation, Adam)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#各优化算法的比较"><span class="nav-number">3.5.</span> <span class="nav-text">各优化算法的比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#知识储备"><span class="nav-number">1.</span> <span class="nav-text">知识储备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#梯度下降法"><span class="nav-number">1.1.</span> <span class="nav-text">梯度下降法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#导数"><span class="nav-number">1.1.1.</span> <span class="nav-text">导数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#梯度"><span class="nav-number">1.1.2.</span> <span class="nav-text">梯度</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#牛顿法和拟牛顿法"><span class="nav-number">1.2.</span> <span class="nav-text">牛顿法和拟牛顿法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#海森矩阵-Hessian-Matrix"><span class="nav-number">1.2.1.</span> <span class="nav-text">海森矩阵(Hessian Matrix)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#正定半正定矩阵"><span class="nav-number">1.2.2.</span> <span class="nav-text">正定半正定矩阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#牛顿法"><span class="nav-number">1.2.3.</span> <span class="nav-text">牛顿法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拟牛顿法"><span class="nav-number">1.2.4.</span> <span class="nav-text">拟牛顿法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#等高线"><span class="nav-number">1.3.</span> <span class="nav-text">等高线</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#梯度下降法-1"><span class="nav-number">2.</span> <span class="nav-text">梯度下降法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#批梯度下降-Batch-Gradient-Descent-BGD"><span class="nav-number">2.1.</span> <span class="nav-text">批梯度下降(Batch Gradient Descent, BGD)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#BGD的梯度下降图"><span class="nav-number">2.1.1.</span> <span class="nav-text">BGD的梯度下降图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BGD的优缺点"><span class="nav-number">2.1.2.</span> <span class="nav-text">BGD的优缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Python伪代码"><span class="nav-number">2.1.3.</span> <span class="nav-text">Python伪代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#随机梯度下降-Stochastic-Gradient-Decent-SGD"><span class="nav-number">2.2.</span> <span class="nav-text">随机梯度下降(Stochastic Gradient Decent, SGD)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SGD的梯度下降图"><span class="nav-number">2.2.1.</span> <span class="nav-text">SGD的梯度下降图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SGD的优缺点"><span class="nav-number">2.2.2.</span> <span class="nav-text">SGD的优缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Python伪代码-1"><span class="nav-number">2.2.3.</span> <span class="nav-text">Python伪代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小批量梯度下降算法-Mini-Batch-Gradient-Decent-MBGD"><span class="nav-number">2.3.</span> <span class="nav-text">小批量梯度下降算法(Mini-Batch Gradient Decent, MBGD)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MBGD的梯度下降图"><span class="nav-number">2.3.1.</span> <span class="nav-text">MBGD的梯度下降图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Python伪代码-2"><span class="nav-number">2.3.2.</span> <span class="nav-text">Python伪代码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#梯度下降优化"><span class="nav-number">3.</span> <span class="nav-text">梯度下降优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#指数加权平均"><span class="nav-number">3.1.</span> <span class="nav-text">指数加权平均</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动量梯度下降（Gradient-Descent-with-Momentum）"><span class="nav-number">3.2.</span> <span class="nav-text">动量梯度下降（Gradient Descent with Momentum）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#均方根支-Root-Mean-Square-Prop-RMSProp"><span class="nav-number">3.3.</span> <span class="nav-text">均方根支(Root Mean Square Prop, RMSProp)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自适应矩估计-Adaptive-Moment-Estimation-Adam"><span class="nav-number">3.4.</span> <span class="nav-text">自适应矩估计(Adaptive Moment Estimation, Adam)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#各优化算法的比较"><span class="nav-number">3.5.</span> <span class="nav-text">各优化算法的比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>
