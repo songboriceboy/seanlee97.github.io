@@ -103,7 +103,7 @@
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/svm/learn-5.jpg">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/svm/result.jpg">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/svm/hingeloss.png">
-<meta property="og:updated_time" content="2018-11-21T03:54:54.529Z">
+<meta property="og:updated_time" content="2018-11-21T03:59:50.860Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SVM从入门到代码实现">
 <meta name="twitter:description" content="本学期选修了数据挖掘课程，发现课本很多内容和李航博士的《统计学习方法》相同，所以我还是从复习《统计学习方法》开始，再结合老师课堂讲的，尽量做到温故而知新。 这篇博文主要记录我对SVM的理解，逐渐深入，到代码实现三个过程。 相信大多数人和我一样，觉得SVM (support vector machine，支持向量机)很高大上，是一个牛逼的算法。但是当看到有关SVM的讲解，推导时，相信大多数人也和我一">
@@ -417,7 +417,7 @@
 <h4 id="凸函数">凸函数</h4>
 <p>若函数<span class="math inline">\((f)\)</span>为凸函数，如果满足<span class="math inline">\((f: \mathbb{R} \rightarrow \mathbb{R})\)</span>，使得函数<span class="math inline">\((f)\)</span>的定义域为凸集，<span class="math inline">\((dom(f) \subseteq \mathbb{R}^n)\)</span>，且<span class="math inline">\((f(tx+(1-t)y) \leq tf(x)+(1-t)f(y))\)</span>, 其中<span class="math inline">\((0 \leq t \leq 1)\)</span>。 也就是说凸函数上任意两点的连线都在两点区间的函数之上。如图： <img src="/images/posts/svm/learn-0.jpg"></p>
 <h3 id="拉格朗日乘子法">拉格朗日乘子法</h3>
-<p>这部分知识，主要来源于<a href="https://baike.baidu.com/item/拉格朗日乘子法/1946079?fr=aladdin" target="_blank" rel="noopener">百度百科</a> 基本的拉格朗日乘子法就是求函数 <span class="math inline">\(f(x_1,x_2,...)\)</span> 在约束条件<span class="math inline">\(g(x_1,x_2,...)=0\)</span> 下的极值的方法。其主要思想是将约束条件函数与原函数联立，从而求出使原函数取得极值的各个变量的解。</p>
+<p>这部分知识，主要来源于<a href="https://baike.baidu.com/item/拉格朗日乘子法/1946079?fr=aladdin" target="_blank" rel="noopener">百度百科</a> 基本的拉格朗日乘子法就是求函数 <span class="math inline">\(f(x_1,x_2,...)\)</span> 在约束条件<span class="math inline">\(g(x_1,x_2,...)=0\)</span> 下的极值的方法。其主要思想是将约束条件函数与原函数联立，从而求出使原函数取得极值的各个变量的解。 也就是说<strong>拉格朗日乘子法将约束最优化问题转为了无约束问题</strong></p>
 <h4 id="定义">定义</h4>
 <p>对于具有<span class="math inline">\(l\)</span>个等式约束的<span class="math inline">\(n\)</span>维优化问题</p>
 <p><span class="math display">\[\begin{cases}

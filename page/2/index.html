@@ -1994,7 +1994,7 @@ arg \underset{s_{1}...s_{m}}{max}\ p( s_{1}...s_{m}|x_{1}...x_{m}) &amp;= arg \u
 <h4 id="凸函数">凸函数</h4>
 <p>若函数<span class="math inline">\((f)\)</span>为凸函数，如果满足<span class="math inline">\((f: \mathbb{R} \rightarrow \mathbb{R})\)</span>，使得函数<span class="math inline">\((f)\)</span>的定义域为凸集，<span class="math inline">\((dom(f) \subseteq \mathbb{R}^n)\)</span>，且<span class="math inline">\((f(tx+(1-t)y) \leq tf(x)+(1-t)f(y))\)</span>, 其中<span class="math inline">\((0 \leq t \leq 1)\)</span>。 也就是说凸函数上任意两点的连线都在两点区间的函数之上。如图： <img src="/images/posts/svm/learn-0.jpg"></p>
 <h3 id="拉格朗日乘子法">拉格朗日乘子法</h3>
-<p>这部分知识，主要来源于<a href="https://baike.baidu.com/item/拉格朗日乘子法/1946079?fr=aladdin" target="_blank" rel="noopener">百度百科</a> 基本的拉格朗日乘子法就是求函数 <span class="math inline">\(f(x_1,x_2,...)\)</span> 在约束条件<span class="math inline">\(g(x_1,x_2,...)=0\)</span> 下的极值的方法。其主要思想是将约束条件函数与原函数联立，从而求出使原函数取得极值的各个变量的解。</p>
+<p>这部分知识，主要来源于<a href="https://baike.baidu.com/item/拉格朗日乘子法/1946079?fr=aladdin" target="_blank" rel="noopener">百度百科</a> 基本的拉格朗日乘子法就是求函数 <span class="math inline">\(f(x_1,x_2,...)\)</span> 在约束条件<span class="math inline">\(g(x_1,x_2,...)=0\)</span> 下的极值的方法。其主要思想是将约束条件函数与原函数联立，从而求出使原函数取得极值的各个变量的解。 也就是说<strong>拉格朗日乘子法将约束最优化问题转为了无约束问题</strong></p>
 <h4 id="定义">定义</h4>
 <p>对于具有<span class="math inline">\(l\)</span>个等式约束的<span class="math inline">\(n\)</span>维优化问题</p>
 <p><span class="math display">\[\begin{cases}
