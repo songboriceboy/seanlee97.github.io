@@ -349,133 +349,175 @@
       
         <p>首先声明，这里的 LDA 是指 Latent Dirichlet Allocation 隐含狄利克雷分布，而不是 Linear Discriminant Analysis 线性判别分析 (笔者有幸在 City University of HK 听过一堂机器学习课，里面讲到了线性判别，受益匪浅，有机会再做分享)</p>
 <p>除了看原论文 <a href="http://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf" target="_blank" rel="noopener">Latent Dirichlet Allocation</a> , 虽然论文一作不是安德鲁(吴恩达)，但是看到他的名字就知道这篇论文的水平，我也看了很多博客，写得最好的是<code>火光摇曳</code>的 《LDA数学八卦》，本文部分知识来自此篇博客。</p>
-<h2 id="LDA-的解释"><a href="#LDA-的解释" class="headerlink" title="LDA 的解释"></a>LDA 的解释</h2><p>既然 LDA 是主题模型，那么它的功能应该是和 LSA、 pLSA 等差不多的。它们都可以得到文档的主题，以及主题词。LSA 一般通过 SVD 求解（可参考先前的文章 <a href="https://seanlee97.github.io/2018/09/01/SVD%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8ALSA%E7%9A%84%E6%B1%82%E8%A7%A3/">SVD的原理及LSA的求解</a>），而 pLSA 和 LDA 是概率模型。</p>
+<h2 id="lda-的解释">LDA 的解释</h2>
+<p>既然 LDA 是主题模型，那么它的功能应该是和 LSA、 pLSA 等差不多的。它们都可以得到文档的主题，以及主题词。LSA 一般通过 SVD 求解（可参考先前的文章 <a href="https://seanlee97.github.io/2018/09/01/SVD%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8ALSA%E7%9A%84%E6%B1%82%E8%A7%A3/">SVD的原理及LSA的求解</a>），而 pLSA 和 LDA 是概率模型。</p>
 <p>那么什么是LDA呢？</p>
 <p>假设有 M 篇文章，我们假设每篇文章中隐含有 K 个主题。其中文章和文章的词是可见的，而主题是假设出来的，且主题往往是受词影响的，可以把这些主题称为 <code>latent topics</code> 隐主题。</p>
-<p><img src="/images/posts/lda_topic/topic-words.png" alt=""></p>
-<p>假设每篇文章的长度为 N (即是每篇文章有 N 个词)，每篇文章都有各自的主题分布（是软分布），主题分布是<code>多项分布</code>， 该多项分布的参数服从<code>Dirichlet 分布</code>, 该<code>Dirichlet 分布</code>的参数为 $\alpha$</p>
-<p>每个主题都有各自的词分布，词分布也是<code>多项分布</code>，其多项分布的参数也同样服从<code>Dirichlet 分布</code>，该<code>Dirichlet 分布</code>的参数为 $\beta$</p>
+<p><img src="/images/posts/lda_topic/topic-words.png"></p>
+<p>假设每篇文章的长度为 N (即是每篇文章有 N 个词)，每篇文章都有各自的主题分布（是软分布），主题分布是<code>多项分布</code>， 该多项分布的参数服从<code>Dirichlet 分布</code>, 该<code>Dirichlet 分布</code>的参数为 <span class="math inline">\(\alpha\)</span></p>
+<p>每个主题都有各自的词分布，词分布也是<code>多项分布</code>，其多项分布的参数也同样服从<code>Dirichlet 分布</code>，该<code>Dirichlet 分布</code>的参数为 <span class="math inline">\(\beta\)</span></p>
 <p>通俗地说就是对于某篇文章中的第 n 个词，首先要从这篇文章的主题分布中采样一个主题，然后再在这个主题对应的词分布中采样一个词，然后不断重复这个过程，直到 m 篇文章全部完成上述过程。</p>
 <p>而 LDA 是基于贝叶斯模型的，是一个三层的网络，贝叶斯模型有三个主要部分：先验分布、数据似然、后验分布，它们的关系为</p>
-<p align="center">先验分布 + 数据似然 = 后验分布</p>
-
+<p align="center">
+先验分布 + 数据似然 = 后验分布
+</p>
 <p><strong>为了让上述关系满足递推关系</strong>，LDA 一般采用的分布是满足共轭分布的，共轭分布的先验分布和后验分布满足相同的分布律，<strong>即当前的求得的后验分布可作为下一次的先验分布</strong>。</p>
 <p>上面内容先介绍了 LDA 的主要思想，下面主要介绍 LDA 的细节</p>
-<h2 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h2><h3 id="Gamma-函数"><a href="#Gamma-函数" class="headerlink" title="Gamma 函数"></a>Gamma 函数</h3><p><code>Beta 分布</code> 和 <code>Dirichlet 分布</code> 中都用到 Gamma 函数  $\Gamma(\alpha)$ ,它的定义为：</p>
-<p>$$\begin{align<em>}<br>&amp; \Gamma(\alpha) = \int_{0}^{+\infty } x^{\alpha-1} e^{-x} dx \<br>&amp; where\ \ x &gt; 0<br>\end{align</em>} \tag{1}$$</p>
-<p>另 $x = t^{2}$ 带回 $(1)$ 式可得到 Gamma 函数的另一表达形式</p>
-<p>$$\begin{align<em>}<br>&amp; \Gamma(\alpha) = 2 \int_{0}^{+ \infty} t^{2\alpha-1} e^{-t^{2}} dt \<br>&amp; where\ \ t &gt; 0<br>\end{align</em>} \tag{2}$$</p>
-<p>对于 $(1)$ 式，将 $\alpha = 1$ 带入求积分易求得:</p>
-<p>$$\Gamma(1) = 1 \tag{3}$$</p>
-<p>对于 $(2)$ 式，将 $\alpha = \frac{1}{2}$ 带入求积分可得：</p>
-<p>$$\Gamma(\frac{1}{2}) = \sqrt{\pi} \tag{4}$$</p>
+<h2 id="背景知识">背景知识</h2>
+<h3 id="gamma-函数">Gamma 函数</h3>
+<p><code>Beta 分布</code> 和 <code>Dirichlet 分布</code> 中都用到 Gamma 函数 <span class="math inline">\(\Gamma(\alpha)\)</span> ,它的定义为：</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \Gamma(\alpha) = \int_{0}^{+\infty } x^{\alpha-1} e^{-x} dx \\
+&amp; where\ \ x &gt; 0
+\end{align*} \tag{1}\]</span></p>
+<p>另 <span class="math inline">\(x = t^{2}\)</span> 带回 <span class="math inline">\((1)\)</span> 式可得到 Gamma 函数的另一表达形式</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \Gamma(\alpha) = 2 \int_{0}^{+ \infty} t^{2\alpha-1} e^{-t^{2}} dt \\
+&amp; where\ \ t &gt; 0
+\end{align*} \tag{2}\]</span></p>
+<p>对于 <span class="math inline">\((1)\)</span> 式，将 <span class="math inline">\(\alpha = 1\)</span> 带入求积分易求得:</p>
+<p><span class="math display">\[\Gamma(1) = 1 \tag{3}\]</span></p>
+<p>对于 <span class="math inline">\((2)\)</span> 式，将 <span class="math inline">\(\alpha = \frac{1}{2}\)</span> 带入求积分可得：</p>
+<p><span class="math display">\[\Gamma(\frac{1}{2}) = \sqrt{\pi} \tag{4}\]</span></p>
 <p>接下来我们用分部积分法求解可得：</p>
-<p>$$\begin{align<em>}<br>\Gamma(\alpha + 1) &amp; = \int _{0}^{+\infty} x^{\alpha} e^{-x} dx \<br>&amp; = -\int _{0}^{+\infty} x^{\alpha}d e^{-x} \<br>&amp; = -x^{\alpha} e^{-x} | _{0}^{+\infty} + \int _{0}^{+\infty} e^{-x}\alpha x^{\alpha-1} dx \<br>&amp; = \alpha \int _{0}^{\infty} x^{\alpha - 1} e^{-x} dx \<br>&amp; = \alpha \Gamma(\alpha)<br>\end{align</em>} \tag{5}$$</p>
-<p>因此 </p>
-<p>$$\Gamma(\alpha + 1) = \alpha \Gamma(\alpha) \tag{6}$$</p>
-<p>易知 $\Gamma(\alpha)$ 函数是阶乘在实数集上的扩展，具有如下性质：</p>
-<p>$$\Gamma(n) = (n-1)! \tag{7}$$</p>
-<p>由 $(1)$ $(3)$ $(6)$ 很容易求得 $\gt 0$ 自然数上的Gamma函数值，由 $(2)$ $(4)$ $(6)$ 易求得小数的Gamma函数值</p>
-<h4 id="Gamma-分布"><a href="#Gamma-分布" class="headerlink" title="Gamma 分布"></a>Gamma 分布</h4><p>对于 Gamma 函数有</p>
-<p>$$\int_{0}^{+\infty} \frac{x^{\alpha-1} e^{-x}}{\Gamma{\alpha}} dx = 1 \tag{8}$$</p>
+<p><span class="math display">\[\begin{align*}
+\Gamma(\alpha + 1) &amp; = \int _{0}^{+\infty} x^{\alpha} e^{-x} dx \\
+&amp; = -\int _{0}^{+\infty} x^{\alpha}d e^{-x} \\
+&amp; = -x^{\alpha} e^{-x} | _{0}^{+\infty} + \int _{0}^{+\infty} e^{-x}\alpha x^{\alpha-1} dx \\
+&amp; = \alpha \int _{0}^{\infty} x^{\alpha - 1} e^{-x} dx \\
+&amp; = \alpha \Gamma(\alpha)
+\end{align*} \tag{5}\]</span></p>
+<p>因此</p>
+<p><span class="math display">\[\Gamma(\alpha + 1) = \alpha \Gamma(\alpha) \tag{6}\]</span></p>
+<p>易知 <span class="math inline">\(\Gamma(\alpha)\)</span> 函数是阶乘在实数集上的扩展，具有如下性质：</p>
+<p><span class="math display">\[\Gamma(n) = (n-1)! \tag{7}\]</span></p>
+<p>由 <span class="math inline">\((1)\)</span> <span class="math inline">\((3)\)</span> <span class="math inline">\((6)\)</span> 很容易求得 <span class="math inline">\(\gt 0\)</span> 自然数上的Gamma函数值，由 <span class="math inline">\((2)\)</span> <span class="math inline">\((4)\)</span> <span class="math inline">\((6)\)</span> 易求得小数的Gamma函数值</p>
+<h4 id="gamma-分布">Gamma 分布</h4>
+<p>对于 Gamma 函数有</p>
+<p><span class="math display">\[\int_{0}^{+\infty} \frac{x^{\alpha-1} e^{-x}}{\Gamma{\alpha}} dx = 1 \tag{8}\]</span></p>
 <p>因此可得 Gamma 分布的密度函数为</p>
-<p>$$Gamma(x|\alpha) = \frac{x^{\alpha-1}e^{-x}}{\Gamma(\alpha)} \tag{9}$$</p>
-<p>更一般的令 $x = \beta t$ 可得</p>
-<p>$$Gamma(t|\alpha, \beta) = \frac{\beta^{\alpha}t^{\alpha-1}e^{-\beta t}}{\Gamma(\alpha)} \tag{10}$$</p>
-<p>$\alpha$ 决定了 Gamma 分布的曲线形状， $\beta$ 决定了 Gamma 分布曲线的陡峭程度 </p>
-<p><img src="/images/posts/lda_topic/gamma-distribution.png" alt=""></p>
-<h4 id="【拓】Gamma-分布与-Poisson-分布"><a href="#【拓】Gamma-分布与-Poisson-分布" class="headerlink" title="【拓】Gamma 分布与 Poisson 分布"></a>【拓】Gamma 分布与 Poisson 分布</h4><p>参数为 $\lambda$ 的泊松分布概率为：</p>
-<p>$$Poisson(X=k|\lambda) = \frac{\lambda ^{k} e-{\lambda}}{k!} \tag{11}$$</p>
-<p>在 Gamma 分布的密度函数中取 $\alpha = k+1$ 可得</p>
-<p>$$Gamma(x|\alpha = k+1) = \frac{x^{k}e{-x}}{\Gamma(k+1)} = \frac{x^{k}e^{-x}}{k!} \tag{12}$$</p>
-<p>可见 $(11)$ 和 $(12)$ 在分布表达式上是一致的，区别在于 Poisson 分布是离散的，而 Gamma 分布是连续的</p>
-<h3 id="共轭先验分布"><a href="#共轭先验分布" class="headerlink" title="共轭先验分布"></a>共轭先验分布</h3><p>对于贝叶斯定理有</p>
-<p>$$p(\theta | x) = \frac{p(x|\theta ) p(\theta)}{p(x)} \propto  p(x|\theta)p(\theta) \tag{13}$$</p>
-<p>其中 $\theta$ 是参数， $p(\theta | x)$ 是后验概率，$p(\theta)$ 是先验概率，$p(x|\theta)$ 称为给定参数 $\theta$ 下样本的似然概率</p>
-<p>若后验概率 $p(\theta|x)$ 和先验概率 $p(\theta)$ 满足同样的分布律，那么先验分布和后验分布叫做共轭分布，同时先验分布叫作似然函数的共轭先验分布</p>
-<h3 id="二项分布和-Beta-分布"><a href="#二项分布和-Beta-分布" class="headerlink" title="二项分布和 Beta 分布"></a>二项分布和 Beta 分布</h3><p>对于二项分布有</p>
-<p>$$Binomial(k|n, p) = \binom{n}{k} p^{k}(1-p)^{n-k} \tag{14}$$</p>
+<p><span class="math display">\[Gamma(x|\alpha) = \frac{x^{\alpha-1}e^{-x}}{\Gamma(\alpha)} \tag{9}\]</span></p>
+<p>更一般的令 <span class="math inline">\(x = \beta t\)</span> 可得</p>
+<p><span class="math display">\[Gamma(t|\alpha, \beta) = \frac{\beta^{\alpha}t^{\alpha-1}e^{-\beta t}}{\Gamma(\alpha)} \tag{10}\]</span></p>
+<p><span class="math inline">\(\alpha\)</span> 决定了 Gamma 分布的曲线形状， <span class="math inline">\(\beta\)</span> 决定了 Gamma 分布曲线的陡峭程度</p>
+<p><img src="/images/posts/lda_topic/gamma-distribution.png"></p>
+<h4 id="拓gamma-分布与-poisson-分布">【拓】Gamma 分布与 Poisson 分布</h4>
+<p>参数为 <span class="math inline">\(\lambda\)</span> 的泊松分布概率为：</p>
+<p><span class="math display">\[Poisson(X=k|\lambda) = \frac{\lambda ^{k} e-{\lambda}}{k!} \tag{11}\]</span></p>
+<p>在 Gamma 分布的密度函数中取 <span class="math inline">\(\alpha = k+1\)</span> 可得</p>
+<p><span class="math display">\[Gamma(x|\alpha = k+1) = \frac{x^{k}e{-x}}{\Gamma(k+1)} = \frac{x^{k}e^{-x}}{k!} \tag{12}\]</span></p>
+<p>可见 <span class="math inline">\((11)\)</span> 和 <span class="math inline">\((12)\)</span> 在分布表达式上是一致的，区别在于 Poisson 分布是离散的，而 Gamma 分布是连续的</p>
+<h3 id="共轭先验分布">共轭先验分布</h3>
+<p>对于贝叶斯定理有</p>
+<p><span class="math display">\[p(\theta | x) = \frac{p(x|\theta ) p(\theta)}{p(x)} \propto  p(x|\theta)p(\theta) \tag{13}\]</span></p>
+<p>其中 <span class="math inline">\(\theta\)</span> 是参数， <span class="math inline">\(p(\theta | x)\)</span> 是后验概率，<span class="math inline">\(p(\theta)\)</span> 是先验概率，<span class="math inline">\(p(x|\theta)\)</span> 称为给定参数 <span class="math inline">\(\theta\)</span> 下样本的似然概率</p>
+<p>若后验概率 <span class="math inline">\(p(\theta|x)\)</span> 和先验概率 <span class="math inline">\(p(\theta)\)</span> 满足同样的分布律，那么先验分布和后验分布叫做共轭分布，同时先验分布叫作似然函数的共轭先验分布</p>
+<h3 id="二项分布和-beta-分布">二项分布和 Beta 分布</h3>
+<p>对于二项分布有</p>
+<p><span class="math display">\[Binomial(k|n, p) = \binom{n}{k} p^{k}(1-p)^{n-k} \tag{14}\]</span></p>
 <p>Beta 分布的概率密度函数为：</p>
-<p>$$f(x) = \begin{cases}<br>\frac{1}{B(\alpha, \beta)} x^{\alpha-1}(1-x)^{\beta-1} &amp; \text{ , } x\in [0, 1] \<br>0 &amp; \text{ , } others<br>\end{cases} \tag{15}$$</p>
+<p><span class="math display">\[f(x) = \begin{cases}
+\frac{1}{B(\alpha, \beta)} x^{\alpha-1}(1-x)^{\beta-1} &amp; \text{ , } x\in [0, 1] \\ 
+0 &amp; \text{ , } others
+\end{cases} \tag{15}\]</span></p>
 <p>其中系数 B 为</p>
-<p>$$B(\alpha, \beta) = \int_{0}^{1} x^{\alpha -1}(1-x)^{\beta -1} dx = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha + \beta)} \tag{16}$$</p>
+<p><span class="math display">\[B(\alpha, \beta) = \int_{0}^{1} x^{\alpha -1}(1-x)^{\beta -1} dx = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha + \beta)} \tag{16}\]</span></p>
 <p>因此对于 Beta 分布有</p>
-<p>$$Beta(p|\alpha, \beta) = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha) \Gamma(\beta)}p^{\alpha -1}(1-p)^{\beta - 1} \tag{17}$$</p>
-<p>观察 $(14)$ 和 $(17)$ 可知两者的密度函数非常相似，尝试将两个分布联合有</p>
-<p>$$\begin{align<em>}<br>P(p|n, k, \alpha, \beta) &amp; \propto P(k|n, p) P(p|\alpha, \beta) \<br>&amp; = Binomial(k|n, p) Beta(p|\alpha, \beta) \<br>&amp; = \binom{n}{k}p^{k} (1-p)^{n-k} \times \frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha) \Gamma(\beta)} p^{\alpha - 1}(1-p)^{\beta - 1} \<br>&amp; \propto p^{k+\alpha - 1}(1-p)^{n-k+\beta-1}<br>\end{align</em>} \tag{18}$$</p>
+<p><span class="math display">\[Beta(p|\alpha, \beta) = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha) \Gamma(\beta)}p^{\alpha -1}(1-p)^{\beta - 1} \tag{17}\]</span></p>
+<p>观察 <span class="math inline">\((14)\)</span> 和 <span class="math inline">\((17)\)</span> 可知两者的密度函数非常相似，尝试将两个分布联合有</p>
+<p><span class="math display">\[\begin{align*}
+P(p|n, k, \alpha, \beta) &amp; \propto P(k|n, p) P(p|\alpha, \beta) \\
+&amp; = Binomial(k|n, p) Beta(p|\alpha, \beta) \\
+&amp; = \binom{n}{k}p^{k} (1-p)^{n-k} \times \frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha) \Gamma(\beta)} p^{\alpha - 1}(1-p)^{\beta - 1} \\
+&amp; \propto p^{k+\alpha - 1}(1-p)^{n-k+\beta-1}
+\end{align*} \tag{18}\]</span></p>
 <p>归一化后可得后验概率</p>
-<p>$$P(p|n, k, \alpha, \beta) = \frac{\Gamma (\alpha + \beta + n)}{\Gamma(\alpha + k) \Gamma (\beta + n - k)}p^{k+\alpha-1}(1-p)^{n-k+\beta-1} \tag{19}$$</p>
+<p><span class="math display">\[P(p|n, k, \alpha, \beta) = \frac{\Gamma (\alpha + \beta + n)}{\Gamma(\alpha + k) \Gamma (\beta + n - k)}p^{k+\alpha-1}(1-p)^{n-k+\beta-1} \tag{19}\]</span></p>
 <p>可以发现<strong>二项分布的共轭分布就是 Beta 分布</strong>，而且有</p>
-<p>$$Beta(p|\alpha, \beta) + BinomialCount(k, n-k) = Beta(p|\alpha + k, \beta+n-k) \tag{20}$$</p>
-<p><strong>注意！</strong> $(20)$ 的 $+$ 并不是加法运算，可把它理解为<code>结合</code>，$BinomialCount$ 有数据得到的，也就是说 $(20)$ 式满足 <code>先验 + 数据 = 后验</code>，称为<br><code>Beta-Binomial 共轭</code></p>
-<h4 id="Beta分布的期望"><a href="#Beta分布的期望" class="headerlink" title="Beta分布的期望"></a>Beta分布的期望</h4><p>$$\begin{align<em>}<br>E(Beta(p|\alpha, \beta)) &amp; = \int_{0}^{1} t Beta(p|\alpha, \beta) dt \<br>&amp; = \int_{0}^{1} t \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha) \Gamma(\beta)} t^{\alpha - 1} (1-t)^{\beta - 1} dt \<br>&amp; = \int_{0}^{1} \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha) \Gamma(\beta)} t^{\alpha} (1-t)^{\beta - 1} dt<br>\end{align</em>} \tag{21}$$</p>
+<p><span class="math display">\[Beta(p|\alpha, \beta) + BinomialCount(k, n-k) = Beta(p|\alpha + k, \beta+n-k) \tag{20}\]</span></p>
+<p><strong>注意！</strong> <span class="math inline">\((20)\)</span> 的 <span class="math inline">\(+\)</span> 并不是加法运算，可把它理解为<code>结合</code>，<span class="math inline">\(BinomialCount\)</span> 有数据得到的，也就是说 <span class="math inline">\((20)\)</span> 式满足 <code>先验 + 数据 = 后验</code>，称为 <code>Beta-Binomial 共轭</code></p>
+<h4 id="beta分布的期望">Beta分布的期望</h4>
+<p><span class="math display">\[\begin{align*}
+E(Beta(p|\alpha, \beta)) &amp; = \int_{0}^{1} t Beta(p|\alpha, \beta) dt \\
+&amp; = \int_{0}^{1} t \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha) \Gamma(\beta)} t^{\alpha - 1} (1-t)^{\beta - 1} dt \\
+&amp; = \int_{0}^{1} \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha) \Gamma(\beta)} t^{\alpha} (1-t)^{\beta - 1} dt
+\end{align*} \tag{21}\]</span></p>
 <p>又有</p>
-<p>$$\int_{0}^{1} \frac{\Gamma(\alpha + \beta + 1)}{\Gamma(\alpha + 1)\Gamma(\beta)} p^{\alpha} (1-p)^{\beta-1} = 1 \tag{22}$$</p>
-<p>由 $(21) (22)$ 可得</p>
-<p>$$E(Beta(p|\alpha, \beta)) = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)}\ \frac{\Gamma(\alpha+1)\Gamma(\beta)}{\Gamma(\alpha+\beta+1)} = \frac{\alpha}{\alpha+\beta} \tag{23}$$</p>
-<h3 id="多项分布和-Dirichlet-分布"><a href="#多项分布和-Dirichlet-分布" class="headerlink" title="多项分布和 Dirichlet 分布"></a>多项分布和 Dirichlet 分布</h3><p>多项分布是二项分布在多种( $&gt;2$ )状态下的推广，对于多项分布有：</p>
-<p>$$Multinomial(\underset{m}{\rightarrow}|n, \underset{p}{\rightarrow}) = \binom{n}{\underset{m}{\rightarrow}}\prod_{k=1}^{K} p_{k}^{m_{k}} \tag{24}$$</p>
+<p><span class="math display">\[\int_{0}^{1} \frac{\Gamma(\alpha + \beta + 1)}{\Gamma(\alpha + 1)\Gamma(\beta)} p^{\alpha} (1-p)^{\beta-1} = 1 \tag{22}\]</span></p>
+<p>由 <span class="math inline">\((21) (22)\)</span> 可得</p>
+<p><span class="math display">\[E(Beta(p|\alpha, \beta)) = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha)\Gamma(\beta)}\ \frac{\Gamma(\alpha+1)\Gamma(\beta)}{\Gamma(\alpha+\beta+1)} = \frac{\alpha}{\alpha+\beta} \tag{23}\]</span></p>
+<h3 id="多项分布和-dirichlet-分布">多项分布和 Dirichlet 分布</h3>
+<p>多项分布是二项分布在多种( <span class="math inline">\(&gt;2\)</span> )状态下的推广，对于多项分布有：</p>
+<p><span class="math display">\[Multinomial(\underset{m}{\rightarrow}|n, \underset{p}{\rightarrow}) = \binom{n}{\underset{m}{\rightarrow}}\prod_{k=1}^{K} p_{k}^{m_{k}} \tag{24}\]</span></p>
 <p>Dirichlet 分布是 Beta 分布在多维状态下的推广，Dirichlet 分布的密度函数为</p>
-<p>$$f(\underset{p}{\rightarrow}|\underset{\alpha}{\rightarrow}) = \begin{cases}<br>\frac{1}{\Delta (\underset{\alpha}{\rightarrow})} \prod_{k=1}^{K} p_{k}^{\alpha_{k-1}} &amp; \text{ , } p_{k} \in [0,1] \<br>0 &amp; \text{ , } others<br>\end{cases} \tag{25}$$</p>
-<p>可知其密度函数的自由度为 $k-1$ </p>
+<p><span class="math display">\[f(\underset{p}{\rightarrow}|\underset{\alpha}{\rightarrow}) = \begin{cases}
+\frac{1}{\Delta (\underset{\alpha}{\rightarrow})} \prod_{k=1}^{K} p_{k}^{\alpha_{k-1}} &amp; \text{ , } p_{k} \in [0,1] \\ 
+0 &amp; \text{ , } others 
+\end{cases} \tag{25}\]</span></p>
+<p>可知其密度函数的自由度为 <span class="math inline">\(k-1\)</span></p>
 <p>对于系数有</p>
-<p>$$\Delta(\underset{\alpha}{\rightarrow}) = \frac{\prod_{k=1}^{K} \Gamma(\alpha_{k})}{\Gamma(\sum_{k=1}^{K} \alpha_{k})} \tag{26}$$</p>
+<p><span class="math display">\[\Delta(\underset{\alpha}{\rightarrow}) = \frac{\prod_{k=1}^{K} \Gamma(\alpha_{k})}{\Gamma(\sum_{k=1}^{K} \alpha_{k})} \tag{26}\]</span></p>
 <p>因此 Dirichlet 分布可表示为</p>
-<p>$$Dir(\underset{p}{\rightarrow}|\underset{\alpha}{\rightarrow}) = \frac{\Gamma(\sum_{k=1}^{K}\alpha <em>{k})}{\prod</em>{k=1}^{K}\Gamma(\alpha_{k})} \prod_{k-1}^{K} p_{k}^{\alpha _{k-1}} \tag{27}$$</p>
+<p><span class="math display">\[Dir(\underset{p}{\rightarrow}|\underset{\alpha}{\rightarrow}) = \frac{\Gamma(\sum_{k=1}^{K}\alpha _{k})}{\prod_{k=1}^{K}\Gamma(\alpha_{k})} \prod_{k-1}^{K} p_{k}^{\alpha _{k-1}} \tag{27}\]</span></p>
 <p>Dirichlet 分布的期望和 Beta 分布差不多</p>
-<p>$$E(p_{i}) = \frac{\alpha_{i}}{\sum_{k=1}^{K} \alpha_{k}} \tag{28}$$</p>
+<p><span class="math display">\[E(p_{i}) = \frac{\alpha_{i}}{\sum_{k=1}^{K} \alpha_{k}} \tag{28}\]</span></p>
 <p>可知<strong>多项分布是二项分布的推广</strong>，<strong>Dirichlet 分布是 Beta 分布的推广</strong></p>
 <p>多项分布和 Dirichlet 分布也同样满足共轭关系，因此有</p>
-<p>$$Dir(\underset{p}{\rightarrow} | \underset{\alpha}{\rightarrow}) + MultinomialCount(\underset{m}{\rightarrow}) = Dir(\underset{p}{\rightarrow} | \underset{\alpha}{\rightarrow} + \underset{m}{\rightarrow}) \tag{29}$$</p>
-<p>这里的 $+$ 也是代表<code>结合</code>的意思，并不是加法，因此同样满足 <code>先验 + 数据 = 后验</code>，称为 <code>Dirichlet-Multinomial 共轭</code></p>
-<h4 id="对称-Dirichlet-分布"><a href="#对称-Dirichlet-分布" class="headerlink" title="对称 Dirichlet 分布"></a>对称 Dirichlet 分布</h4><p>在具体实现中为了简化计算，对于参数 $\underset{\alpha}{\rightarrow} = (\alpha _{1}, \alpha _{2}, …, \alpha _{k})$ 令 $\alpha _{1} = \alpha _{2} = … = \alpha _{k} = \alpha$ , 满足这样的参数称为对称 Dirchlet 分布，对于 $\alpha$ 的取值有</p>
+<p><span class="math display">\[Dir(\underset{p}{\rightarrow} | \underset{\alpha}{\rightarrow}) + MultinomialCount(\underset{m}{\rightarrow}) = Dir(\underset{p}{\rightarrow} | \underset{\alpha}{\rightarrow} + \underset{m}{\rightarrow}) \tag{29}\]</span></p>
+<p>这里的 <span class="math inline">\(+\)</span> 也是代表<code>结合</code>的意思，并不是加法，因此同样满足 <code>先验 + 数据 = 后验</code>，称为 <code>Dirichlet-Multinomial 共轭</code></p>
+<h4 id="对称-dirichlet-分布">对称 Dirichlet 分布</h4>
+<p>在具体实现中为了简化计算，对于参数 <span class="math inline">\(\underset{\alpha}{\rightarrow} = (\alpha _{1}, \alpha _{2}, ..., \alpha _{k})\)</span> 令 <span class="math inline">\(\alpha _{1} = \alpha _{2} = ... = \alpha _{k} = \alpha\)</span> , 满足这样的参数称为对称 Dirchlet 分布，对于 <span class="math inline">\(\alpha\)</span> 的取值有</p>
 <ul>
-<li>$\alpha = 1$ : 退化为均匀分布</li>
-<li>$\alpha \gt 1$ : $p_{1} = p_{2} = … = p_{k}$ 的概率增大</li>
-<li>$\alpha \lt 1$ : $p_{i}=1$, $p_{\neq i} = 0$ 的概率增大</li>
+<li><span class="math inline">\(\alpha = 1\)</span> : 退化为均匀分布</li>
+<li><span class="math inline">\(\alpha \gt 1\)</span> : <span class="math inline">\(p_{1} = p_{2} = ... = p_{k}\)</span> 的概率增大</li>
+<li><span class="math inline">\(\alpha \lt 1\)</span> : <span class="math inline">\(p_{i}=1\)</span>, <span class="math inline">\(p_{\neq i} = 0\)</span> 的概率增大</li>
 </ul>
-<p><img src="/images/posts/lda_topic/dirichlet-alpha.gif" alt=""></p>
-<p align="center">图片来自维基百科</p>
-
-<h3 id="硬-amp-软思维"><a href="#硬-amp-软思维" class="headerlink" title="硬 &amp; 软思维"></a>硬 &amp; 软思维</h3><p>举个例子，判断一个人的性别</p>
+<img src="/images/posts/lda_topic/dirichlet-alpha.gif">
+<p align="center">
+图片来自维基百科
+</p>
+<h3 id="硬-软思维">硬 &amp; 软思维</h3>
+<p>举个例子，判断一个人的性别</p>
 <ul>
 <li>硬分类思想：这个人是男的（很果断，非0即1）</li>
 <li>软分类思想：这个人 70% 的可能是男的， 30% 的可能是女的，所以他应该是个男的</li>
 </ul>
-<h2 id="再话-LDA"><a href="#再话-LDA" class="headerlink" title="再话 LDA"></a>再话 LDA</h2><p>在 <code>LDA 的解释</code> 部分已经解释了 LDA 的基本思想，这里结合背景知识再深入的讲解</p>
-<p>假设有 M 篇文档，对应第 d 个文档种有 $N_{d}$ 词</p>
-<p><img src="/images/posts/lda_topic/corpus.png" alt=""></p>
+<h2 id="再话-lda">再话 LDA</h2>
+<p>在 <code>LDA 的解释</code> 部分已经解释了 LDA 的基本思想，这里结合背景知识再深入的讲解</p>
+<p>假设有 M 篇文档，对应第 d 个文档种有 <span class="math inline">\(N_{d}\)</span> 词</p>
+<p><img src="/images/posts/lda_topic/corpus.png"></p>
 <p>我们的目标是找到每一篇文档的主题分布和每一个主题中词的分布。</p>
 <p>我们假设<code>隐变量K</code>代表主题数，则 LDA 的概率图模型为</p>
-<p><img src="/images/posts/lda_topic/bayes-model.png" alt=""></p>
-<p>图中只有 <code>Observed Word</code> 是可见的，其他都是<code>隐</code>的，<code>Observed word</code> $W _{d, n}$ 代表第 d 个文档的第 n 个词</p>
-<p>LDA 假设文档的主题的先验分布是 Dirichlet 分布，即对于任一文档 d ，其主题分布 $\theta _{d}$ 为</p>
-<p>$$\theta _{d} = Dir(\underset{\alpha}{\rightarrow})$$</p>
-<p>其中 $\alpha \in \mathbb{R}^{K}$ 是分布的超参数，是一个 $K$ 维向量（它对应了文档分别属于 $K$ 个主题的软概率）</p>
-<p>LDA 假设主题中词的先验分布是 Dirichlet 分布，即对于任一主题 $k$，其词分布 $\beta _{k}$ 为</p>
-<p>$$\beta_{k} = Dir(\underset{\eta }{\rightarrow})$$</p>
-<p>其中 $\eta \in \mathbb{R}^{V}$ 为分布的超参数，$V$ 代表词典的大小， 是一个 $V$ 维的向量（它对应了词典中各个词对主题影响的软概率）</p>
-<p>对于数据中任意一篇文档 $d$ 中的第 n 个词，可以从主题分布 $\theta_{d}$ 中得到它的主题编号 $z_{d,n}$ 的分布为</p>
-<p>$$z_{d,n} = Multinomial(\theta_{d})$$</p>
-<p>而对于该主题编号，可以得到我们看到词 $w_{d, n}$ 的概率分布为</p>
-<p>$$w_{d, n} = Multinomial(\beta_{z_{d, n}})$$</p>
-<p>对于 M 篇文档就有 M 个文档主题的 Dirichlet 分布，而对应的<strong>数据</strong>就有 M 个主题编号的多项分布，因此 $\alpha \rightarrow \theta_{d} \rightarrow \underset{z_{d}}{\rightarrow}$ 满足 Dirichlet-Multinomial 共轭</p>
+<p><img src="/images/posts/lda_topic/bayes-model.png"></p>
+<p>图中只有 <code>Observed Word</code> 是可见的，其他都是<code>隐</code>的，<code>Observed word</code> <span class="math inline">\(W _{d, n}\)</span> 代表第 d 个文档的第 n 个词</p>
+<p>LDA 假设文档的主题的先验分布是 Dirichlet 分布，即对于任一文档 d ，其主题分布 <span class="math inline">\(\theta _{d}\)</span> 为</p>
+<p><span class="math display">\[\theta _{d} = Dir(\underset{\alpha}{\rightarrow})\]</span></p>
+<p>其中 <span class="math inline">\(\alpha \in \mathbb{R}^{K}\)</span> 是分布的超参数，是一个 <span class="math inline">\(K\)</span> 维向量（它对应了文档分别属于 <span class="math inline">\(K\)</span> 个主题的软概率）</p>
+<p>LDA 假设主题中词的先验分布是 Dirichlet 分布，即对于任一主题 <span class="math inline">\(k\)</span>，其词分布 <span class="math inline">\(\beta _{k}\)</span> 为</p>
+<p><span class="math display">\[\beta_{k} = Dir(\underset{\eta }{\rightarrow})\]</span></p>
+<p>其中 <span class="math inline">\(\eta \in \mathbb{R}^{V}\)</span> 为分布的超参数，<span class="math inline">\(V\)</span> 代表词典的大小， 是一个 <span class="math inline">\(V\)</span> 维的向量（它对应了词典中各个词对主题影响的软概率）</p>
+<p>对于数据中任意一篇文档 <span class="math inline">\(d\)</span> 中的第 n 个词，可以从主题分布 <span class="math inline">\(\theta_{d}\)</span> 中得到它的主题编号 <span class="math inline">\(z_{d,n}\)</span> 的分布为</p>
+<p><span class="math display">\[z_{d,n} = Multinomial(\theta_{d})\]</span></p>
+<p>而对于该主题编号，可以得到我们看到词 <span class="math inline">\(w_{d, n}\)</span> 的概率分布为</p>
+<p><span class="math display">\[w_{d, n} = Multinomial(\beta_{z_{d, n}})\]</span></p>
+<p>对于 M 篇文档就有 M 个文档主题的 Dirichlet 分布，而对应的<strong>数据</strong>就有 M 个主题编号的多项分布，因此 <span class="math inline">\(\alpha \rightarrow \theta_{d} \rightarrow \underset{z_{d}}{\rightarrow}\)</span> 满足 Dirichlet-Multinomial 共轭</p>
 <p>那么数据似然部分，如何求解呢？</p>
-<p>假设在第 k 个主题中，第 v 个词的个数为 $n_{k}^{(v)}$，则该主题编号对应的词多项分布计数可表示为</p>
-<p>$$\underset{n_{k}}{\rightarrow} = (n_{k}^{(1)}, n_{k}^{(2)}, …, n_{k}^{(V)})$$</p>
-<p>利用 Dirichlet-Multinomial 共轭，可得 $\beta_{k}$ 的后验分布为</p>
-<p>$$Dir(\beta_{k}|\underset{\eta}{\rightarrow}+\underset{n_{k}}{\rightarrow})$$</p>
-<p><strong>由于主题产生词不依赖具体的某一个文档，因此文档主题分布和词分布是独立的</strong> </p>
+<p>假设在第 k 个主题中，第 v 个词的个数为 <span class="math inline">\(n_{k}^{(v)}\)</span>，则该主题编号对应的词多项分布计数可表示为</p>
+<p><span class="math display">\[\underset{n_{k}}{\rightarrow} = (n_{k}^{(1)}, n_{k}^{(2)}, ..., n_{k}^{(V)})\]</span></p>
+<p>利用 Dirichlet-Multinomial 共轭，可得 <span class="math inline">\(\beta_{k}\)</span> 的后验分布为</p>
+<p><span class="math display">\[Dir(\beta_{k}|\underset{\eta}{\rightarrow}+\underset{n_{k}}{\rightarrow})\]</span></p>
+<p><strong>由于主题产生词不依赖具体的某一个文档，因此文档主题分布和词分布是独立的</strong></p>
 <p>可能上面的解释还是难以理解，下面尝试以更通俗的语言解释</p>
 <blockquote>
-<p>这里的超参数一般是我们根据经验设定一个具体的数，这样也就是得到了我们的最原始的先验分布<br>初始化：利用先验分布，为每一个文档 m 中的每一个词 n 赋予一个主题 z<br>根据这个初始化 我们可以统计文档m的各个主题数目，也可以统计某个主题z对应的不同词的数目<br>这些数目我们看做第一步的数据似然 -&gt; 然后再结合先验 -&gt; 得到第一步的后验<br>把第一步的后验看做第二步的先验概率再去为每一个文档 m 中的每一个词 n 赋予一个主题 z，因为是共轭先验分布因此进行和第一步一样的迭代，直到收敛<br>—— 上述解释来自 <a href="https://www.cnblogs.com/pinard/p/6831308.html" target="_blank" rel="noopener">kylin0228</a></p>
+<p>这里的超参数一般是我们根据经验设定一个具体的数，这样也就是得到了我们的最原始的先验分布 初始化：利用先验分布，为每一个文档 m 中的每一个词 n 赋予一个主题 z 根据这个初始化 我们可以统计文档m的各个主题数目，也可以统计某个主题z对应的不同词的数目 这些数目我们看做第一步的数据似然 -&gt; 然后再结合先验 -&gt; 得到第一步的后验 把第一步的后验看做第二步的先验概率再去为每一个文档 m 中的每一个词 n 赋予一个主题 z，因为是共轭先验分布因此进行和第一步一样的迭代，直到收敛 —— 上述解释来自 <a href="https://www.cnblogs.com/pinard/p/6831308.html" target="_blank" rel="noopener">kylin0228</a></p>
 </blockquote>
 <p>本文只介绍原理部分，实现部分后期发布</p>
-<h2 id="Refrence"><a href="#Refrence" class="headerlink" title="Refrence"></a>Refrence</h2><ul>
-<li>[1] <a href="https://en.wikipedia.org/wiki/Dirichlet_distribution" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Dirichlet_distribution</a></li>
-<li>[2] <a href="http://www.flickering.cn/%E6%95%B0%E5%AD%A6%E4%B9%8B%E7%BE%8E/2014/06/lda%E6%95%B0%E5%AD%A6%E5%85%AB%E5%8D%A6%E6%96%87%E6%9C%AC%E5%BB%BA%E6%A8%A1/" target="_blank" rel="noopener">http://www.flickering.cn/%E6%95%B0%E5%AD%A6%E4%B9%8B%E7%BE%8E/2014/06/lda%E6%95%B0%E5%AD%A6%E5%85%AB%E5%8D%A6%E6%96%87%E6%9C%AC%E5%BB%BA%E6%A8%A1/</a></li>
-<li>[3] <a href="https://www.cnblogs.com/pinard/p/6831308.html" target="_blank" rel="noopener">https://www.cnblogs.com/pinard/p/6831308.html</a></li>
-<li>[4] <a href="http://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf" target="_blank" rel="noopener">http://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf</a></li>
+<h2 id="refrence">Refrence</h2>
+<ul>
+<li>[1] https://en.wikipedia.org/wiki/Dirichlet_distribution</li>
+<li>[2] http://www.flickering.cn/%E6%95%B0%E5%AD%A6%E4%B9%8B%E7%BE%8E/2014/06/lda%E6%95%B0%E5%AD%A6%E5%85%AB%E5%8D%A6%E6%96%87%E6%9C%AC%E5%BB%BA%E6%A8%A1/</li>
+<li>[3] https://www.cnblogs.com/pinard/p/6831308.html</li>
+<li>[4] http://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf</li>
 </ul>
 
       
@@ -663,7 +705,7 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
+                <a href="/tags/index-1.html">
                   <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
@@ -725,7 +767,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LDA-的解释"><span class="nav-number">1.</span> <span class="nav-text">LDA 的解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景知识"><span class="nav-number">2.</span> <span class="nav-text">背景知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Gamma-函数"><span class="nav-number">2.1.</span> <span class="nav-text">Gamma 函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Gamma-分布"><span class="nav-number">2.1.1.</span> <span class="nav-text">Gamma 分布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#【拓】Gamma-分布与-Poisson-分布"><span class="nav-number">2.1.2.</span> <span class="nav-text">【拓】Gamma 分布与 Poisson 分布</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#共轭先验分布"><span class="nav-number">2.2.</span> <span class="nav-text">共轭先验分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二项分布和-Beta-分布"><span class="nav-number">2.3.</span> <span class="nav-text">二项分布和 Beta 分布</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Beta分布的期望"><span class="nav-number">2.3.1.</span> <span class="nav-text">Beta分布的期望</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多项分布和-Dirichlet-分布"><span class="nav-number">2.4.</span> <span class="nav-text">多项分布和 Dirichlet 分布</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对称-Dirichlet-分布"><span class="nav-number">2.4.1.</span> <span class="nav-text">对称 Dirichlet 分布</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#硬-amp-软思维"><span class="nav-number">2.5.</span> <span class="nav-text">硬 &amp; 软思维</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#再话-LDA"><span class="nav-number">3.</span> <span class="nav-text">再话 LDA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Refrence"><span class="nav-number">4.</span> <span class="nav-text">Refrence</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#lda-的解释"><span class="nav-number">1.</span> <span class="nav-text">LDA 的解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景知识"><span class="nav-number">2.</span> <span class="nav-text">背景知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#gamma-函数"><span class="nav-number">2.1.</span> <span class="nav-text">Gamma 函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#gamma-分布"><span class="nav-number">2.1.1.</span> <span class="nav-text">Gamma 分布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拓gamma-分布与-poisson-分布"><span class="nav-number">2.1.2.</span> <span class="nav-text">【拓】Gamma 分布与 Poisson 分布</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#共轭先验分布"><span class="nav-number">2.2.</span> <span class="nav-text">共轭先验分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二项分布和-beta-分布"><span class="nav-number">2.3.</span> <span class="nav-text">二项分布和 Beta 分布</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#beta分布的期望"><span class="nav-number">2.3.1.</span> <span class="nav-text">Beta分布的期望</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多项分布和-dirichlet-分布"><span class="nav-number">2.4.</span> <span class="nav-text">多项分布和 Dirichlet 分布</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对称-dirichlet-分布"><span class="nav-number">2.4.1.</span> <span class="nav-text">对称 Dirichlet 分布</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#硬-软思维"><span class="nav-number">2.5.</span> <span class="nav-text">硬 &amp; 软思维</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#再话-lda"><span class="nav-number">3.</span> <span class="nav-text">再话 LDA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#refrence"><span class="nav-number">4.</span> <span class="nav-text">Refrence</span></a></li></ol></div>
             
 
           </div>

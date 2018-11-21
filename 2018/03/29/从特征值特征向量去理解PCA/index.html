@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="从网上看了很多PCA的讲解，大多数都是从空间几何上阐述PCA的原理，但大多都不好理解。本文主要从最原始的特征值特征向量的角度出发去理解PCA的原理。 在读文本前，应该预备的知识：  特征值特征向量 协方差  特征值特征向量定义设 $A$ 是 $n$ 阶方阵，若存在数 $\lambda$ 和非零向量 $x$ 使得 $A \cdot x = \lambda x$ ($x\neq0$) 则称 $\lam">
+<meta name="description" content="从网上看了很多PCA的讲解，大多数都是从空间几何上阐述PCA的原理，但大多都不好理解。 本文主要从最原始的特征值特征向量的角度出发去理解PCA的原理。 在读文本前，应该预备的知识：  特征值特征向量 协方差  特征值特征向量定义 设 \(A\) 是 \(n\) 阶方阵，若存在数 \(\lambda\) 和非零向量 \(x\) 使得 \(A \cdot x = \lambda x\) (\(x\ne">
 <meta name="keywords" content="NLP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从特征值特征向量去理解PCA">
 <meta property="og:url" content="http://seanlee97.github.io/2018/03/29/从特征值特征向量去理解PCA/index.html">
 <meta property="og:site_name" content="明天探索者">
-<meta property="og:description" content="从网上看了很多PCA的讲解，大多数都是从空间几何上阐述PCA的原理，但大多都不好理解。本文主要从最原始的特征值特征向量的角度出发去理解PCA的原理。 在读文本前，应该预备的知识：  特征值特征向量 协方差  特征值特征向量定义设 $A$ 是 $n$ 阶方阵，若存在数 $\lambda$ 和非零向量 $x$ 使得 $A \cdot x = \lambda x$ ($x\neq0$) 则称 $\lam">
+<meta property="og:description" content="从网上看了很多PCA的讲解，大多数都是从空间几何上阐述PCA的原理，但大多都不好理解。 本文主要从最原始的特征值特征向量的角度出发去理解PCA的原理。 在读文本前，应该预备的知识：  特征值特征向量 协方差  特征值特征向量定义 设 \(A\) 是 \(n\) 阶方阵，若存在数 \(\lambda\) 和非零向量 \(x\) 使得 \(A \cdot x = \lambda x\) (\(x\ne">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-09-11T13:24:10.581Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从特征值特征向量去理解PCA">
-<meta name="twitter:description" content="从网上看了很多PCA的讲解，大多数都是从空间几何上阐述PCA的原理，但大多都不好理解。本文主要从最原始的特征值特征向量的角度出发去理解PCA的原理。 在读文本前，应该预备的知识：  特征值特征向量 协方差  特征值特征向量定义设 $A$ 是 $n$ 阶方阵，若存在数 $\lambda$ 和非零向量 $x$ 使得 $A \cdot x = \lambda x$ ($x\neq0$) 则称 $\lam">
+<meta name="twitter:description" content="从网上看了很多PCA的讲解，大多数都是从空间几何上阐述PCA的原理，但大多都不好理解。 本文主要从最原始的特征值特征向量的角度出发去理解PCA的原理。 在读文本前，应该预备的知识：  特征值特征向量 协方差  特征值特征向量定义 设 \(A\) 是 \(n\) 阶方阵，若存在数 \(\lambda\) 和非零向量 \(x\) 使得 \(A \cdot x = \lambda x\) (\(x\ne">
 
 
 
@@ -363,65 +363,152 @@
       
 
       
-        <p>从网上看了很多PCA的讲解，大多数都是从空间几何上阐述PCA的原理，但大多都不好理解。<br>本文主要从最原始的特征值特征向量的角度出发去理解PCA的原理。</p>
+        <p>从网上看了很多PCA的讲解，大多数都是从空间几何上阐述PCA的原理，但大多都不好理解。 本文主要从最原始的特征值特征向量的角度出发去理解PCA的原理。</p>
 <p>在读文本前，应该预备的知识：</p>
-<ol>
+<ol type="1">
 <li>特征值特征向量</li>
 <li>协方差</li>
 </ol>
-<h2 id="特征值特征向量定义"><a href="#特征值特征向量定义" class="headerlink" title="特征值特征向量定义"></a>特征值特征向量定义</h2><p>设 $A$ 是 $n$ 阶方阵，若存在数 $\lambda$ 和非零向量 $x$ 使得 $A \cdot x = \lambda x$ ($x\neq0$) 则称 $\lambda$ 是 $A$ 的一个特征值， $x$ 为 $A$ 对应于特征值 $\lambda$ 的特征向量</p>
+<h2 id="特征值特征向量定义">特征值特征向量定义</h2>
+<p>设 <span class="math inline">\(A\)</span> 是 <span class="math inline">\(n\)</span> 阶方阵，若存在数 <span class="math inline">\(\lambda\)</span> 和非零向量 <span class="math inline">\(x\)</span> 使得 <span class="math inline">\(A \cdot x = \lambda x\)</span> (<span class="math inline">\(x\neq0\)</span>) 则称 <span class="math inline">\(\lambda\)</span> 是 <span class="math inline">\(A\)</span> 的一个特征值， <span class="math inline">\(x\)</span> 为 <span class="math inline">\(A\)</span> 对应于特征值 <span class="math inline">\(\lambda\)</span> 的特征向量</p>
 <p>由定义可得到：</p>
-<p>$$A \cdot x = \lambda x \Rightarrow  （A - \lambda E）x = 0$$</p>
-<p>而 $x \neq 0$ 故有 $|A - \lambda E|$ = 0</p>
+<p><span class="math display">\[A \cdot x = \lambda x \Rightarrow  （A - \lambda E）x = 0\]</span></p>
+<p>而 <span class="math inline">\(x \neq 0\)</span> 故有 <span class="math inline">\(|A - \lambda E|\)</span> = 0</p>
 <p>以一道例题来帮助理解：</p>
-<p><strong>题目：</strong>求矩阵 $A = \bigl(\begin{smallmatrix}<br>-2 &amp; 1 &amp; 1 \<br>0 &amp; 2 &amp; 0 \<br>-4 &amp; 1 &amp; 3<br>\end{smallmatrix}\bigr)$ 的特征值和特征向量，并求可逆矩阵 $P$ ， 使得 $P^{-1}AP$ 为对角矩阵.</p>
+<p><strong>题目：</strong>求矩阵 <span class="math inline">\(A = \bigl(\begin{smallmatrix} -2 &amp; 1 &amp; 1 \\ 0 &amp; 2 &amp; 0 \\ -4 &amp; 1 &amp; 3 \end{smallmatrix}\bigr)\)</span> 的特征值和特征向量，并求可逆矩阵 <span class="math inline">\(P\)</span> ， 使得 <span class="math inline">\(P^{-1}AP\)</span> 为对角矩阵.</p>
 <p><strong>解：</strong></p>
-<p>$$\left | A-\lambda E \right | = \begin{vmatrix}<br>-2-\lambda &amp; 1 &amp; 1 \\<br>0 &amp; 2-\lambda  &amp; 0 \\<br>-4 &amp; 1 &amp; 3-\lambda<br>\end{vmatrix} = -(\lambda - 2)^{2}(\lambda + 1)$$</p>
-<p>得到特征值 $\lambda = -1,2$</p>
-<p>1. 当$\lambda = -1$ ,解线性方程组 $(A+E)x = 0$ 得到</p>
-<p>$$| A + E | = \bigl(\begin{smallmatrix}<br>-1 &amp; 1 &amp; 1 \\<br>0 &amp; 3 &amp; 0 \\<br>-4 &amp; 1 &amp; 4<br>\end{smallmatrix}\bigr) \rightarrow \bigl(\begin{smallmatrix}<br>1 &amp; 0 &amp; -1 \\<br>0 &amp; 1 &amp; 0 \\<br>0 &amp; 0 &amp; 0<br>\end{smallmatrix}\bigr) \rightarrow<br>\left{\begin{matrix}<br>x_{1} - x_{3} = 0\\<br>x_{2} = 0<br>\end{matrix}\right. \rightarrow p_{1} = \bigl(\begin{smallmatrix}<br>1\\<br>0\\<br>1<br>\end{smallmatrix}\bigr)$$</p>
-<p>2. 当 $\lambda =2$ 解线性方程组 $(A - 2E)x = 0$ 得</p>
-<p>$$\left | A-2E \right | = \bigl(\begin{smallmatrix}<br>-4 &amp; 1 &amp; 1 \\<br>0 &amp; 0 &amp; 0 \\<br>-4 &amp; 1 &amp; 1<br>\end{smallmatrix}\bigr) \rightarrow \bigl(\begin{smallmatrix}<br>-4 &amp; 1 &amp; 1 \\<br>0 &amp; 0 &amp; 0 \\<br>0 &amp; 0 &amp; 0<br>\end{smallmatrix}\bigr)$$</p>
-<p>$$-4x_{1} + x_{2} + x_{3} = 0 \rightarrow p_{2} = \bigl(\begin{smallmatrix}<br>0\\<br>1\\<br>-1<br>\end{smallmatrix}\bigr)\ p_{3} = \bigl(\begin{smallmatrix}<br>1 \\<br>0 \\<br>4<br>\end{smallmatrix}\bigr)$$</p>
-<p>3. $p_{1}, p_{2}, p_{3}$ 为基础解系,设 $P = (p_{1}, p_{2}, p_{3})$ 即</p>
-<p>$$P = (p_{1}, p_{2}, p_{3}) = \bigl(\begin{smallmatrix}<br>1 &amp; 0 &amp; 1 \\<br>0 &amp; 1 &amp; 0 \\<br>1 &amp; -1 &amp; 4<br>\end{smallmatrix}\bigr)$$</p>
+<p><span class="math display">\[\left | A-\lambda E \right | = \begin{vmatrix}
+-2-\lambda &amp; 1 &amp; 1 \\\\
+0 &amp; 2-\lambda  &amp; 0 \\\\ 
+-4 &amp; 1 &amp; 3-\lambda
+\end{vmatrix} = -(\lambda - 2)^{2}(\lambda + 1)\]</span></p>
+<p>得到特征值 <span class="math inline">\(\lambda = -1,2\)</span></p>
+<p>1. 当<span class="math inline">\(\lambda = -1\)</span> ,解线性方程组 <span class="math inline">\((A+E)x = 0\)</span> 得到</p>
+<p><span class="math display">\[| A + E | = \bigl(\begin{smallmatrix}
+-1 &amp; 1 &amp; 1 \\\\
+0 &amp; 3 &amp; 0 \\\\
+-4 &amp; 1 &amp; 4
+\end{smallmatrix}\bigr) \rightarrow \bigl(\begin{smallmatrix}
+1 &amp; 0 &amp; -1 \\\\ 
+0 &amp; 1 &amp; 0 \\\\ 
+0 &amp; 0 &amp; 0
+\end{smallmatrix}\bigr) \rightarrow 
+\left\{\begin{matrix}
+x_{1} - x_{3} = 0\\\\ 
+x_{2} = 0
+\end{matrix}\right. \rightarrow p_{1} = \bigl(\begin{smallmatrix}
+1\\\\ 
+0\\\\ 
+1
+\end{smallmatrix}\bigr)\]</span></p>
+<p>2. 当 <span class="math inline">\(\lambda =2\)</span> 解线性方程组 <span class="math inline">\((A - 2E)x = 0\)</span> 得</p>
+<p><span class="math display">\[\left | A-2E \right | = \bigl(\begin{smallmatrix}
+-4 &amp; 1 &amp; 1 \\\\ 
+0 &amp; 0 &amp; 0 \\\\ 
+-4 &amp; 1 &amp; 1
+\end{smallmatrix}\bigr) \rightarrow \bigl(\begin{smallmatrix}
+-4 &amp; 1 &amp; 1 \\\\ 
+0 &amp; 0 &amp; 0 \\\\ 
+0 &amp; 0 &amp; 0
+\end{smallmatrix}\bigr)\]</span></p>
+<p><span class="math display">\[-4x_{1} + x_{2} + x_{3} = 0 \rightarrow p_{2} = \bigl(\begin{smallmatrix}
+0\\\\ 
+1\\\\ 
+-1
+\end{smallmatrix}\bigr)\ p_{3} = \bigl(\begin{smallmatrix}
+1 \\\\ 
+0 \\\\ 
+4
+\end{smallmatrix}\bigr)\]</span></p>
+<p>3. <span class="math inline">\(p_{1}, p_{2}, p_{3}\)</span> 为基础解系,设 <span class="math inline">\(P = (p_{1}, p_{2}, p_{3})\)</span> 即</p>
+<p><span class="math display">\[P = (p_{1}, p_{2}, p_{3}) = \bigl(\begin{smallmatrix}
+1 &amp; 0 &amp; 1 \\\\ 
+0 &amp; 1 &amp; 0 \\\\ 
+1 &amp; -1 &amp; 4
+\end{smallmatrix}\bigr)\]</span></p>
 <p>则</p>
-<p>$$P^{-1} A P = \bigl(\begin{smallmatrix}<br>-1 &amp;  &amp; \\<br> &amp; 2 &amp; \\<br> &amp;  &amp; 2<br>\end{smallmatrix}\bigr)$$</p>
-<h2 id="PCA"><a href="#PCA" class="headerlink" title="PCA"></a>PCA</h2><h3 id="特征值特征向量的意义"><a href="#特征值特征向量的意义" class="headerlink" title="特征值特征向量的意义"></a>特征值特征向量的意义</h3><p><strong>Q：</strong> 一个矩阵和一个向量相乘的意义是什么？为什么可以等同于一个常数和一个向量相乘？</p>
-<p><strong>A：</strong> 一个矩阵和一个向量相乘的意义在于对该向量做旋转或伸缩变换，旋转改变了方向、伸缩改变了大小。之间的变换规律是：一个矩阵和该矩阵的<strong>非特征向量</strong>相乘是对该向量的旋转变换，而与<strong>特征向量</strong>相乘是对该向量的伸缩变换，也就是说一个矩阵和该矩阵的特征向量相乘与一个实数和特征向量相乘的联系就是该向量发生了伸缩变换。因此特征向量的作用得以明晰，它的作用就是在一个矩阵 $A$ 的变换下做伸缩变换，伸缩多少呢？由 $A \cdot x = \lambda x$ 易知伸缩了 $\lambda$ 倍，即伸缩了<code>特征值</code>倍</p>
-<h3 id="特征值特征向量性质"><a href="#特征值特征向量性质" class="headerlink" title="特征值特征向量性质"></a>特征值特征向量性质</h3><p>(1) 对于$A \cdot x = \lambda x$ ，若所有特征值各不相同则对应的所有特征向量线性无关，此时<br>$A$ 可被对角化为<br>$$ A = U \Lambda U^{-1}$$<br>其中 $U = [u_{1}, u_{2}, …, u_{n}]$ 是特征向量组成的矩阵，对角矩阵<br>$\Lambda = Diag(\lambda _1, \lambda _2, …, \lambda _n)$</p>
-<p>(2) 在(1)条件下，若矩阵 $A$ 是<strong>对称矩阵</strong>则其相应的所有特征向量正交, 此时有$UU^{T} = U^{T}U = E$,有<br>$$A = U \Lambda U^{T}<br>\\= [u_1, u_2, …, u_n][\lambda _1, \lambda _2, …, \lambda _n][{u_1}^{T}, {u_2}^{T}, …, {u_n}^{T}]^{T}<br>\\= \sum_{i=1}^{n} \lambda _i u_i {u_i}^{T}$$<br>对于 $A = \sum_{i=1}^{n} \lambda _i u_i {u_i}^{T}$ 是否应该有所思考呢？假如我们已经对对角矩阵中 $\lambda$ 进行了逆序排序，如果 $n$ 很大且 $\lambda$ 只有前m (m &lt; n) 个值较大，后面的都很小，显然如果我们只取前m个那么对整体的影响应该也不是很大。所以这里已经凸显了<code>降维</code>的思想了</p>
-<h3 id="PCA的意义"><a href="#PCA的意义" class="headerlink" title="PCA的意义"></a>PCA的意义</h3><p>给定一个矩阵 $x \in R^{m \times n}$, 例如：</p>
-<p>$$x = \begin{bmatrix}<br>a_1 &amp; a_2 &amp; … &amp; a_n\\<br>b_1 &amp; b_2 &amp; … &amp; b_n<br>\end{bmatrix}$$</p>
-<p>选择k&lt;m个正交基进行降维的同时又尽量保留原始的信息。即使得 $x$ 变换到这组正交基后<strong>使得行向量（特征）之间的协方差为0，而每个行向量的方差尽可能大</strong>，也就是通过正交变化将一组可能存在相关性的变量转为一组线性不相关的变量，通俗地说就是<code>去相关性</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">为什么要“去相关性”呢？</span><br><span class="line">举个例子，有一个长方形长和宽为x, y且有x+y=A，求长和宽为何值时长方形有最大面积。</span><br><span class="line">很显然由于x, y是相关的，你会用x来代替y，即y = A-x。</span><br><span class="line">设长方形面积为W, 则有 W = -x^2 + Ax，接下来可根据二次函数的特点来求解最大面积。</span><br><span class="line">由例子可知，我们可以去掉y,因为x、y是相关的，用x可以表示y，这样的话使得求解更方便</span><br></pre></td></tr></table></figure></p>
+<p><span class="math display">\[P^{-1} A P = \bigl(\begin{smallmatrix}
+-1 &amp;  &amp; \\\\ 
+ &amp; 2 &amp; \\\\ 
+ &amp;  &amp; 2
+\end{smallmatrix}\bigr)\]</span></p>
+<h2 id="pca">PCA</h2>
+<h3 id="特征值特征向量的意义">特征值特征向量的意义</h3>
+<p><strong>Q：</strong> 一个矩阵和一个向量相乘的意义是什么？为什么可以等同于一个常数和一个向量相乘？</p>
+<p><strong>A：</strong> 一个矩阵和一个向量相乘的意义在于对该向量做旋转或伸缩变换，旋转改变了方向、伸缩改变了大小。之间的变换规律是：一个矩阵和该矩阵的<strong>非特征向量</strong>相乘是对该向量的旋转变换，而与<strong>特征向量</strong>相乘是对该向量的伸缩变换，也就是说一个矩阵和该矩阵的特征向量相乘与一个实数和特征向量相乘的联系就是该向量发生了伸缩变换。因此特征向量的作用得以明晰，它的作用就是在一个矩阵 <span class="math inline">\(A\)</span> 的变换下做伸缩变换，伸缩多少呢？由 <span class="math inline">\(A \cdot x = \lambda x\)</span> 易知伸缩了 <span class="math inline">\(\lambda\)</span> 倍，即伸缩了<code>特征值</code>倍</p>
+<h3 id="特征值特征向量性质">特征值特征向量性质</h3>
+<ol type="1">
+<li><p>对于<span class="math inline">\(A \cdot x = \lambda x\)</span> ，若所有特征值各不相同则对应的所有特征向量线性无关，此时 <span class="math inline">\(A\)</span> 可被对角化为 <span class="math display">\[ A = U \Lambda U^{-1}\]</span> 其中 <span class="math inline">\(U = [u_{1}, u_{2}, ..., u_{n}]\)</span> 是特征向量组成的矩阵，对角矩阵 <span class="math inline">\(\Lambda = Diag(\lambda _1, \lambda _2, ..., \lambda _n)\)</span></p></li>
+<li><p>在(1)条件下，若矩阵 <span class="math inline">\(A\)</span> 是<strong>对称矩阵</strong>则其相应的所有特征向量正交, 此时有<span class="math inline">\(UU^{T} = U^{T}U = E\)</span>,有 <span class="math display">\[A = U \Lambda U^{T} 
+\\\\= [u_1, u_2, ..., u_n][\lambda _1, \lambda _2, ..., \lambda _n][{u_1}^{T}, {u_2}^{T}, ..., {u_n}^{T}]^{T}
+\\\\= \sum_{i=1}^{n} \lambda _i u_i {u_i}^{T}\]</span> 对于 <span class="math inline">\(A = \sum_{i=1}^{n} \lambda _i u_i {u_i}^{T}\)</span> 是否应该有所思考呢？假如我们已经对对角矩阵中 <span class="math inline">\(\lambda\)</span> 进行了逆序排序，如果 <span class="math inline">\(n\)</span> 很大且 <span class="math inline">\(\lambda\)</span> 只有前m (m &lt; n) 个值较大，后面的都很小，显然如果我们只取前m个那么对整体的影响应该也不是很大。所以这里已经凸显了<code>降维</code>的思想了</p></li>
+</ol>
+<h3 id="pca的意义">PCA的意义</h3>
+<p>给定一个矩阵 <span class="math inline">\(x \in R^{m \times n}\)</span>, 例如：</p>
+<p><span class="math display">\[x = \begin{bmatrix}
+a_1 &amp; a_2 &amp; ... &amp; a_n\\\\ 
+b_1 &amp; b_2 &amp; ... &amp; b_n
+\end{bmatrix}\]</span></p>
+<p>选择k&lt;m个正交基进行降维的同时又尽量保留原始的信息。即使得 <span class="math inline">\(x\)</span> 变换到这组正交基后<strong>使得行向量（特征）之间的协方差为0，而每个行向量的方差尽可能大</strong>，也就是通过正交变化将一组可能存在相关性的变量转为一组线性不相关的变量，通俗地说就是<code>去相关性</code> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">为什么要“去相关性”呢？</span><br><span class="line">举个例子，有一个长方形长和宽为x, y且有x+y=A，求长和宽为何值时长方形有最大面积。</span><br><span class="line">很显然由于x, y是相关的，你会用x来代替y，即y = A-x。</span><br><span class="line">设长方形面积为W, 则有 W = -x^2 + Ax，接下来可根据二次函数的特点来求解最大面积。</span><br><span class="line">由例子可知，我们可以去掉y,因为x、y是相关的，用x可以表示y，这样的话使得求解更方便</span><br></pre></td></tr></table></figure></p>
 <p>对于协方差矩阵有</p>
-<p>$$C_x = \frac{1}{n} xx^{T} = \begin{bmatrix}<br>\frac{1}{n} \sum_{i=1}^{n}a_i^{2} &amp; \frac{1}{n} \sum_{i=1}^{n}a_i b_i\\<br>\frac{1}{n} \sum_{i=1}^{n}a_i b_i &amp; \frac{1}{n} \sum_{i=1}^{n}b_i^{2}<br>\end{bmatrix}$$</p>
-<p>(注意：$x$ 已经进行了去中心化处理，即 $x \leftarrow x - \mu$ )</p>
-<p>可知协方差矩阵的主对角线是特征的方差，而副对角线是特征间的协方差，可知协方差矩阵是<strong>对称矩阵</strong>，又因为PCA的目标是使得协方差尽可能小最好为0，方差尽可能大，<strong>也就是相当于使得协方差矩阵上对角线的值尽可能大而副对角线上的值尽可能小。是不是觉得对角矩阵 $\Lambda = [\lambda _1, \lambda _2, …, \lambda _n]$ 很符合这样的矩阵呢？</strong></p>
-<p>按照这个思路，我们假设变换矩阵为 $Y = Qx$，则 </p>
-<p>$$C_Y = \frac{1}{n} YY^{T} = \frac{1}{n} Qxx^{T}Q^{T} = QC_xQ^{T}$$</p>
-<p>如何使得 $C_Y$ 是一个对角矩阵呢？</p>
-<p>我们求解原矩阵$x$的协方差矩阵 $C_{x}$ 的特征向量矩阵，有 </p>
-<p>$$C_{x} = U\Lambda U^{T} \Rightarrow \Lambda = U^{T}C_xU$$</p>
-<p>如果使得 $Q = U^{T}$ 那么 $C_{Y} = U^{T}C_{x}U = \Lambda$ 不就满足 $C_{Y}$ 是对角矩阵了吗？</p>
-<p>也就是说我们用<strong>原矩阵 $x$ 的协方差矩阵 $C_{X}$ 的特征向量矩阵来使得 $C_{Y}$ 是对角矩阵</strong>。</p>
+<p><span class="math display">\[C_x = \frac{1}{n} xx^{T} = \begin{bmatrix}
+\frac{1}{n} \sum_{i=1}^{n}a_i^{2} &amp; \frac{1}{n} \sum_{i=1}^{n}a_i b_i\\\\ 
+\frac{1}{n} \sum_{i=1}^{n}a_i b_i &amp; \frac{1}{n} \sum_{i=1}^{n}b_i^{2} 
+\end{bmatrix}\]</span></p>
+<p>(注意：<span class="math inline">\(x\)</span> 已经进行了去中心化处理，即 <span class="math inline">\(x \leftarrow x - \mu\)</span> )</p>
+<p>可知协方差矩阵的主对角线是特征的方差，而副对角线是特征间的协方差，可知协方差矩阵是<strong>对称矩阵</strong>，又因为PCA的目标是使得协方差尽可能小最好为0，方差尽可能大，<strong>也就是相当于使得协方差矩阵上对角线的值尽可能大而副对角线上的值尽可能小。是不是觉得对角矩阵 <span class="math inline">\(\Lambda = [\lambda _1, \lambda _2, ..., \lambda _n]\)</span> 很符合这样的矩阵呢？</strong></p>
+<p>按照这个思路，我们假设变换矩阵为 <span class="math inline">\(Y = Qx\)</span>，则</p>
+<p><span class="math display">\[C_Y = \frac{1}{n} YY^{T} = \frac{1}{n} Qxx^{T}Q^{T} = QC_xQ^{T}\]</span></p>
+<p>如何使得 <span class="math inline">\(C_Y\)</span> 是一个对角矩阵呢？</p>
+<p>我们求解原矩阵<span class="math inline">\(x\)</span>的协方差矩阵 <span class="math inline">\(C_{x}\)</span> 的特征向量矩阵，有</p>
+<p><span class="math display">\[C_{x} = U\Lambda U^{T} \Rightarrow \Lambda = U^{T}C_xU\]</span></p>
+<p>如果使得 <span class="math inline">\(Q = U^{T}\)</span> 那么 <span class="math inline">\(C_{Y} = U^{T}C_{x}U = \Lambda\)</span> 不就满足 <span class="math inline">\(C_{Y}\)</span> 是对角矩阵了吗？</p>
+<p>也就是说我们用<strong>原矩阵 <span class="math inline">\(x\)</span> 的协方差矩阵 <span class="math inline">\(C_{X}\)</span> 的特征向量矩阵来使得 <span class="math inline">\(C_{Y}\)</span> 是对角矩阵</strong>。</p>
 <p>到这里，你应该大致明白了PCA的大概原理了。接下来举一个例子来实现整个过程。</p>
-<p>设 $x = \begin{bmatrix}<br>-1 &amp; -1 &amp; 0 &amp; 2 &amp; 0\\<br>-2 &amp; 0 &amp; 0 &amp; 1 &amp; 1<br>\end{bmatrix}$，用PCA将 $x$ 降至1维。</p>
+<p>设 <span class="math inline">\(x = \begin{bmatrix} -1 &amp; -1 &amp; 0 &amp; 2 &amp; 0\\\\ -2 &amp; 0 &amp; 0 &amp; 1 &amp; 1 \end{bmatrix}\)</span>，用PCA将 <span class="math inline">\(x\)</span> 降至1维。</p>
 <p>解：</p>
-<p>$$C_x = \frac{1}{n} xx^{T} = \begin{bmatrix}<br>\frac{1}{n} \sum_{i=1}^{n}a_i^{2} &amp; \frac{1}{n} \sum_{i=1}^{n}a_i b_i\\<br>\frac{1}{n} \sum_{i=1}^{n}a_i b_i &amp; \frac{1}{n} \sum_{i=1}^{n}b_i^{2}<br>\end{bmatrix} = \begin{bmatrix}<br>\frac{6}{5} &amp; \frac{4}{5}\\<br>\frac{4}{5} &amp; \frac{6}{5}<br>\end{bmatrix}$$</p>
-<p>求得协方差矩阵 $C_{x}$ 的特征值为 $\lambda _{1} = 2, \lambda _{2} = \frac{2}{5}$，对特征值进行降序排序得到对应的特征向量分别为<br>$$\begin{bmatrix}<br>\frac{\sqrt{2}}{2}\\<br>\frac{-\sqrt{2}}{2}<br>\end{bmatrix},<br>\begin{bmatrix}<br>\frac{\sqrt{2}}{2}\\<br>\frac{\sqrt{2}}{2}<br>\end{bmatrix}$$</p>
-<p>所以 </p>
-<p>$$U = \begin{bmatrix}<br>\frac{\sqrt{2}}{2} &amp; \frac{\sqrt{2}}{2}\\<br>\frac{-\sqrt{2}}{2} &amp; \frac{\sqrt{2}}{2}<br>\end{bmatrix}<br>\\<br>Q = U^{T} = U = \begin{bmatrix}<br>\frac{\sqrt{2}}{2} &amp; \frac{-\sqrt{2}}{2}\\<br>\frac{\sqrt{2}}{2} &amp; \frac{\sqrt{2}}{2}<br>\end{bmatrix}$$</p>
-<p>可验证有<br>$$\Lambda  = U^{T}C_{x} U$$</p>
-<p>由于降至一维且 $\lambda _{1} &gt; \lambda _{2}$ 故选择 $\lambda _{1}$ 对应的维度,即</p>
-<p>$$x{}’ = \begin{bmatrix}<br>\frac{\sqrt{2}}{2} &amp; \frac{-\sqrt{2}}{2}<br>\end{bmatrix} x =  \begin{bmatrix}<br>\frac{-3\sqrt{2}}{2} &amp; \frac{-\sqrt{2}}{2} &amp; 0 &amp; \frac{3\sqrt{2}}{2} &amp; \frac{-\sqrt{2}}{2}<br>\end{bmatrix}$$</p>
-<p>$x{}’$ 即为降维后所得</p>
-<h2 id="python实现PCA"><a href="#python实现PCA" class="headerlink" title="python实现PCA"></a>python实现PCA</h2><p>有了上面的知识，现在我们可以开始coding了<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">PCA</span><span class="params">(x, n_components=<span class="number">2</span>)</span>:</span></span><br><span class="line">    <span class="comment"># 1. 对每个特征（每一行）进行去中心化，即每个数据减去均值</span></span><br><span class="line">    mean_val = np.mean(x, axis=<span class="number">0</span>)</span><br><span class="line">    mean_x = x - mean_val</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 求mean_x协方差方阵</span></span><br><span class="line">    C_x = np.cov(mean_x, rowvar=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 3. 求C_x特征值和特征向量</span></span><br><span class="line">    eig_vals, eig_vects = np.linalg.eig(np.mat(C_x))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 4. 对协方差矩阵的特征值从大到小排序</span></span><br><span class="line">    sorted_idx = np.argsort(-eig_vals)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 5. 降维</span></span><br><span class="line">    topn_index = sorted_idx[:n_components]</span><br><span class="line">    topn_vects = eig_vects[topn_index, :]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 6. 投影到低维空间</span></span><br><span class="line">    pca_x = topn_vects * x  </span><br><span class="line">    <span class="keyword">return</span> pca_x</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    x = np.mat([[<span class="number">-1</span>, <span class="number">-1</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>], </span><br><span class="line">                [<span class="number">-2</span>,  <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>]])</span><br><span class="line">    x_ = PCA(x, n_components=<span class="number">1</span>)</span><br><span class="line">    print(x_)</span><br></pre></td></tr></table></figure></p>
-<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>上述的求解过程是针对方阵的，如果是非方阵可以用SVD去求解，关于SVD这里不详细介绍，后面会有专文介绍。</p>
+<p><span class="math display">\[C_x = \frac{1}{n} xx^{T} = \begin{bmatrix}
+\frac{1}{n} \sum_{i=1}^{n}a_i^{2} &amp; \frac{1}{n} \sum_{i=1}^{n}a_i b_i\\\\ 
+\frac{1}{n} \sum_{i=1}^{n}a_i b_i &amp; \frac{1}{n} \sum_{i=1}^{n}b_i^{2} 
+\end{bmatrix} = \begin{bmatrix}
+\frac{6}{5} &amp; \frac{4}{5}\\\\ 
+\frac{4}{5} &amp; \frac{6}{5}
+\end{bmatrix}\]</span></p>
+<p>求得协方差矩阵 <span class="math inline">\(C_{x}\)</span> 的特征值为 <span class="math inline">\(\lambda _{1} = 2, \lambda _{2} = \frac{2}{5}\)</span>，对特征值进行降序排序得到对应的特征向量分别为 <span class="math display">\[\begin{bmatrix}
+\frac{\sqrt{2}}{2}\\\\ 
+\frac{-\sqrt{2}}{2}
+\end{bmatrix},
+\begin{bmatrix}
+\frac{\sqrt{2}}{2}\\\\ 
+\frac{\sqrt{2}}{2}
+\end{bmatrix}\]</span></p>
+<p>所以</p>
+<p><span class="math display">\[U = \begin{bmatrix}
+\frac{\sqrt{2}}{2} &amp; \frac{\sqrt{2}}{2}\\\\ 
+\frac{-\sqrt{2}}{2} &amp; \frac{\sqrt{2}}{2}
+\end{bmatrix}
+\\\\
+Q = U^{T} = U = \begin{bmatrix}
+\frac{\sqrt{2}}{2} &amp; \frac{-\sqrt{2}}{2}\\\\ 
+\frac{\sqrt{2}}{2} &amp; \frac{\sqrt{2}}{2}
+\end{bmatrix}\]</span></p>
+<p>可验证有 <span class="math display">\[\Lambda  = U^{T}C_{x} U\]</span></p>
+<p>由于降至一维且 <span class="math inline">\(\lambda _{1} &gt; \lambda _{2}\)</span> 故选择 <span class="math inline">\(\lambda _{1}\)</span> 对应的维度,即</p>
+<p><span class="math display">\[x{}&#39; = \begin{bmatrix}
+\frac{\sqrt{2}}{2} &amp; \frac{-\sqrt{2}}{2}
+\end{bmatrix} x =  \begin{bmatrix}
+\frac{-3\sqrt{2}}{2} &amp; \frac{-\sqrt{2}}{2} &amp; 0 &amp; \frac{3\sqrt{2}}{2} &amp; \frac{-\sqrt{2}}{2}
+\end{bmatrix}\]</span></p>
+<p><span class="math inline">\(x{}&#39;\)</span> 即为降维后所得</p>
+<h2 id="python实现pca">python实现PCA</h2>
+<p>有了上面的知识，现在我们可以开始coding了 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">PCA</span><span class="params">(x, n_components=<span class="number">2</span>)</span>:</span></span><br><span class="line">    <span class="comment"># 1. 对每个特征（每一行）进行去中心化，即每个数据减去均值</span></span><br><span class="line">    mean_val = np.mean(x, axis=<span class="number">0</span>)</span><br><span class="line">    mean_x = x - mean_val</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 求mean_x协方差方阵</span></span><br><span class="line">    C_x = np.cov(mean_x, rowvar=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 3. 求C_x特征值和特征向量</span></span><br><span class="line">    eig_vals, eig_vects = np.linalg.eig(np.mat(C_x))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 4. 对协方差矩阵的特征值从大到小排序</span></span><br><span class="line">    sorted_idx = np.argsort(-eig_vals)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 5. 降维</span></span><br><span class="line">    topn_index = sorted_idx[:n_components]</span><br><span class="line">    topn_vects = eig_vects[topn_index, :]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 6. 投影到低维空间</span></span><br><span class="line">    pca_x = topn_vects * x  </span><br><span class="line">    <span class="keyword">return</span> pca_x</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    x = np.mat([[<span class="number">-1</span>, <span class="number">-1</span>, <span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>], </span><br><span class="line">                [<span class="number">-2</span>,  <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>]])</span><br><span class="line">    x_ = PCA(x, n_components=<span class="number">1</span>)</span><br><span class="line">    print(x_)</span><br></pre></td></tr></table></figure></p>
+<h2 id="补充">补充</h2>
+<p>上述的求解过程是针对方阵的，如果是非方阵可以用SVD去求解，关于SVD这里不详细介绍，后面会有专文介绍。</p>
 <p>SVD可将矩阵（不一定是方阵）分解为三个矩阵</p>
-<p>$$A_{m \times n} = U_{m\times m} \Sigma_{m\times n}V^{T}<em>{n\times n} \approx U</em>{m\times k} \Sigma_{k\times k}V^{T}_{k\times n}$$</p>
-<p>$U,V^{T}$ 称为酉矩阵， $\Sigma$ 称为奇异矩阵，对于 $k\times k$ 的奇异矩阵 $\Sigma$ 它的主对角线为零，对应的值称为奇异值，非主对角线上的值均为0 (是不是和上面的对角矩阵很像)，同理求解PCA时需要用到奇异矩阵 $\Sigma$</p>
-<h2 id="Refrence"><a href="#Refrence" class="headerlink" title="Refrence"></a>Refrence</h2><p><a href="https://blog.csdn.net/sunshine_in_moon/article/details/51513880" target="_blank" rel="noopener">sunshine_in_moon`s blog</a></p>
+<p><span class="math display">\[A_{m \times n} = U_{m\times m} \Sigma_{m\times n}V^{T}_{n\times n} \approx U_{m\times k} \Sigma_{k\times k}V^{T}_{k\times n}\]</span></p>
+<p><span class="math inline">\(U,V^{T}\)</span> 称为酉矩阵， <span class="math inline">\(\Sigma\)</span> 称为奇异矩阵，对于 <span class="math inline">\(k\times k\)</span> 的奇异矩阵 <span class="math inline">\(\Sigma\)</span> 它的主对角线为零，对应的值称为奇异值，非主对角线上的值均为0 (是不是和上面的对角矩阵很像)，同理求解PCA时需要用到奇异矩阵 <span class="math inline">\(\Sigma\)</span></p>
+<h2 id="refrence">Refrence</h2>
+<p><a href="https://blog.csdn.net/sunshine_in_moon/article/details/51513880" target="_blank" rel="noopener">sunshine_in_moon`s blog</a></p>
 
       
     </div>
@@ -608,7 +695,7 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
+                <a href="/tags/index-1.html">
                   <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
@@ -670,7 +757,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#特征值特征向量定义"><span class="nav-number">1.</span> <span class="nav-text">特征值特征向量定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PCA"><span class="nav-number">2.</span> <span class="nav-text">PCA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#特征值特征向量的意义"><span class="nav-number">2.1.</span> <span class="nav-text">特征值特征向量的意义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#特征值特征向量性质"><span class="nav-number">2.2.</span> <span class="nav-text">特征值特征向量性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PCA的意义"><span class="nav-number">2.3.</span> <span class="nav-text">PCA的意义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#python实现PCA"><span class="nav-number">3.</span> <span class="nav-text">python实现PCA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#补充"><span class="nav-number">4.</span> <span class="nav-text">补充</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Refrence"><span class="nav-number">5.</span> <span class="nav-text">Refrence</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#特征值特征向量定义"><span class="nav-number">1.</span> <span class="nav-text">特征值特征向量定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pca"><span class="nav-number">2.</span> <span class="nav-text">PCA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#特征值特征向量的意义"><span class="nav-number">2.1.</span> <span class="nav-text">特征值特征向量的意义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#特征值特征向量性质"><span class="nav-number">2.2.</span> <span class="nav-text">特征值特征向量性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pca的意义"><span class="nav-number">2.3.</span> <span class="nav-text">PCA的意义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#python实现pca"><span class="nav-number">3.</span> <span class="nav-text">python实现PCA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#补充"><span class="nav-number">4.</span> <span class="nav-text">补充</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#refrence"><span class="nav-number">5.</span> <span class="nav-text">Refrence</span></a></li></ol></div>
             
 
           </div>

@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="EM(Expectation Maximization, 期望最大)算法也称“上帝算法”，能称为“上帝”可见它有多牛掰。 EM的原理很简单但真正理解起来是挺痛苦的一件事，本文以凡人视角尝试理解上帝本意。 知识储备KL距离KL距离又称相对熵(relative entropy)，用来衡量空间上两个概率分布 $P(x)$，$Q(x)$ 的相对差距的测度（通俗的说就是两个概率分布的距离） $$\begin">
+<meta name="description" content="EM(Expectation Maximization, 期望最大)算法也称“上帝算法”，能称为“上帝”可见它有多牛掰。 EM的原理很简单但真正理解起来是挺痛苦的一件事，本文以凡人视角尝试理解上帝本意。 知识储备 KL距离 KL距离又称相对熵(relative entropy)，用来衡量空间上两个概率分布 \(P(x)\)，\(Q(x)\) 的相对差距的测度（通俗的说就是两个概率分布的距离） \[">
 <meta name="keywords" content="NLP,ML">
 <meta property="og:type" content="article">
 <meta property="og:title" content="简单理解&quot;上帝算法&quot;EM">
 <meta property="og:url" content="http://seanlee97.github.io/2018/09/09/简单理解上帝算法EM/index.html">
 <meta property="og:site_name" content="明天探索者">
-<meta property="og:description" content="EM(Expectation Maximization, 期望最大)算法也称“上帝算法”，能称为“上帝”可见它有多牛掰。 EM的原理很简单但真正理解起来是挺痛苦的一件事，本文以凡人视角尝试理解上帝本意。 知识储备KL距离KL距离又称相对熵(relative entropy)，用来衡量空间上两个概率分布 $P(x)$，$Q(x)$ 的相对差距的测度（通俗的说就是两个概率分布的距离） $$\begin">
+<meta property="og:description" content="EM(Expectation Maximization, 期望最大)算法也称“上帝算法”，能称为“上帝”可见它有多牛掰。 EM的原理很简单但真正理解起来是挺痛苦的一件事，本文以凡人视角尝试理解上帝本意。 知识储备 KL距离 KL距离又称相对熵(relative entropy)，用来衡量空间上两个概率分布 \(P(x)\)，\(Q(x)\) 的相对差距的测度（通俗的说就是两个概率分布的距离） \[">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/em/jensen.jpg">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/em/aotufunc.png">
@@ -93,7 +93,7 @@
 <meta property="og:updated_time" content="2018-10-09T15:20:30.818Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="简单理解&quot;上帝算法&quot;EM">
-<meta name="twitter:description" content="EM(Expectation Maximization, 期望最大)算法也称“上帝算法”，能称为“上帝”可见它有多牛掰。 EM的原理很简单但真正理解起来是挺痛苦的一件事，本文以凡人视角尝试理解上帝本意。 知识储备KL距离KL距离又称相对熵(relative entropy)，用来衡量空间上两个概率分布 $P(x)$，$Q(x)$ 的相对差距的测度（通俗的说就是两个概率分布的距离） $$\begin">
+<meta name="twitter:description" content="EM(Expectation Maximization, 期望最大)算法也称“上帝算法”，能称为“上帝”可见它有多牛掰。 EM的原理很简单但真正理解起来是挺痛苦的一件事，本文以凡人视角尝试理解上帝本意。 知识储备 KL距离 KL距离又称相对熵(relative entropy)，用来衡量空间上两个概率分布 \(P(x)\)，\(Q(x)\) 的相对差距的测度（通俗的说就是两个概率分布的距离） \[">
 <meta name="twitter:image" content="http://seanlee97.github.io/images/posts/em/jensen.jpg">
 
 
@@ -369,78 +369,132 @@
       
         <p>EM(Expectation Maximization, 期望最大)算法也称“上帝算法”，能称为“上帝”可见它有多牛掰。</p>
 <p>EM的原理很简单但真正理解起来是挺痛苦的一件事，本文以凡人视角尝试理解上帝本意。</p>
-<h2 id="知识储备"><a href="#知识储备" class="headerlink" title="知识储备"></a>知识储备</h2><h3 id="KL距离"><a href="#KL距离" class="headerlink" title="KL距离"></a>KL距离</h3><p>KL距离又称相对熵(relative entropy)，用来衡量空间上两个概率分布 $P(x)$，$Q(x)$ 的相对差距的测度（通俗的说就是两个概率分布的距离）</p>
-<p>$$\begin{align<em>}<br>D_{KL}(P||Q) &amp; = \sum_{i} P(i)log\ \frac{P(i)}{Q(i)} \<br>&amp; = \sum_{i} P(i) log\ P(i) - \sum_{i} P(i) log\  Q(i) \<br>&amp; = E_{P}(log\ P(i)) - E_{P}(log\ Q(i))<br>\end{align</em>} \tag{1}$$</p>
-<p>$(1)$ 式便于理解”距离”的概念，因为A, B两点的距离我们一般表示为 $|A-B|$ ，当 $P$ 和 $Q$ 是同概率分布时KL距离为0</p>
-<h3 id="极大似然估计"><a href="#极大似然估计" class="headerlink" title="极大似然估计"></a>极大似然估计</h3><p>极大似然估计，是用来估计一个概率模型的参数的一种方法，它一般求解似然函数 </p>
-<p>$$L(\theta | x_{1}…x_{m}) = f_{\theta}(x_{1}…x_{m})$$</p>
-<p>取最大值时的参数 $\widehat{\theta}$</p>
-<p>$$\widehat{\theta} = \underset{\theta}{argmax} L(\theta | x_{1}…x_{m})$$</p>
-<h3 id="隐变量"><a href="#隐变量" class="headerlink" title="隐变量"></a>隐变量</h3><p>在统计学中，隐变量或潜变量指的是不可观测的随机变量,隐变量可以通过使用数学模型依据观测得的数据被推断出来。</p>
+<h2 id="知识储备">知识储备</h2>
+<h3 id="kl距离">KL距离</h3>
+<p>KL距离又称相对熵(relative entropy)，用来衡量空间上两个概率分布 <span class="math inline">\(P(x)\)</span>，<span class="math inline">\(Q(x)\)</span> 的相对差距的测度（通俗的说就是两个概率分布的距离）</p>
+<p><span class="math display">\[\begin{align*}
+D_{KL}(P||Q) &amp; = \sum_{i} P(i)log\ \frac{P(i)}{Q(i)} \\
+&amp; = \sum_{i} P(i) log\ P(i) - \sum_{i} P(i) log\  Q(i) \\
+&amp; = E_{P}(log\ P(i)) - E_{P}(log\ Q(i))
+\end{align*} \tag{1}\]</span></p>
+<p><span class="math inline">\((1)\)</span> 式便于理解“距离”的概念，因为A, B两点的距离我们一般表示为 <span class="math inline">\(|A-B|\)</span> ，当 <span class="math inline">\(P\)</span> 和 <span class="math inline">\(Q\)</span> 是同概率分布时KL距离为0</p>
+<h3 id="极大似然估计">极大似然估计</h3>
+<p>极大似然估计，是用来估计一个概率模型的参数的一种方法，它一般求解似然函数</p>
+<p><span class="math display">\[L(\theta | x_{1}...x_{m}) = f_{\theta}(x_{1}...x_{m})\]</span></p>
+<p>取最大值时的参数 <span class="math inline">\(\widehat{\theta}\)</span></p>
+<p><span class="math display">\[\widehat{\theta} = \underset{\theta}{argmax} L(\theta | x_{1}...x_{m})\]</span></p>
+<h3 id="隐变量">隐变量</h3>
+<p>在统计学中，隐变量或潜变量指的是不可观测的随机变量,隐变量可以通过使用数学模型依据观测得的数据被推断出来。</p>
 <p>通俗的说隐变量是存在的但是你无法看到。举个例子吧，分类和聚类看起来是差不多的，都是把一堆相似的东西分到一起，但是分类（显式）提供了类别信息，而聚类没有（显式）提供类别信息，聚类之所以能把一堆相似的东西分到一起可以认为它内部定义了一个“隐藏”的类别信息，可以认为是隐变量</p>
 <p>（上述解释系本人捏造的，不一定正确）</p>
-<h3 id="Jensen-不等式"><a href="#Jensen-不等式" class="headerlink" title="Jensen 不等式"></a>Jensen 不等式</h3><p><img src="/images/posts/em/jensen.jpg" alt=""></p>
-<p>如果 $f$ 是凸函数(如上图)， $x$ 是随机变量有</p>
-<p>$$E(f(x)) \geq f(E(x)) \tag{2}$$</p>
+<h3 id="jensen-不等式">Jensen 不等式</h3>
+<p><img src="/images/posts/em/jensen.jpg"></p>
+<p>如果 <span class="math inline">\(f\)</span> 是凸函数(如上图)， <span class="math inline">\(x\)</span> 是随机变量有</p>
+<p><span class="math display">\[E(f(x)) \geq f(E(x)) \tag{2}\]</span></p>
 <p>凹函数则相反</p>
-<p>$$E(f(x)) \leq f(E(x))$$</p>
-<p><strong>当 $x$ 是常量时上式取等</strong>，即上图$a$, $b$两点重合时取等</p>
+<p><span class="math display">\[E(f(x)) \leq f(E(x))\]</span></p>
+<p><strong>当 <span class="math inline">\(x\)</span> 是常量时上式取等</strong>，即上图<span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>两点重合时取等</p>
 <p>Jensen不等式在下述EM算法的推导中很重要</p>
-<h4 id="凹凸函数"><a href="#凹凸函数" class="headerlink" title="凹凸函数"></a>凹凸函数</h4><p>可能受中文<code>凹凸</code>字型的影响会对<code>凹凸</code>函数有歧义，凸函数可理解为<code>下凸</code>，凹函数可理解为<code>上凸</code></p>
-<p><img src="/images/posts/em/aotufunc.png" alt=""></p>
-<h2 id="EM算法的推导"><a href="#EM算法的推导" class="headerlink" title="EM算法的推导"></a>EM算法的推导</h2><p>EM算法主要分两个求解步骤，称为E步和M步</p>
-<h3 id="E步"><a href="#E步" class="headerlink" title="E步"></a>E步</h3><p>假设有训练集</p>
-<p>$${x^{1}, …., x^{m}}$$</p>
-<p>包含 $m$ 个独立样本，我们希望从中找到该组数据的模型 $p(x, z)$ 的参数</p>
+<h4 id="凹凸函数">凹凸函数</h4>
+<p>可能受中文<code>凹凸</code>字型的影响会对<code>凹凸</code>函数有歧义，凸函数可理解为<code>下凸</code>，凹函数可理解为<code>上凸</code></p>
+<p><img src="/images/posts/em/aotufunc.png"></p>
+<h2 id="em算法的推导">EM算法的推导</h2>
+<p>EM算法主要分两个求解步骤，称为E步和M步</p>
+<h3 id="e步">E步</h3>
+<p>假设有训练集</p>
+<p><span class="math display">\[{x^{1}, ...., x^{m}}\]</span></p>
+<p>包含 <span class="math inline">\(m\)</span> 个独立样本，我们希望从中找到该组数据的模型 <span class="math inline">\(p(x, z)\)</span> 的参数</p>
 <p>在这里我们先以<strong>极大似然</strong>的思想去建立目标函数，取对数似然函数</p>
-<p>$$L(\theta) = \sum_{i=1}^{m} log\ p(x; \theta) \tag{3}$$</p>
-<p>我们给 $(3)$ 式加入隐变量 $z$ , 对于联合分布 $p(x, z; \theta)$ 有 $\sum_{z}\ p(x, z; \theta) = p(x; \theta)$, 故有</p>
-<p>$$<br>\begin{align<em>}<br>L(\theta) &amp; = \sum_{i=1}^{m} log\ p(x; \theta) \<br>&amp; = \sum_{i=1}^{m} log\ \sum_{z} p(x, z; \theta)<br>\end{align</em>} \tag{4}<br>$$</p>
-<p>$z$ 是随机的隐变量，直接找到参数的估计是很困难的，我们要做的是建立 $L(\theta)$ 的下界，然后<strong>求该下界的最大值，重复求解直至收敛到局部最大值</strong></p>
+<p><span class="math display">\[L(\theta) = \sum_{i=1}^{m} log\ p(x; \theta) \tag{3}\]</span></p>
+<p>我们给 <span class="math inline">\((3)\)</span> 式加入隐变量 <span class="math inline">\(z\)</span> , 对于联合分布 <span class="math inline">\(p(x, z; \theta)\)</span> 有 <span class="math inline">\(\sum_{z}\ p(x, z; \theta) = p(x; \theta)\)</span>, 故有</p>
+<p><span class="math display">\[
+\begin{align*}
+L(\theta) &amp; = \sum_{i=1}^{m} log\ p(x; \theta) \\
+&amp; = \sum_{i=1}^{m} log\ \sum_{z} p(x, z; \theta)
+\end{align*} \tag{4}
+\]</span></p>
+<p><span class="math inline">\(z\)</span> 是随机的隐变量，直接找到参数的估计是很困难的，我们要做的是建立 <span class="math inline">\(L(\theta)\)</span> 的下界，然后<strong>求该下界的最大值，重复求解直至收敛到局部最大值</strong></p>
 <p>因为假设了样本是独立的，故整体的概率有</p>
-<p>$$P = \prod_{i} p(x^{(i)}; \theta) = \prod_{i} \sum_{z^{(i)}}  p(x^{(i)}, z^{(i)}; \theta)$$</p>
+<p><span class="math display">\[P = \prod_{i} p(x^{(i)}; \theta) = \prod_{i} \sum_{z^{(i)}}  p(x^{(i)}, z^{(i)}; \theta)\]</span></p>
 <p>为了方便推导，一般两边取对数，故有</p>
-<p>$$\begin{align<em>}<br>log\ P &amp; = \sum_{i} log\ p(x^{(i)}; \theta) \<br>&amp; = \sum_{i} log\  \sum_{z^{(i)}} p(x^{(i)}, z^{(i)}; \theta)<br>\end{align</em>} \tag{5}$$</p>
-<p>现在我们假设 $Q_{i}$ 是 $z$ 的某一分布，$Q_{i} \geqslant 0$， $\sum_{i} Q_{i} = 1$，此时 $(5)$ 有</p>
-<p>$$\begin{align<em>}<br>log\ P &amp; = \sum_{i} log\ p(x^{(i)}; \theta) \<br>&amp; = \sum_{i} log\  \sum_{z^{(i)}} p(x^{(i)}, z^{(i)}; \theta) \<br>&amp; = \sum_{i} log\  \sum_{z^{(i)}} Q_{i}(z^{(i)}) \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}<br>\end{align</em>} \tag{6}$$</p>
-<p>对于 $(6)$ 有</p>
-<p>$$\sum_{i} log\  \sum_{z^{(i)}} Q_{i}(z^{(i)}) \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} = \sum_{i} log(E_{Q_{i}} (\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}) ) \tag{7}$$</p>
-<p>因为<code>log(x)</code>是凹函数，根据<strong>Jensen不等式</strong>，对于$(7)$ 有</p>
-<p>$$\begin{align<em>}<br>\sum_{i} log(E_{Q_{i}} ( \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}) )<br>\geq \sum_{i} E_{Q_{i}}(log( \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}) )<br>=\sum_{i} \sum_{z^{(i)}} Q_{i}(z^{(i)}) log\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}<br>\end{align</em>} \tag{8}$$</p>
-<p>因此由$(8)$可得</p>
-<p>$$\begin{align<em>}<br>log\ P &amp; = \sum_{i} log\ p(x^{(i)}; \theta) \<br>&amp; = \sum_{i} log\  \sum_{z^{(i)}} p(x^{(i)}, z^{(i)}; \theta) \<br>&amp; = \sum_{i} log\  \sum_{z^{(i)}} Q_{i}(z^{(i)}) \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} \<br>&amp; \geq \sum_{i} \sum_{z^{(i)}} Q_{i}(z^{(i)}) log\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}<br>\end{align</em>} \tag{9}$$</p>
-<p>因为之前已经说了我们要求最大下界，回到Jensen不等式 $(2)$ 当x为常量时才能取等号，也就是对于 $(8)$ 当</p>
-<p>$$\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} = c \tag{10}$$</p>
-<p>$c$ 为常数时才能取等，从<strong>KL距离</strong>解释就是当$p$ 和 $Q$ 的KL距离为0时才能取等，也就是说 $p$ 和 $Q$ 是同分布的，而由 $(10)$可知 <strong>$p$ 和 $Q$ 是线性关系</strong>，故属于同分布, 对$p$归一化有</p>
-<p>$$\frac{p(x^{(i)}, z^{(i)}; \theta)}{\sum_{z} p(x^{(i)}, z; \theta)} = 1 \tag{11}$$</p>
-<p>此时刚好满足 $\sum_{z} Q_{i}(z^{(i)}) = 1$，因此我们可以用 $p$ 来表示 $Q$</p>
-<p>$$\begin{align<em>}<br>Q_{i}(z^{(i)}) &amp; = \frac{p(x^{(i)}, z^{(i)}; \theta)}{\sum_{z} p(x^{(i)}, z; \theta)} \<br>&amp; = \frac{p(x^{(i)}, z^{(i)}; \theta)}{p(x^{(i)}; \theta)} \<br>&amp; = p(z^{(i)} | x^{(i)}; \theta)<br>\end{align</em>} \tag{12}$$</p>
-<p>由$(12)$可知，$Q_{i}(z^{(i)})$ 的估计就是给定 $x^{(i)}$ 下  $z^{(i)}$ 发生的条件分布，此时可以使得 $(9)$ 式取等</p>
-<p>因此<strong>E步可以认为是固定参数 $\theta$ 最大化 $Q_{i}(z^{(i)})$</strong></p>
-<h3 id="M步"><a href="#M步" class="headerlink" title="M步"></a>M步</h3><p><strong>M步的思想是固定住 $Q_{i}(z^{(i)})$ 最大化 $\theta$</strong>，即</p>
-<p>$$\theta := \underset{\theta}{argmax} \sum_{i} \sum_{z^{(i)}} Q_{i}(z^{(i)}) log\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} \tag{13}$$</p>
+<p><span class="math display">\[\begin{align*}
+log\ P &amp; = \sum_{i} log\ p(x^{(i)}; \theta) \\
+&amp; = \sum_{i} log\  \sum_{z^{(i)}} p(x^{(i)}, z^{(i)}; \theta)
+\end{align*} \tag{5}\]</span></p>
+<p>现在我们假设 <span class="math inline">\(Q_{i}\)</span> 是 <span class="math inline">\(z\)</span> 的某一分布，<span class="math inline">\(Q_{i} \geqslant 0\)</span>， <span class="math inline">\(\sum_{i} Q_{i} = 1\)</span>，此时 <span class="math inline">\((5)\)</span> 有</p>
+<p><span class="math display">\[\begin{align*}
+log\ P &amp; = \sum_{i} log\ p(x^{(i)}; \theta) \\
+&amp; = \sum_{i} log\  \sum_{z^{(i)}} p(x^{(i)}, z^{(i)}; \theta) \\
+&amp; = \sum_{i} log\  \sum_{z^{(i)}} Q_{i}(z^{(i)}) \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}
+\end{align*} \tag{6}\]</span></p>
+<p>对于 <span class="math inline">\((6)\)</span> 有</p>
+<p><span class="math display">\[\sum_{i} log\  \sum_{z^{(i)}} Q_{i}(z^{(i)}) \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} = \sum_{i} log(E_{Q_{i}} (\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}) ) \tag{7}\]</span></p>
+<p>因为<code>log(x)</code>是凹函数，根据<strong>Jensen不等式</strong>，对于<span class="math inline">\((7)\)</span> 有</p>
+<p><span class="math display">\[\begin{align*}
+\sum_{i} log(E_{Q_{i}} ( \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}) )
+\geq \sum_{i} E_{Q_{i}}(log( \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}) )
+=\sum_{i} \sum_{z^{(i)}} Q_{i}(z^{(i)}) log\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} 
+\end{align*} \tag{8}\]</span></p>
+<p>因此由<span class="math inline">\((8)\)</span>可得</p>
+<p><span class="math display">\[\begin{align*}
+log\ P &amp; = \sum_{i} log\ p(x^{(i)}; \theta) \\
+&amp; = \sum_{i} log\  \sum_{z^{(i)}} p(x^{(i)}, z^{(i)}; \theta) \\
+&amp; = \sum_{i} log\  \sum_{z^{(i)}} Q_{i}(z^{(i)}) \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} \\
+&amp; \geq \sum_{i} \sum_{z^{(i)}} Q_{i}(z^{(i)}) log\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} 
+\end{align*} \tag{9}\]</span></p>
+<p>因为之前已经说了我们要求最大下界，回到Jensen不等式 <span class="math inline">\((2)\)</span> 当x为常量时才能取等号，也就是对于 <span class="math inline">\((8)\)</span> 当</p>
+<p><span class="math display">\[\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} = c \tag{10}\]</span></p>
+<p><span class="math inline">\(c\)</span> 为常数时才能取等，从<strong>KL距离</strong>解释就是当<span class="math inline">\(p\)</span> 和 <span class="math inline">\(Q\)</span> 的KL距离为0时才能取等，也就是说 <span class="math inline">\(p\)</span> 和 <span class="math inline">\(Q\)</span> 是同分布的，而由 <span class="math inline">\((10)\)</span>可知 <strong><span class="math inline">\(p\)</span> 和 <span class="math inline">\(Q\)</span> 是线性关系</strong>，故属于同分布, 对<span class="math inline">\(p\)</span>归一化有</p>
+<p><span class="math display">\[\frac{p(x^{(i)}, z^{(i)}; \theta)}{\sum_{z} p(x^{(i)}, z; \theta)} = 1 \tag{11}\]</span></p>
+<p>此时刚好满足 <span class="math inline">\(\sum_{z} Q_{i}(z^{(i)}) = 1\)</span>，因此我们可以用 <span class="math inline">\(p\)</span> 来表示 <span class="math inline">\(Q\)</span></p>
+<p><span class="math display">\[\begin{align*}
+Q_{i}(z^{(i)}) &amp; = \frac{p(x^{(i)}, z^{(i)}; \theta)}{\sum_{z} p(x^{(i)}, z; \theta)} \\
+&amp; = \frac{p(x^{(i)}, z^{(i)}; \theta)}{p(x^{(i)}; \theta)} \\
+&amp; = p(z^{(i)} | x^{(i)}; \theta)
+\end{align*} \tag{12}\]</span></p>
+<p>由<span class="math inline">\((12)\)</span>可知，<span class="math inline">\(Q_{i}(z^{(i)})\)</span> 的估计就是给定 <span class="math inline">\(x^{(i)}\)</span> 下 <span class="math inline">\(z^{(i)}\)</span> 发生的条件分布，此时可以使得 <span class="math inline">\((9)\)</span> 式取等</p>
+<p>因此<strong>E步可以认为是固定参数 <span class="math inline">\(\theta\)</span> 最大化 <span class="math inline">\(Q_{i}(z^{(i)})\)</span></strong></p>
+<h3 id="m步">M步</h3>
+<p><strong>M步的思想是固定住 <span class="math inline">\(Q_{i}(z^{(i)})\)</span> 最大化 <span class="math inline">\(\theta\)</span></strong>，即</p>
+<p><span class="math display">\[\theta := \underset{\theta}{argmax} \sum_{i} \sum_{z^{(i)}} Q_{i}(z^{(i)}) log\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} \tag{13}\]</span></p>
 <p>至于M步如何求解就是EM算法计算的难点所在，此文不做详细讨论</p>
-<h3 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h3><p>由上可知EM算法，就是通过E步和M步来循环更新 $\theta$ 和 $Q$ 使得极值推向设定的收敛值</p>
-<h2 id="GMM-Gaussian-Mixed-Model-高斯混合模型与EM"><a href="#GMM-Gaussian-Mixed-Model-高斯混合模型与EM" class="headerlink" title="GMM(Gaussian Mixed Model) 高斯混合模型与EM"></a>GMM(Gaussian Mixed Model) 高斯混合模型与EM</h2><p>高斯混合模型是指多个高斯分布的混合<br><img src="/images/posts/em/gmm.png" alt=""></p>
-<h3 id="一个经典的高斯混合模型的例子"><a href="#一个经典的高斯混合模型的例子" class="headerlink" title="一个经典的高斯混合模型的例子"></a>一个经典的高斯混合模型的例子</h3><p>随机挑选10000个志愿者，然后测量他们的身高，若样本中存在男性和女性，且他们的身高分别服从 $N(\mu_{1}, \sigma_{1})$ 和 $N(\mu_{2}, \sigma_{2})$ 的分布，在性别未知的情况下试估计参数 $\mu_{1}$、$\sigma_{1}$、$\mu_{2}$、$\sigma_{2}$</p>
+<h3 id="综述">综述</h3>
+<p>由上可知EM算法，就是通过E步和M步来循环更新 <span class="math inline">\(\theta\)</span> 和 <span class="math inline">\(Q\)</span> 使得极值推向设定的收敛值</p>
+<h2 id="gmmgaussian-mixed-model-高斯混合模型与em">GMM(Gaussian Mixed Model) 高斯混合模型与EM</h2>
+<p>高斯混合模型是指多个高斯分布的混合 <img src="/images/posts/em/gmm.png"></p>
+<h3 id="一个经典的高斯混合模型的例子">一个经典的高斯混合模型的例子</h3>
+<p>随机挑选10000个志愿者，然后测量他们的身高，若样本中存在男性和女性，且他们的身高分别服从 <span class="math inline">\(N(\mu_{1}, \sigma_{1})\)</span> 和 <span class="math inline">\(N(\mu_{2}, \sigma_{2})\)</span> 的分布，在性别未知的情况下试估计参数 <span class="math inline">\(\mu_{1}\)</span>、<span class="math inline">\(\sigma_{1}\)</span>、<span class="math inline">\(\mu_{2}\)</span>、<span class="math inline">\(\sigma_{2}\)</span></p>
 <p>由于性别未知，用常规的方法是无法求得男女身高对应的高斯分布的，一般用EM算法求解</p>
 <p>在将EM算法求解GMM前，先要知道高斯分布的极大似然估计</p>
-<h3 id="高斯分布的极大似然估计"><a href="#高斯分布的极大似然估计" class="headerlink" title="高斯分布的极大似然估计"></a>高斯分布的极大似然估计</h3><p>假定给定一组样本 $x_{1}, x_{2}, …, x_{n}$ ，已知他们来自于高斯分布 $N(\mu, \sigma)$ ，试估计参数 $\mu$, $\sigma$</p>
+<h3 id="高斯分布的极大似然估计">高斯分布的极大似然估计</h3>
+<p>假定给定一组样本 <span class="math inline">\(x_{1}, x_{2}, ..., x_{n}\)</span> ，已知他们来自于高斯分布 <span class="math inline">\(N(\mu, \sigma)\)</span> ，试估计参数 <span class="math inline">\(\mu\)</span>, <span class="math inline">\(\sigma\)</span></p>
 <p>对数似然估计有</p>
-<p>$$\begin{align<em>}<br>L(x) &amp; = \sum_{i} log \frac{1}{\sqrt{2\pi} \sigma} e^{-\frac{(x_{i}-\mu)^{2}}{2\sigma^{2}}} \<br>&amp; = (\sum_{i} log \frac{1}{\sqrt{2\pi} \sigma}) + (\sum_{i} -\frac{(x_{i}-\mu)^{2}}{2\sigma^{2}}) \<br>&amp; = -\frac{n}{2} log\ 2\pi \sigma^{2} - \frac{1}{2\sigma^{2}} \sum_{i}(x_{i} - \mu)^{2}<br>\end{align</em>} \tag{14}$$</p>
-<p>对 $L(x)$ 求偏导有</p>
-<p>$$\frac{\partial L(x)}{\partial \mu} \Rightarrow \mu = \frac{1}{n} \sum_{i} x_{i} \tag{15}$$</p>
-<p>$$\frac{\partial L(x)}{\partial \sigma^{2}} \Rightarrow \sigma^{2} = \frac{1}{n}\sum_{i} (x_{i}-\mu)^{2} \tag{16}$$</p>
-<p>可知极大似然估计使用了样本均值和样本伪方差（样本方差的分母是  $n-1$, 这里是 $n$）来估计参数</p>
-<h3 id="GMM"><a href="#GMM" class="headerlink" title="GMM"></a>GMM</h3><p>随机变量 $X$ 是由k个高斯分布混合而成，取各个高斯分布的概率为 $\pi_{1}, \pi_{2}, …, \pi_{k}$ 第 $i$ 个高斯分布的均值为 $\mu_{i}$ ，方差为 $\Sigma_{i}$ 。若观测到随机变量的一系列样本 $x_{1}, x_{2}, …, x_{n}$ ,试估计参数 $\underset{\pi}{\rightarrow} (\pi_{1}, \pi_{2}, …, \pi_{k})$ 、$\underset{\mu}{\rightarrow} (\mu_{1}, \mu_{2}, …, \mu_{k})$ 和 $\underset{\Sigma}{\rightarrow} (\Sigma_{1}, \Sigma_{2}, …, \Sigma_{k})$</p>
+<p><span class="math display">\[\begin{align*}
+L(x) &amp; = \sum_{i} log \frac{1}{\sqrt{2\pi} \sigma} e^{-\frac{(x_{i}-\mu)^{2}}{2\sigma^{2}}} \\
+&amp; = (\sum_{i} log \frac{1}{\sqrt{2\pi} \sigma}) + (\sum_{i} -\frac{(x_{i}-\mu)^{2}}{2\sigma^{2}}) \\
+&amp; = -\frac{n}{2} log\ 2\pi \sigma^{2} - \frac{1}{2\sigma^{2}} \sum_{i}(x_{i} - \mu)^{2}
+\end{align*} \tag{14}\]</span></p>
+<p>对 <span class="math inline">\(L(x)\)</span> 求偏导有</p>
+<p><span class="math display">\[\frac{\partial L(x)}{\partial \mu} \Rightarrow \mu = \frac{1}{n} \sum_{i} x_{i} \tag{15}\]</span></p>
+<p><span class="math display">\[\frac{\partial L(x)}{\partial \sigma^{2}} \Rightarrow \sigma^{2} = \frac{1}{n}\sum_{i} (x_{i}-\mu)^{2} \tag{16}\]</span></p>
+<p>可知极大似然估计使用了样本均值和样本伪方差（样本方差的分母是 <span class="math inline">\(n-1\)</span>, 这里是 <span class="math inline">\(n\)</span>）来估计参数</p>
+<h3 id="gmm">GMM</h3>
+<p>随机变量 <span class="math inline">\(X\)</span> 是由k个高斯分布混合而成，取各个高斯分布的概率为 <span class="math inline">\(\pi_{1}, \pi_{2}, ..., \pi_{k}\)</span> 第 <span class="math inline">\(i\)</span> 个高斯分布的均值为 <span class="math inline">\(\mu_{i}\)</span> ，方差为 <span class="math inline">\(\Sigma_{i}\)</span> 。若观测到随机变量的一系列样本 <span class="math inline">\(x_{1}, x_{2}, ..., x_{n}\)</span> ,试估计参数 <span class="math inline">\(\underset{\pi}{\rightarrow} (\pi_{1}, \pi_{2}, ..., \pi_{k})\)</span> 、<span class="math inline">\(\underset{\mu}{\rightarrow} (\mu_{1}, \mu_{2}, ..., \mu_{k})\)</span> 和 <span class="math inline">\(\underset{\Sigma}{\rightarrow} (\Sigma_{1}, \Sigma_{2}, ..., \Sigma_{k})\)</span></p>
 <p>对上述问题先建立对数似然函数</p>
-<p>$$L_{\pi, \mu, \Sigma} (x) = \sum_{i=1}^{n}log(\sum_{k=1}^{K} \pi_{k} N(x_{i} | \mu_{k}, \Sigma_{k})) \tag{17}$$</p>
+<p><span class="math display">\[L_{\pi, \mu, \Sigma} (x) = \sum_{i=1}^{n}log(\sum_{k=1}^{K} \pi_{k} N(x_{i} | \mu_{k}, \Sigma_{k})) \tag{17}\]</span></p>
 <p>由于在对数函数里有加和一般是不以直接求偏导的，故采用EM算法取估计参数</p>
-<h4 id="E步-1"><a href="#E步-1" class="headerlink" title="E步"></a>E步</h4><p>E步主要估计数据来自哪个组份(E步假设待估计参数是固定的)：对于每个样本 $x_{i}$ 它由<strong>第k个组份生成的概率</strong>为：</p>
-<p> $$\gamma(i, k) = \frac{\pi_{k} N(x_{i}|\mu_{k}, \Sigma_{k})}{\sum_{j=1}^{k} \pi_{j}N(X_{i} | \mu_{j}, \Sigma_{j})} \tag{18}$$</p>
-<h4 id="M步-1"><a href="#M步-1" class="headerlink" title="M步"></a>M步</h4><p> 对于所有样本点，对于组份k而言，可看做生成了 { $\gamma(i, k)x_{i} | i=1, 2, …, N$ } 这些点，组分k是一个标准的高斯分布，由 $(15), (16)$ 可得</p>
-<p> $$\left{\begin{matrix}<br>N_{k} = \sum_{i=1}^{n}\gamma (i, k) \<br>\mu_{k} = \frac{1}{N_{k}} \sum_{i=1}^{n}\gamma (i, k) x_{i} \<br>\Sigma_{k} = \frac{1}{N_{k}} \sum_{i=1}^{n}\gamma (i, k)(x_{i} - \mu_{i})^{2} \<br>\pi_{k} = \frac{N_{k}}{n} = \frac{1}{n} \sum_{i}^{n}\gamma (i, k)<br>\end{matrix}\right. \tag{19}$$</p>
-<h2 id="Refrence"><a href="#Refrence" class="headerlink" title="Refrence"></a>Refrence</h2><p>[0] <a href="https://zh.wikipedia.org/wiki/%E9%9A%90%E5%8F%98%E9%87%8F" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/%E9%9A%90%E5%8F%98%E9%87%8F</a></p>
+<h4 id="e步-1">E步</h4>
+<p>E步主要估计数据来自哪个组份(E步假设待估计参数是固定的)：对于每个样本 <span class="math inline">\(x_{i}\)</span> 它由<strong>第k个组份生成的概率</strong>为：</p>
+<p><span class="math display">\[\gamma(i, k) = \frac{\pi_{k} N(x_{i}|\mu_{k}, \Sigma_{k})}{\sum_{j=1}^{k} \pi_{j}N(X_{i} | \mu_{j}, \Sigma_{j})} \tag{18}\]</span></p>
+<p>#### M步 对于所有样本点，对于组份k而言，可看做生成了 { <span class="math inline">\(\gamma(i, k)x_{i} | i=1, 2, ..., N\)</span> } 这些点，组分k是一个标准的高斯分布，由 <span class="math inline">\((15), (16)\)</span> 可得</p>
+<p><span class="math display">\[\left\{\begin{matrix}
+N_{k} = \sum_{i=1}^{n}\gamma (i, k) \\ 
+\mu_{k} = \frac{1}{N_{k}} \sum_{i=1}^{n}\gamma (i, k) x_{i} \\ 
+\Sigma_{k} = \frac{1}{N_{k}} \sum_{i=1}^{n}\gamma (i, k)(x_{i} - \mu_{i})^{2} \\ 
+\pi_{k} = \frac{N_{k}}{n} = \frac{1}{n} \sum_{i}^{n}\gamma (i, k)
+\end{matrix}\right. \tag{19}\]</span></p>
+<h2 id="refrence">Refrence</h2>
+<p>[0] https://zh.wikipedia.org/wiki/%E9%9A%90%E5%8F%98%E9%87%8F</p>
 <p>[1] 李航 《统计学习方法》</p>
 
       
@@ -630,7 +684,7 @@
               
               
               <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
+                <a href="/tags/index-1.html">
                   <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
@@ -692,7 +746,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#知识储备"><span class="nav-number">1.</span> <span class="nav-text">知识储备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#KL距离"><span class="nav-number">1.1.</span> <span class="nav-text">KL距离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#极大似然估计"><span class="nav-number">1.2.</span> <span class="nav-text">极大似然估计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#隐变量"><span class="nav-number">1.3.</span> <span class="nav-text">隐变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Jensen-不等式"><span class="nav-number">1.4.</span> <span class="nav-text">Jensen 不等式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#凹凸函数"><span class="nav-number">1.4.1.</span> <span class="nav-text">凹凸函数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EM算法的推导"><span class="nav-number">2.</span> <span class="nav-text">EM算法的推导</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#E步"><span class="nav-number">2.1.</span> <span class="nav-text">E步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#M步"><span class="nav-number">2.2.</span> <span class="nav-text">M步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#综述"><span class="nav-number">2.3.</span> <span class="nav-text">综述</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GMM-Gaussian-Mixed-Model-高斯混合模型与EM"><span class="nav-number">3.</span> <span class="nav-text">GMM(Gaussian Mixed Model) 高斯混合模型与EM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一个经典的高斯混合模型的例子"><span class="nav-number">3.1.</span> <span class="nav-text">一个经典的高斯混合模型的例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高斯分布的极大似然估计"><span class="nav-number">3.2.</span> <span class="nav-text">高斯分布的极大似然估计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GMM"><span class="nav-number">3.3.</span> <span class="nav-text">GMM</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#E步-1"><span class="nav-number">3.3.1.</span> <span class="nav-text">E步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#M步-1"><span class="nav-number">3.3.2.</span> <span class="nav-text">M步</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Refrence"><span class="nav-number">4.</span> <span class="nav-text">Refrence</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#知识储备"><span class="nav-number">1.</span> <span class="nav-text">知识储备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#kl距离"><span class="nav-number">1.1.</span> <span class="nav-text">KL距离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#极大似然估计"><span class="nav-number">1.2.</span> <span class="nav-text">极大似然估计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#隐变量"><span class="nav-number">1.3.</span> <span class="nav-text">隐变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jensen-不等式"><span class="nav-number">1.4.</span> <span class="nav-text">Jensen 不等式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#凹凸函数"><span class="nav-number">1.4.1.</span> <span class="nav-text">凹凸函数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#em算法的推导"><span class="nav-number">2.</span> <span class="nav-text">EM算法的推导</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#e步"><span class="nav-number">2.1.</span> <span class="nav-text">E步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#m步"><span class="nav-number">2.2.</span> <span class="nav-text">M步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#综述"><span class="nav-number">2.3.</span> <span class="nav-text">综述</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gmmgaussian-mixed-model-高斯混合模型与em"><span class="nav-number">3.</span> <span class="nav-text">GMM(Gaussian Mixed Model) 高斯混合模型与EM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一个经典的高斯混合模型的例子"><span class="nav-number">3.1.</span> <span class="nav-text">一个经典的高斯混合模型的例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高斯分布的极大似然估计"><span class="nav-number">3.2.</span> <span class="nav-text">高斯分布的极大似然估计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gmm"><span class="nav-number">3.3.</span> <span class="nav-text">GMM</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#e步-1"><span class="nav-number">3.3.1.</span> <span class="nav-text">E步</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#refrence"><span class="nav-number">4.</span> <span class="nav-text">Refrence</span></a></li></ol></div>
             
 
           </div>
