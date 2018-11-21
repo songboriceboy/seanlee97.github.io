@@ -578,7 +578,7 @@
 </ul>
 <p><img src="/images/posts/deeplearning/dp01.png"></p>
 <p>如图是一个双层神经网络(一般计算网络的层数时，通常不考虑输入层，因此图中隐藏层是第一层，输出层是第二层)，也称作<strong>单隐层神经网络</strong>，隐藏层中每个结点称为<strong>神经元</strong>，神经元是含有非线性激活函数的感知单元。</p>
-<p>其中 <span class="math inline">\(a^{[0]}, a^{[1]}, .., a^{[layer\_size]}\)</span> 等为非线性激活值，如 <span class="math inline">\(a^{[1]} = [a_{0}^{[1]}, a_{1}^{[1]}, ..., a_{hidden\_size}^{[1]}]\)</span> 为第一层的激活值。</p>
+<p>其中 <span class="math inline">\(a^{[0]}, a^{[1]}, .., a^{[layer\_size]}\)</span> 等为每一层的输出值，如 <span class="math inline">\(a^{[1]} = [a_{0}^{[1]}, a_{1}^{[1]}, ..., a_{hidden\_size}^{[1]}]\)</span> 为第一层的输出值。</p>
 <h4 id="神经网络的计算">神经网络的计算</h4>
 <p>神经网络中的计算由前向传播与反向传播构成，一般由计算图表示。</p>
 <h5 id="前向传播">前向传播</h5>
