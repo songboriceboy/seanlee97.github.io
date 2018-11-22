@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="现今使用深度学习的方法解决 NLP 领域的问题变得越来越流行，近年来，学界上出现了越来越多有关深度学习的论文;业界上各种深度学习框架、深度学习应用也被推出。 本文主要分享本人对于深度学习的理解及一些经验。 大纲  什么是深度学习？ 热门的深度学习框架及选择建议 常用深度学习模块原理及应用  CNN RNN及其变体 Attention机制的原理以及实现 Transformer  常用的网络训练技巧">
+<meta name="description" content="现今使用深度学习的方法解决 NLP 领域的问题变得越来越流行，近年来，学界上出现了越来越多有关深度学习的论文;业界上各种深度学习框架、深度学习应用也被推出。 本文主要分享本人对于深度学习的理解及一些经验。 大纲 什么是深度学习？ 热门的深度学习框架及选择建议 常用深度学习模块原理及应用 CNN RNN及其变体 Attention机制的原理以及实现 Transformer   常用的网络训练技巧 正">
 <meta name="keywords" content="DL,ML">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深度学习那些事">
 <meta property="og:url" content="http://seanlee97.github.io/2018/11/15/深度学习那些事/index.html">
 <meta property="og:site_name" content="明天探索者">
-<meta property="og:description" content="现今使用深度学习的方法解决 NLP 领域的问题变得越来越流行，近年来，学界上出现了越来越多有关深度学习的论文;业界上各种深度学习框架、深度学习应用也被推出。 本文主要分享本人对于深度学习的理解及一些经验。 大纲  什么是深度学习？ 热门的深度学习框架及选择建议 常用深度学习模块原理及应用  CNN RNN及其变体 Attention机制的原理以及实现 Transformer  常用的网络训练技巧">
+<meta property="og:description" content="现今使用深度学习的方法解决 NLP 领域的问题变得越来越流行，近年来，学界上出现了越来越多有关深度学习的论文;业界上各种深度学习框架、深度学习应用也被推出。 本文主要分享本人对于深度学习的理解及一些经验。 大纲 什么是深度学习？ 热门的深度学习框架及选择建议 常用深度学习模块原理及应用 CNN RNN及其变体 Attention机制的原理以及实现 Transformer   常用的网络训练技巧 正">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/deeplearning/01.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/deeplearning/dp01.png">
@@ -139,10 +139,10 @@
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/deeplearning/word2vec05.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/deeplearning/word2vec06.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/deeplearning/dpcnn01.png">
-<meta property="og:updated_time" content="2018-11-21T16:37:22.139Z">
+<meta property="og:updated_time" content="2018-11-22T02:47:22.015Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深度学习那些事">
-<meta name="twitter:description" content="现今使用深度学习的方法解决 NLP 领域的问题变得越来越流行，近年来，学界上出现了越来越多有关深度学习的论文;业界上各种深度学习框架、深度学习应用也被推出。 本文主要分享本人对于深度学习的理解及一些经验。 大纲  什么是深度学习？ 热门的深度学习框架及选择建议 常用深度学习模块原理及应用  CNN RNN及其变体 Attention机制的原理以及实现 Transformer  常用的网络训练技巧">
+<meta name="twitter:description" content="现今使用深度学习的方法解决 NLP 领域的问题变得越来越流行，近年来，学界上出现了越来越多有关深度学习的论文;业界上各种深度学习框架、深度学习应用也被推出。 本文主要分享本人对于深度学习的理解及一些经验。 大纲 什么是深度学习？ 热门的深度学习框架及选择建议 常用深度学习模块原理及应用 CNN RNN及其变体 Attention机制的原理以及实现 Transformer   常用的网络训练技巧 正">
 <meta name="twitter:image" content="http://seanlee97.github.io/images/posts/deeplearning/01.png">
 
 
@@ -396,107 +396,77 @@
       
         <p>现今使用深度学习的方法解决 NLP 领域的问题变得越来越流行，近年来，学界上出现了越来越多有关深度学习的论文;业界上各种深度学习框架、深度学习应用也被推出。</p>
 <p>本文主要分享本人对于深度学习的理解及一些经验。</p>
-<h2 id="大纲">大纲</h2>
-<ul>
+<h2 id="大纲"><a href="#大纲" class="headerlink" title="大纲"></a>大纲</h2><ul>
 <li>什么是深度学习？</li>
 <li>热门的深度学习框架及选择建议</li>
-<li>常用深度学习模块原理及应用
-<ul>
+<li>常用深度学习模块原理及应用<ul>
 <li>CNN</li>
 <li>RNN及其变体</li>
 <li>Attention机制的原理以及实现</li>
 <li>Transformer</li>
-</ul></li>
-<li>常用的网络训练技巧
-<ul>
+</ul>
+</li>
+<li>常用的网络训练技巧<ul>
 <li>正则化的意义及使用方式</li>
 <li>规范化的作用及常用的规范化方式</li>
 <li>常见的激活函数及选择</li>
 <li>常见的优化器及选择</li>
 <li>mask 的作用</li>
-<li>模型效果提升偏方
-<ul>
-<li>迁移学习</li>
+<li>模型效果提升偏方<ul>
+<li>迁移学习 </li>
 <li>鉴别学习</li>
 <li>模型融合</li>
 <li>模型蒸馏</li>
-</ul></li>
-</ul></li>
-<li>深度学习与NLP
-<ul>
+</ul>
+</li>
+</ul>
+</li>
+<li>深度学习与NLP<ul>
 <li>word2vec vs fasttext</li>
 <li>如何给网络添加特征</li>
 <li>ELMo、GPT、BERT</li>
-</ul></li>
+</ul>
+</li>
 <li>TensorFlow 实战：以DPCNN为例讲述如何实现一篇论文</li>
 <li>写在最后</li>
 <li>Refrence</li>
 </ul>
-<h2 id="什么是深度学习">什么是深度学习？</h2>
-<p>深度学习 <span class="math inline">\(\neq\)</span> 深度学习框架，掌握深度学习首先要掌握相关的理论知识，掌握常用的网络模型，锻炼自己的工程能力。做到看得懂论文，还能自己实现论文。</p>
+<h2 id="什么是深度学习？"><a href="#什么是深度学习？" class="headerlink" title="什么是深度学习？"></a>什么是深度学习？</h2><p>深度学习 $\neq$ 深度学习框架，掌握深度学习首先要掌握相关的理论知识，掌握常用的网络模型，锻炼自己的工程能力。做到看得懂论文，还能自己实现论文。</p>
 <p>现在流行的深度学习方法主要是基于反向传播(Back-Propagation, BP)思想的，主要是<strong>深度神经网络</strong> (DNN，Deep Neural Network)，深度学习一般在大数据量下才能体现出其优点，而且深度学习对计算资源要求也比较高，一般需要用到 GPU (Graphics processing unit) 加速运算。</p>
-<p><img src="/images/posts/deeplearning/01.png"></p>
-<h3 id="神经网络">神经网络</h3>
-<h4 id="神经网络表示">神经网络表示</h4>
-<ul>
+<p><img src="/images/posts/deeplearning/01.png" alt=""></p>
+<h3 id="神经网络"><a href="#神经网络" class="headerlink" title="神经网络"></a>神经网络</h3><h4 id="神经网络表示"><a href="#神经网络表示" class="headerlink" title="神经网络表示"></a>神经网络表示</h4><ul>
 <li>输入层：输入特征被称作神经网络的输入层 (Input Layer)</li>
 <li>隐藏层：一般在输入层和输出层之间的网络层都可称为隐藏层，“隐藏”的含义是中间节点的真正数值是无法看到的。</li>
 <li>输出层：将网络空间最终映射到<code>任务空间</code></li>
 </ul>
-<p><img src="/images/posts/deeplearning/dp01.png"></p>
+<p><img src="/images/posts/deeplearning/dp01.png" alt=""></p>
 <p>如图是一个双层神经网络(一般计算网络的层数时，通常不考虑输入层，因此图中隐藏层是第一层，输出层是第二层)，也称作<strong>单隐层神经网络</strong>，隐藏层中每个结点称为<strong>神经元</strong>，神经元是含有非线性激活函数的感知单元。</p>
-<p>其中 <span class="math inline">\(a^{[0]}, a^{[1]}, .., a^{[layer\_size]}\)</span> 等为每一层的输出值，如 <span class="math inline">\(a^{[1]} = [a_{0}^{[1]}, a_{1}^{[1]}, ..., a_{hidden\_size}^{[1]}]\)</span> 为第一层的输出值。</p>
-<h4 id="神经网络的计算">神经网络的计算</h4>
-<p>神经网络中的计算由前向传播与反向传播构成，一般由计算图表示。</p>
-<h5 id="前向传播">前向传播</h5>
-<p>前向传播是计算神经网络输出的过程，对于单个神经元有：</p>
-<p><img src="/images/posts/deeplearning/dp02.png"></p>
-<p>其中 <span class="math inline">\(W\)</span> 是一个向量，<span class="math inline">\(W^{T}\)</span> 是向量的转置， <span class="math inline">\(b\)</span> 是一个标量</p>
+<p>其中 $a^{[0]}, a^{[1]}, .., a^{[layer_size]}$ 等为每一层的输出值，如 $a^{[1]} = [a_{0}^{[1]}, a_{1}^{[1]}, …, a_{hidden_size}^{[1]}]$ 为第一层的输出值。</p>
+<h4 id="神经网络的计算"><a href="#神经网络的计算" class="headerlink" title="神经网络的计算"></a>神经网络的计算</h4><p>神经网络中的计算由前向传播与反向传播构成，一般由计算图表示。</p>
+<h5 id="前向传播"><a href="#前向传播" class="headerlink" title="前向传播"></a>前向传播</h5><p>前向传播是计算神经网络输出的过程，对于单个神经元有：</p>
+<p><img src="/images/posts/deeplearning/dp02.png" alt=""></p>
+<p>其中 $W$ 是一个向量，$W^{T}$ 是向量的转置， $b$ 是一个标量</p>
 <p>对于隐藏层的第一个结点有：</p>
-<p><span class="math display">\[z_{1}^{[1]} = (W_{1}^{[1]})^{T}X + b_{1}^{[1]} \\\\
-a_{1}^{[1]} = \sigma(z_{1}^{[1]}) \\\\
-where\  X = \begin{bmatrix}
-x_{1} \\\\ 
-x_{2} \\\\ 
-x_{3}
-\end{bmatrix}, W_{1}^{[1]} \in \mathbb{R}^{3\times 1}, b_{1}^{[1]}\ is\ a\ scalar\]</span></p>
+<p>$$z_{1}^{[1]} = (W_{1}^{[1]})^{T}X + b_{1}^{[1]} \\<br>a_{1}^{[1]} = \sigma(z_{1}^{[1]}) \\<br>where\  X = \begin{bmatrix}<br>x_{1} \\<br>x_{2} \\<br>x_{3}<br>\end{bmatrix}, W_{1}^{[1]} \in \mathbb{R}^{3\times 1}, b_{1}^{[1]}\ is\ a\ scalar$$</p>
 <p>依次类推对于第一个隐藏层整体有：</p>
-<p><span class="math display">\[z^{[1]} = (W^{[1]})^{T} a^{[0]} + b^{[1]} \\\\
-a^{[1]} = \sigma(z^{[1]}) \\\\
-where\ (W^{[1]})^{T} = \begin{bmatrix}
-(W_{1}^{[1]})^{T} \\\\ 
-(W_{2}^{[1]})^{T} \\\\ 
-(W_{3}^{[1]})^{T} \\\\
-(W_{4}^{[1]})^{T}
-\end{bmatrix} \in \mathbb{R}^{4\times 3}, b^{[1]} = \begin{bmatrix}
-b_{1}^{[1]} \\\\ 
-b_{2}^{[1]} \\\\ 
-b_{3}^{[1]} \\\\
-b_{4}^{[1]}
-\end{bmatrix} \in \mathbb{R}^{4\times 1}\]</span></p>
+<p>$$z^{[1]} = (W^{[1]})^{T} a^{[0]} + b^{[1]} \\<br>a^{[1]} = \sigma(z^{[1]}) \\<br>where\ (W^{[1]})^{T} = \begin{bmatrix}<br>(W_{1}^{[1]})^{T} \\<br>(W_{2}^{[1]})^{T} \\<br>(W_{3}^{[1]})^{T} \\<br>(W_{4}^{[1]})^{T}<br>\end{bmatrix} \in \mathbb{R}^{4\times 3}, b^{[1]} = \begin{bmatrix}<br>b_{1}^{[1]} \\<br>b_{2}^{[1]} \\<br>b_{3}^{[1]} \\<br>b_{4}^{[1]}<br>\end{bmatrix} \in \mathbb{R}^{4\times 1}$$</p>
 <p>同理对于输出层有</p>
-<p><span class="math display">\[z^{[2]} = (W^{[2]})^{T} a^{[1]} + b^{[2]} \\\\
-\hat{y} = a^{[2]} = \sigma(z^{[2]}) \\\\
-where\ (W^{[2]})^{T} \in \mathbb{R}^{1\times 4}, b^{[2]}\in \mathbb{R}^{1\times 1}\]</span></p>
-<h5 id="反向传播">反向传播</h5>
-<p>所谓的反向传播（Back Propagation）即是当我们需要计算最终值相对于某个特征变量的导数时，我们需要利用计算图中上一步的结点定义。</p>
+<p>$$z^{[2]} = (W^{[2]})^{T} a^{[1]} + b^{[2]} \\<br>\hat{y} = a^{[2]} = \sigma(z^{[2]}) \\<br>where\ (W^{[2]})^{T} \in \mathbb{R}^{1\times 4}, b^{[2]}\in \mathbb{R}^{1\times 1}$$</p>
+<h5 id="反向传播"><a href="#反向传播" class="headerlink" title="反向传播"></a>反向传播</h5><p>所谓的反向传播（Back Propagation）即是当我们需要计算最终值相对于某个特征变量的导数时，我们需要利用计算图中上一步的结点定义。</p>
 <p>如图</p>
-<p><img src="/images/posts/deeplearning/dp03.png"></p>
-<p>其中 <span class="math inline">\(L(a, y)\)</span> 为损失函数，损失函数计算了预测值 <span class="math inline">\(a\)</span> 与真实值 <span class="math inline">\(y\)</span> 的差距。</p>
+<p><img src="/images/posts/deeplearning/dp03.png" alt=""></p>
+<p>其中 $L(a, y)$ 为损失函数，损失函数计算了预测值 $a$ 与真实值 $y$ 的差距。这里假设 $L(a, y)$ 损失函数为</p>
+<p>$$L(a, y) = -(y log a) - (1-y)log(1-a)$$</p>
 <p>反向传播过程如下：</p>
-<p>首先反向求出 <span class="math inline">\(L\)</span> 对于 <span class="math inline">\(a\)</span> 的导数：</p>
-<p><span class="math display">\[d(a) = \frac{d L(a, y)}{da} = - \frac{y}{a} + \frac{1-y}{1-a}\]</span></p>
-<p>然后继续反向求出 <span class="math inline">\(L\)</span> 对 <span class="math inline">\(z\)</span> 的导数，根据链式求导法则有</p>
-<p><span class="math display">\[dz = \frac{dL}{dz} = \frac{dL}{da}\frac{da}{dz} = a-y\]</span></p>
+<p>首先反向求出 $L$ 对于 $a$ 的导数：</p>
+<p>$$d(a) = \frac{d L(a, y)}{da} = - \frac{y}{a} + \frac{1-y}{1-a}$$</p>
+<p>然后继续反向求出 $L$ 对 $z$ 的导数，根据链式求导法则有</p>
+<p>$$dz = \frac{dL}{dz} = \frac{dL}{da}\frac{da}{dz} = a-y$$</p>
 <p>依次类推求出最终损失函数相对于<strong>原始参数</strong>的导数之后，使用梯度下降方式优化更新参数</p>
-<p><span class="math display">\[w_{1} := w_{1} - \alpha dw_{1} \\\\
-w_{2} := w_{2} - \alpha dw_{2} \\\\
-b := b - \alpha db\]</span></p>
-<p>其中 <span class="math inline">\(\alpha\)</span> 为优化器的学习速率</p>
-<h4 id="神经网络学习建议">神经网络学习建议</h4>
-<p>建议自己动手实现一个简易的神经网络框架 (可以基于 python 的 numpy 库) 实现前向传播和反向传播过程，这样有助于对神经网络的理解。</p>
-<h2 id="热门的深度学习框架及选择建议">热门的深度学习框架及选择建议</h2>
-<p>深度学习框架主要有两种类型：静态图和动态图，静态图的代表框架是 Google 开源的 TensorFlow (简称 TF) , 动态图的代表框架是 Facebook 开源的 PyTorch (简称 PT)，上述两种框架也是如今最热门的两种框架生态。</p>
+<p>$$w_{1} := w_{1} - \alpha dw_{1} \\<br>w_{2} := w_{2} - \alpha dw_{2} \\<br>b := b - \alpha db$$</p>
+<p>其中 $\alpha$ 为优化器的学习速率</p>
+<h4 id="神经网络学习建议"><a href="#神经网络学习建议" class="headerlink" title="神经网络学习建议"></a>神经网络学习建议</h4><p>建议自己动手实现一个简易的神经网络框架 (可以基于 python 的 numpy 库) 实现前向传播和反向传播过程，这样有助于对神经网络的理解。</p>
+<h2 id="热门的深度学习框架及选择建议"><a href="#热门的深度学习框架及选择建议" class="headerlink" title="热门的深度学习框架及选择建议"></a>热门的深度学习框架及选择建议</h2><p>深度学习框架主要有两种类型：静态图和动态图，静态图的代表框架是 Google 开源的 TensorFlow (简称 TF) , 动态图的代表框架是 Facebook 开源的 PyTorch (简称 PT)，上述两种框架也是如今最热门的两种框架生态。</p>
 <p>以 TensorFlow 为代表的框架生态主要有：</p>
 <ul>
 <li>TensorFlow</li>
@@ -509,82 +479,73 @@ b := b - \alpha db\]</span></p>
 <li>fast.ai：基于 PT 的高级模块框架</li>
 <li>cafee：常用于计算机视觉领域，已集成到新版 PyTorch 中</li>
 </ul>
-<h3 id="静态图和动态图的区别">静态图和动态图的区别</h3>
-<h4 id="静态图">静态图</h4>
-<p>静态图把模型和数据分离开来，必须先用占位结点 (placeholder) 构建好计算图，然后才能将数据“喂入” (feed)，在数据没有流入前是很难对网络进行调试的，这也是静态图的缺点。</p>
-<h4 id="动态图">动态图</h4>
-<p>可以随时捕获网络当前的状态，便于调试</p>
-<h3 id="两种框架的对比">两种框架的对比</h3>
-<table>
+<h3 id="静态图和动态图的区别"><a href="#静态图和动态图的区别" class="headerlink" title="静态图和动态图的区别"></a>静态图和动态图的区别</h3><h4 id="静态图"><a href="#静态图" class="headerlink" title="静态图"></a>静态图</h4><p>静态图把模型和数据分离开来，必须先用占位结点 (placeholder) 构建好计算图，然后才能将数据”喂入” (feed)，在数据没有流入前是很难对网络进行调试的，这也是静态图的缺点。</p>
+<h4 id="动态图"><a href="#动态图" class="headerlink" title="动态图"></a>动态图</h4><p>可以随时捕获网络当前的状态，便于调试</p>
+<h3 id="两种框架的对比"><a href="#两种框架的对比" class="headerlink" title="两种框架的对比"></a>两种框架的对比</h3><table>
 <thead>
-<tr class="header">
+<tr>
 <th>—</th>
 <th>TensorFlow</th>
 <th>PyTorch</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>计算图类型</td>
 <td>静态图</td>
 <td>动态图</td>
 </tr>
-<tr class="even">
+<tr>
 <td>学习成本</td>
 <td>不易入门</td>
 <td>易入门</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>执行效率</td>
 <td>适合分布式</td>
 <td>单机效率强大，缺点是CPU，GPU切换复杂</td>
 </tr>
-<tr class="even">
+<tr>
 <td>调试</td>
 <td>不易调试</td>
 <td>易调试</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>部署</td>
 <td>易部署，友好支持多终端，支持分布式</td>
 <td>还在完善中</td>
 </tr>
-<tr class="even">
+<tr>
 <td>生态</td>
 <td>背靠 Google AI / Brain，生态强大</td>
 <td>生态还在完善中</td>
 </tr>
 </tbody>
 </table>
-<h3 id="选择建议">选择建议</h3>
-<p>个人一开始学习的是 TensorFlow 但是觉得有点生硬不太好掌握，后来转了 PyTorch，很快就入门，自己慢慢能用 PyTorch 做些实验，通过这些实验也慢慢对一些常用模型有了更深的理解。</p>
+<h3 id="选择建议"><a href="#选择建议" class="headerlink" title="选择建议"></a>选择建议</h3><p>个人一开始学习的是 TensorFlow 但是觉得有点生硬不太好掌握，后来转了 PyTorch，很快就入门，自己慢慢能用 PyTorch 做些实验，通过这些实验也慢慢对一些常用模型有了更深的理解。</p>
 <p>后来的实习经历主要使用 TensorFlow，所以又把 TensorFlow 捡了起来，由于有了经验，再次学习 TensorFlow 时，发现它其实并没有想象中的那么难，后来发现 TensorFlow 更倾向于<code>数学思维</code>, PyTorch 更倾向于 <code>工程思维</code>。</p>
 <p>由于 PyTorch 的单机高效性，学习成本也比较低，近年来越来越多的论文用 PyTorch 实现；由于 TensorFlow 支持分布式，易部署所以业界用得比较多。</p>
 <p>下文代码说明均使用 TensorFlow</p>
-<h2 id="常用深度学习模块原理及应用">常用深度学习模块原理及应用</h2>
-<h3 id="cnn">CNN</h3>
-<p>CNN 主要由两个部分组成：卷积 (convolution) 和池化 (pooling) 两个部分。卷积主要用来提取特征；池化可以达到降维和降低模型复杂性抑制过拟合的目的，池化一般分为最大池化和平均池化，一般采用最大池化，因为<strong>最大池化具有平移不变性</strong>，这在一些任务中很重要。</p>
-<h4 id="卷积">卷积</h4>
-<p><img src="/images/posts/deeplearning/cnn.gif"></p>
-<p>假设有一个 <span class="math inline">\(5\times 5\)</span> 的图像，使用一个 <span class="math inline">\(3\times 3\)</span> 的卷积核 (filter) 进行卷积，想得到一个 <span class="math inline">\(3\times 3\)</span> 的 特征表 (feature map)，如下所示：</p>
-<p><img src="/images/posts/deeplearning/cnn01.png"></p>
-<p><img src="/images/posts/deeplearning/cnn02.png"></p>
+<h2 id="常用深度学习模块原理及应用"><a href="#常用深度学习模块原理及应用" class="headerlink" title="常用深度学习模块原理及应用"></a>常用深度学习模块原理及应用</h2><h3 id="CNN"><a href="#CNN" class="headerlink" title="CNN"></a>CNN</h3><p>CNN 主要由两个部分组成：卷积 (convolution) 和池化 (pooling) 两个部分。卷积主要用来提取特征；池化可以达到降维和降低模型复杂性抑制过拟合的目的，池化一般分为最大池化和平均池化，一般采用最大池化，因为<strong>最大池化具有平移不变性</strong>，这在一些任务中很重要。</p>
+<h4 id="卷积"><a href="#卷积" class="headerlink" title="卷积"></a>卷积</h4><p><img src="/images/posts/deeplearning/cnn.gif" alt=""></p>
+<p>假设有一个 $5\times 5$ 的图像，使用一个 $3\times 3$ 的卷积核 (filter) 进行卷积，想得到一个 $3\times 3$ 的 特征表 (feature map)，如下所示：</p>
+<p><img src="/images/posts/deeplearning/cnn01.png" alt=""></p>
+<p><img src="/images/posts/deeplearning/cnn02.png" alt=""></p>
 <p>卷积计算有三个重要的量：</p>
 <ul>
 <li>filter: 设置卷积核大小</li>
 <li>padding: 设置输入的填充区域</li>
 <li>stride: 设置卷积核窗口的滑动步数</li>
 </ul>
-<p>一个 <span class="math inline">\(n\times n\)</span> 的图像，经过大小为 <span class="math inline">\(f\times f\)</span> 的卷积核，填充 (padding) 大小为 <span class="math inline">\(p\)</span>，步数 (stride) 为 <span class="math inline">\(s\)</span>，则得到的 feature map 为</p>
-<p><span class="math display">\[(\left \lfloor \frac{n+2p-f}{s} \right \rfloor + 1, \left \lfloor \frac{n+2p-f}{s} \right \rfloor + 1)\]</span></p>
+<p>一个 $n\times n$ 的图像，经过大小为 $f\times f$ 的卷积核，填充 (padding) 大小为 $p$，步数 (stride) 为 $s$，则得到的 feature map 为</p>
+<p>$$(\left \lfloor \frac{n+2p-f}{s} \right \rfloor + 1, \left \lfloor \frac{n+2p-f}{s} \right \rfloor + 1)$$</p>
 <p>一般我们想得到<strong>输入等于输出</strong>时需要设置 padding 值</p>
-<p><img src="/images/posts/deeplearning/cnn03.png"></p>
+<p><img src="/images/posts/deeplearning/cnn03.png" alt=""></p>
 <p>一般我们想使得<strong>输出的尺寸比输入更低</strong>时，一般有两种方式：池化、调大 stride。通过调大 stride 的方式是改变卷积核的移动步长从而跳过一些像素</p>
-<p><img src="/images/posts/deeplearning/cnn04.png"></p>
+<p><img src="/images/posts/deeplearning/cnn04.png" alt=""></p>
 <p>为了能捕获到不同的特征边缘信息，一般会使用多卷积核</p>
-<p><img src="/images/posts/deeplearning/cnn05.png"></p>
-<h4 id="池化">池化</h4>
-<p>一般对卷积后得到的 feature map 进行降维，池化的作用：</p>
+<p><img src="/images/posts/deeplearning/cnn05.png" alt=""></p>
+<h4 id="池化"><a href="#池化" class="headerlink" title="池化"></a>池化</h4><p>一般对卷积后得到的 feature map 进行降维，池化的作用：</p>
 <ul>
 <li>降低模型复杂性，抑制过拟合</li>
 <li>平移不变性(一般对于最大池化来说)</li>
@@ -592,62 +553,44 @@ b := b - \alpha db\]</span></p>
 <blockquote>
 <p><strong>平移不变性</strong> 如果人们选择图像中的连续范围作为池化区域，并且只是池化相同(重复)的隐藏单元产生的特征，那么，这些池化单元就具有平移不变性 (translation invariant)。这就意味着即使图像经历了一个小的平移之后，依然会产生相同的 (池化的) 特征。在很多任务中 (例如物体检测、声音识别)，我们都更希望得到具有平移不变性的特征，因为即使图像经过了平移，样例(图像)的标记仍然保持不变。</p>
 </blockquote>
-<p><img src="/images/posts/deeplearning/cnn06.gif"></p>
-<h4 id="其他概念">其他概念</h4>
-<h5 id="感受野">感受野</h5>
-<p>feature map 中的输出对应回得到这个输出的输入区域，feature map 中的输出处于感受野的中心位置</p>
-<h5 id="空洞膨胀卷积">空洞(膨胀)卷积</h5>
-<p>卷积核中只有一部分起作用</p>
-<p><img src="/images/posts/deeplearning/cnn07.gif"></p>
-<h3 id="tensorflow-的封装">TensorFlow 的封装</h3>
-<p>TensorFlow 支持一维卷积 <code>conv1d</code> 、二维卷积 <code>conv2d</code> 和三维卷积 <code>conv3d</code> 操作，用得比较多得是一维和二维，具体的函数为：</p>
+<p><img src="/images/posts/deeplearning/cnn06.gif" alt=""></p>
+<h4 id="其他概念"><a href="#其他概念" class="headerlink" title="其他概念"></a>其他概念</h4><h5 id="感受野"><a href="#感受野" class="headerlink" title="感受野"></a>感受野</h5><p>feature map 中的输出对应回得到这个输出的输入区域，feature map 中的输出处于感受野的中心位置</p>
+<h5 id="空洞-膨胀-卷积"><a href="#空洞-膨胀-卷积" class="headerlink" title="空洞(膨胀)卷积"></a>空洞(膨胀)卷积</h5><p>卷积核中只有一部分起作用</p>
+<p><img src="/images/posts/deeplearning/cnn07.gif" alt=""></p>
+<h3 id="TensorFlow-的封装"><a href="#TensorFlow-的封装" class="headerlink" title="TensorFlow 的封装"></a>TensorFlow 的封装</h3><p>TensorFlow 支持一维卷积 <code>conv1d</code> 、二维卷积 <code>conv2d</code> 和三维卷积 <code>conv3d</code> 操作，用得比较多得是一维和二维，具体的函数为：</p>
 <ul>
-<li>conv1d
+<li><p>conv1d</p>
 <ul>
 <li><a href="https://tensorflow.google.cn/api_docs/python/tf/nn/conv1d" target="_blank" rel="noopener">tf.nn.conv1d</a></li>
 <li><a href="https://tensorflow.google.cn/api_docs/python/tf/layers/conv1d" target="_blank" rel="noopener">tf.layers.conv1d</a> : 相比 <code>tf.nn.conv1d</code> 提供了更多的操作接口</li>
-</ul></li>
-<li>conv2d
+</ul>
+</li>
+<li><p>conv2d</p>
 <ul>
 <li><a href="https://tensorflow.google.cn/api_docs/python/tf/nn/conv2d" target="_blank" rel="noopener">tf.nn.conv2d</a></li>
 <li><a href="https://tensorflow.google.cn/api_docs/python/tf/layers/conv2d" target="_blank" rel="noopener">tf.layers.conv2d</a></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <p>一维卷积一般用于处理序列信息，常用于NLP任务，二维卷积一般用来处理三通道RGB的图片。</p>
 <p>一般用一维卷积处理的任务可以通过扩充维度来使用二维卷积来处理，至于如何选择还得看具体的任务，NLP任务来说个人更偏向于使用 <code>conv1d</code></p>
 <p>无论是一维还是二维，卷积神经网络都具有相同的特点和相同的处理方法，区别在于滤波器的对数据的滑动方式不同</p>
-<p><img src="/images/posts/deeplearning/cnn08.png"></p>
-<h3 id="rnn及其变体">RNN及其变体</h3>
-<h4 id="最简单的神经网络模型">最简单的神经网络模型</h4>
-<p>没有上下文记忆，只保存当前状态</p>
-<p><img src="/images/posts/deeplearning/rnn01.png"></p>
-<p><span class="math display">\[h = \sigma(Wx)\\
-y = Vh\]</span></p>
-<h4 id="rnn">RNN</h4>
-<h5 id="原理">原理</h5>
-<p>含有上下文状态的神经网络模型</p>
-<p><img src="/images/posts/deeplearning/rnn02.png"></p>
-<p><span class="math display">\[h_{t} = \sigma(Wx_{t} + Uh_{t-1})\\
-y_{t} = Vh_{t}\]</span></p>
+<p><img src="/images/posts/deeplearning/cnn08.png" alt=""></p>
+<h3 id="RNN及其变体"><a href="#RNN及其变体" class="headerlink" title="RNN及其变体"></a>RNN及其变体</h3><h4 id="最简单的神经网络模型"><a href="#最简单的神经网络模型" class="headerlink" title="最简单的神经网络模型"></a>最简单的神经网络模型</h4><p>没有上下文记忆，只保存当前状态</p>
+<p><img src="/images/posts/deeplearning/rnn01.png" alt=""></p>
+<p>$$h = \sigma(Wx)\<br>y = Vh$$</p>
+<h4 id="RNN"><a href="#RNN" class="headerlink" title="RNN"></a>RNN</h4><h5 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h5><p>含有上下文状态的神经网络模型</p>
+<p><img src="/images/posts/deeplearning/rnn02.png" alt=""></p>
+<p>$$h_{t} = \sigma(Wx_{t} + Uh_{t-1})\<br>y_{t} = Vh_{t}$$</p>
 <p>其中：</p>
 <ul>
-<li><span class="math inline">\(h_{t}\)</span> 是 t 时刻的隐藏状态值</li>
-<li><span class="math inline">\(h_{t-1}\)</span> 是 t-1 时刻的隐藏状态值</li>
+<li>$h_{t}$ 是 t 时刻的隐藏状态值</li>
+<li>$h_{t-1}$ 是 t-1 时刻的隐藏状态值</li>
 </ul>
-<h5 id="缺点">缺点</h5>
-<p>尽管 RNN 成功记忆了部分上下文信息，但存在一个很大的缺陷，那就是它很难记住长期的记忆，因为随着网络的加深网络会出现梯度弥散的问题，也就是<strong>很长的时刻前的输入，对现在的网络影响非常小，反向传播时那些梯度，也很难影响很早以前的输入</strong></p>
-<h4 id="lstm-long-short-term-memory-长短时记忆">LSTM (Long Short-Term Memory) 长短时记忆</h4>
-<p>为了克服原始 RNN 的缺点，一些带门控单元的 RNN 被提出来，LSTM 是其中一个。</p>
-<h5 id="lstm-的工作原理">LSTM 的工作原理</h5>
-<p><img src="/images/posts/deeplearning/rnn03.png"></p>
-<p><span class="math display">\[\begin{align*}
-f_{t} &amp; = \sigma(W_{f} [h_{t-1}, x_{t}] + b_{f}) \\
-i_{t} &amp; = \sigma(W_{i} [h_{t-1}, x_{t}] + b_{i}) \\
-o_{t} &amp; = \sigma(W_{o} [h_{t-1}, x_{t}] + b_{o}) \\
-\widetilde{c_{t}} &amp; = tanh(W_{c} [h_{t-1}, x_{t}] + b_{c}) \\
-c_{t} &amp; = f_{t}\odot c_{t-1} + i_{t} \odot \widetilde{c_{t}} \\
-h_{t} &amp; = o_{t} \odot tanh(c_{t})
-\end{align*}\]</span></p>
+<h5 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h5><p>尽管 RNN 成功记忆了部分上下文信息，但存在一个很大的缺陷，那就是它很难记住长期的记忆，因为随着网络的加深网络会出现梯度弥散的问题，也就是<strong>很长的时刻前的输入，对现在的网络影响非常小，反向传播时那些梯度，也很难影响很早以前的输入</strong></p>
+<h4 id="LSTM-Long-Short-Term-Memory-长短时记忆"><a href="#LSTM-Long-Short-Term-Memory-长短时记忆" class="headerlink" title="LSTM (Long Short-Term Memory) 长短时记忆"></a>LSTM (Long Short-Term Memory) 长短时记忆</h4><p>为了克服原始 RNN 的缺点，一些带门控单元的 RNN 被提出来，LSTM 是其中一个。</p>
+<h5 id="LSTM-的工作原理"><a href="#LSTM-的工作原理" class="headerlink" title="LSTM 的工作原理"></a>LSTM 的工作原理</h5><p><img src="/images/posts/deeplearning/rnn03.png" alt=""></p>
+<p>$$\begin{align<em>}<br>f_{t} &amp; = \sigma(W_{f} [h_{t-1}, x_{t}] + b_{f}) \<br>i_{t} &amp; = \sigma(W_{i} [h_{t-1}, x_{t}] + b_{i}) \<br>o_{t} &amp; = \sigma(W_{o} [h_{t-1}, x_{t}] + b_{o}) \<br>\widetilde{c_{t}} &amp; = tanh(W_{c} [h_{t-1}, x_{t}] + b_{c}) \<br>c_{t} &amp; = f_{t}\odot c_{t-1} + i_{t} \odot \widetilde{c_{t}} \<br>h_{t} &amp; = o_{t} \odot tanh(c_{t})<br>\end{align</em>}$$</p>
 <p>LSTM 有三个门:</p>
 <ul>
 <li>input gate: 输入门</li>
@@ -662,138 +605,118 @@ h_{t} &amp; = o_{t} \odot tanh(c_{t})
 <p>LSTM 的迭代过程：</p>
 <ul>
 <li>选择性遗忘部分长期记忆：将记忆中不需要的记忆移除</li>
-<li>将当前时刻的一些信息加入到长期记忆中
-<ul>
+<li>将当前时刻的一些信息加入到长期记忆中<ul>
 <li>计算候选长期记忆</li>
 <li>选择函数</li>
-</ul></li>
-<li>从长期记忆中提取工作记忆
-<ul>
+</ul>
+</li>
+<li>从长期记忆中提取工作记忆<ul>
 <li>计算候选的工作记忆</li>
 <li>选择函数</li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <p><strong>1. 选择性遗忘部分长期记忆</strong></p>
 <p>这部分主要由遗忘门来控制，通过遗忘门来决定哪些长期记忆能够被留下，在 t 时刻有：</p>
-<p><span class="math display">\[remember_{t} = \sigma(W_{r} x_{t} + U_{r}wm_{t-1})\]</span></p>
-<p>这里的 <span class="math inline">\(remember_{t}\)</span> 是一个布尔序列，长度和上一时刻的长期记忆 <span class="math inline">\(ltm_{t-1}\)</span> 相同，<span class="math inline">\(remember_{t}\)</span> 中值为 <code>1</code> 代表保留 <span class="math inline">\(ltm_{t-1}\)</span> 对应位置的值，<code>0</code> 代表遗忘。</p>
+<p>$$remember_{t} = \sigma(W_{r} x_{t} + U_{r}wm_{t-1})$$</p>
+<p>这里的 $remember_{t}$ 是一个布尔序列，长度和上一时刻的长期记忆 $ltm_{t-1}$ 相同，$remember_{t}$ 中值为 <code>1</code> 代表保留 $ltm_{t-1}$ 对应位置的值，<code>0</code> 代表遗忘。 </p>
 <p>上述的公式最终表示成：</p>
-<p><span class="math display">\[f_{t} = \sigma(W_{f} [h_{t-1}, x_{t}] + b_{f})\]</span></p>
-<p><img src="/images/posts/deeplearning/rnn04.png"></p>
+<p>$$f_{t} = \sigma(W_{f} [h_{t-1}, x_{t}] + b_{f})$$</p>
+<p><img src="/images/posts/deeplearning/rnn04.png" alt=""></p>
 <p>则经过遗忘门后<strong>保留下来的记忆</strong>为：</p>
-<p><span class="math display">\[old\_ltm_{t} = f_{t}\odot ltm_{t-1}\]</span></p>
+<p>$$old_ltm_{t} = f_{t}\odot ltm_{t-1}$$</p>
 <p><strong>2. 将当前时刻的一些信息加入到长期记忆中</strong></p>
 <p>除了某些老的记忆需要保留，当前时刻的部分记忆也需要保留。</p>
 <p>首先需要从上一时刻工作记忆及当前输入中计算全体候选记忆，在 t 时刻有：</p>
-<p><span class="math display">\[ltm^{&#39;}_{t} = tanh(W_{l}x_{t} + U_{l}wm_{t-1})\]</span></p>
-<p>这里的 <span class="math inline">\(ltm^{&#39;}\)</span> 代表可能加入长期记忆的记忆序列，长度和 <span class="math inline">\(ltm_{t-1}\)</span> 相同。</p>
+<p>$$ltm^{‘}<em>{t} = tanh(W</em>{l}x_{t} + U_{l}wm_{t-1})$$</p>
+<p>这里的 $ltm^{‘}$ 代表可能加入长期记忆的记忆序列，长度和 $ltm_{t-1}$ 相同。</p>
 <p>上述公式还可表示成：</p>
-<p><span class="math display">\[\widetilde{c_{t}} = tanh(W_{c} [h_{t-1}, x_{t}] + b_{c})\]</span></p>
+<p>$$\widetilde{c_{t}} = tanh(W_{c} [h_{t-1}, x_{t}] + b_{c})$$</p>
 <p>有了候选记忆后，需要一个选择函数负责实际选择哪些记忆可以加入长期记忆，这个需要输入门来控制，在 t 时刻有：</p>
-<p><span class="math display">\[save_{t} = \sigma(W_{s} x_{t} + U_{s}wm_{t-1})\]</span></p>
+<p>$$save_{t} = \sigma(W_{s} x_{t} + U_{s}wm_{t-1})$$</p>
 <p>上述公式还可表示成：</p>
-<p><span class="math display">\[i_{t} = \sigma(W_{i} [h_{t-1}, x_{t}] + b_{i})\]</span></p>
+<p>$$i_{t} = \sigma(W_{i} [h_{t-1}, x_{t}] + b_{i})$$</p>
 <p>有了候选的长期记忆和选择函数后，我们就可以确定哪些记忆是要添加到长期记忆的。在 t 时刻：</p>
-<p><span class="math display">\[new\_ltm_{t} = save_{t} \odot lsm^{&#39;}\]</span></p>
-<p><img src="/images/posts/deeplearning/rnn04.png"></p>
-<p>上面已经得到了老的长期记忆中在当前时刻要保留的部分 <span class="math inline">\(old\_ltm_{t}\)</span> ，以及当前时刻的候选记忆中要保留的部分 <span class="math inline">\(new\_ltm_{t}\)</span> ，因此 t 时刻最终确定的长期记忆为</p>
-<p><span class="math display">\[ltm_{t} = old\_ltm_{t} + new\_ltm_{t}\]</span></p>
+<p>$$new_ltm_{t} = save_{t} \odot lsm^{‘}$$</p>
+<p><img src="/images/posts/deeplearning/rnn04.png" alt=""></p>
+<p>上面已经得到了老的长期记忆中在当前时刻要保留的部分 $old_ltm_{t}$ ，以及当前时刻的候选记忆中要保留的部分 $new_ltm_{t}$ ，因此 t 时刻最终确定的长期记忆为</p>
+<p>$$ltm_{t} = old_ltm_{t} + new_ltm_{t}$$</p>
 <p>上述公式还可表示成：</p>
-<p><span class="math display">\[c_{t} = f_{t}\odot c_{t-1} + i_{t} \odot \widetilde{c_{t}}\]</span></p>
-<p><img src="/images/posts/deeplearning/rnn06.png"></p>
+<p>$$c_{t} = f_{t}\odot c_{t-1} + i_{t} \odot \widetilde{c_{t}}$$</p>
+<p><img src="/images/posts/deeplearning/rnn06.png" alt=""></p>
 <p><strong>3. 从长期记忆中提取工作记忆</strong></p>
 <p>长期记忆需要应用在当前的工作记忆中才有作用。</p>
-<p>从上一个工作记忆和当前输入中选择，通过输出门来控制，在 <span class="math inline">\(t\)</span> 时刻有</p>
-<p><span class="math display">\[focus_{t} = \sigma(W_{f}x_{t} + U_{f}wm_{t-1})\]</span></p>
+<p>从上一个工作记忆和当前输入中选择，通过输出门来控制，在 $t$ 时刻有</p>
+<p>$$focus_{t} = \sigma(W_{f}x_{t} + U_{f}wm_{t-1})$$</p>
 <p>上述公式可以表示成：</p>
-<p><span class="math display">\[o_{t} = \sigma(W_{o} [h_{t-1}, x_{t}] + b_{o})\]</span></p>
+<p>$$o_{t} = \sigma(W_{o} [h_{t-1}, x_{t}] + b_{o})$$</p>
 <p>将长期记忆转换为工作记忆，在 t 时刻有</p>
-<p><span class="math display">\[wm_{t}^{&#39;} = tanh(ltm_{t-1})\]</span></p>
+<p>$$wm_{t}^{‘} = tanh(ltm_{t-1})$$</p>
 <p>上述公式还可表示成：</p>
-<p><span class="math display">\[\widetilde{h}_{t} = tanh(c_{t})\]</span></p>
+<p>$$\widetilde{h}<em>{t} = tanh(c</em>{t})$$</p>
 <p>有了选择函数和候选记忆则 t 时刻最终的工作记忆有</p>
-<p><span class="math display">\[wm_{t} = focus_{t} \odot wm_{t}^{&#39;}\]</span></p>
+<p>$$wm_{t} = focus_{t} \odot wm_{t}^{‘}$$</p>
 <p>上述公式还可表示成</p>
-<p><span class="math display">\[\begin{align*}
-h_{t} &amp; = o_{t} \odot \widetilde{h}_{t} \\ 
-&amp; = o_{t} \odot tanh(c_{t})\end{align*}\]</span></p>
-<p><img src="/images/posts/deeplearning/rnn07.png"></p>
+<p>$$\begin{align<em>}<br>h_{t} &amp; = o_{t} \odot \widetilde{h}<em>{t} \<br>&amp; = o</em>{t} \odot tanh(c_{t})\end{align</em>}$$</p>
+<p><img src="/images/posts/deeplearning/rnn07.png" alt=""></p>
 <p>因此，LSTM 最终的结构为</p>
-<p><img src="/images/posts/deeplearning/rnn03.png"></p>
-<h5 id="lstm-的变种">LSTM 的变种</h5>
-<p>上述讲的 LSTM 是经典的结构，LSTM 有不少变种，用得较多的由两种：</p>
+<p><img src="/images/posts/deeplearning/rnn03.png" alt=""></p>
+<h5 id="LSTM-的变种"><a href="#LSTM-的变种" class="headerlink" title="LSTM 的变种"></a>LSTM 的变种</h5><p>上述讲的 LSTM 是经典的结构，LSTM 有不少变种，用得较多的由两种：</p>
 <ul>
 <li>Peephole LSTM</li>
 <li>Gated Recurrent Unit (GRU)</li>
 </ul>
 <p><strong>1. Peephole LSTM</strong></p>
-<p>普通的 LSTM 的所有的门的决策全部都是由输入 <span class="math inline">\(x\)</span> 和 工作记忆 <span class="math inline">\(h_{t-1}\)</span> 决定，Peephole LSTM 改进了门的实现，让长期记忆 <span class="math inline">\(ltm_{t-1}\)</span> 也参与门的决策。</p>
-<p><img src="/images/posts/deeplearning/rnn08.png"></p>
-<p><strong>2. Gated Recurrent Unit (GRU)</strong> 可以把 GRU 当作 LSTM 的高效压缩版，GRU 有两个门 reset gate 和 update gate，GRU使用了update gate替代了forget gate和input gate,而且将long-term memory 和 working memory 合并了，并做了一些细微的调整。</p>
-<p><img src="/images/posts/deeplearning/rnn09.png"></p>
-<h5 id="双向-rnn">双向 RNN</h5>
-<p>双向的 RNN 同时考虑“过去”和“未来”的信息，可以更好的捕捉整体序列的语义信息、结构关系</p>
-<p><img src="/images/posts/deeplearning/rnn10.png"></p>
-<h3 id="attention机制的原理以及实现">Attention机制的原理以及实现</h3>
-<p>Attention 目标是从众多信息中选择出对当前任务目标更关键的信息，一般通过加权的方式进行。</p>
-<img src="/images/posts/deeplearning/attn02.png">
-<p align="center">
-Attention 在机器阅读理解任务中
-</p>
+<p>普通的 LSTM 的所有的门的决策全部都是由输入 $x$ 和 工作记忆 $h_{t-1}$ 决定，Peephole LSTM 改进了门的实现，让长期记忆 $ltm_{t-1}$ 也参与门的决策。</p>
+<p><img src="/images/posts/deeplearning/rnn08.png" alt=""></p>
+<p><strong>2. Gated Recurrent Unit (GRU)</strong><br>可以把 GRU 当作 LSTM 的高效压缩版，GRU 有两个门 reset gate 和  update gate，GRU使用了update gate替代了forget gate和input gate,而且将long-term memory 和 working memory 合并了，并做了一些细微的调整。</p>
+<p><img src="/images/posts/deeplearning/rnn09.png" alt=""></p>
+<h5 id="双向-RNN"><a href="#双向-RNN" class="headerlink" title="双向 RNN"></a>双向 RNN</h5><p>双向的 RNN 同时考虑“过去”和“未来”的信息，可以更好的捕捉整体序列的语义信息、结构关系</p>
+<p><img src="/images/posts/deeplearning/rnn10.png" alt=""></p>
+<h3 id="Attention机制的原理以及实现"><a href="#Attention机制的原理以及实现" class="headerlink" title="Attention机制的原理以及实现"></a>Attention机制的原理以及实现</h3><p>Attention 目标是从众多信息中选择出对当前任务目标更关键的信息，一般通过加权的方式进行。</p>
+<p><img src="/images/posts/deeplearning/attn02.png" alt=""></p>
+<p align="center">Attention 在机器阅读理解任务中</p>
+
 <p>计算 Attention 一般需要三个量 Q (query), K (key), V (value)</p>
-<p>K 和 V 一般是对应的，在 NLP 中一般 K = V，对于 self-attention 有 Q = K = V</p>
+<p>K 和 V 一般是对应的，在 NLP 中一般 K = V，对于 self-attention 有 Q = K = V  </p>
 <p>Attention 的计算主要分三步:</p>
-<p><span class="math display">\[S = similarity(Q, K) \\
-\alpha = softmax(S) \\
-V^{&#39;} = \alpha \cdot V\]</span></p>
-<p>其中 <span class="math inline">\(similarity(*)\)</span> 计算的是 Q 和 K 的相似度，该函数可由简单的点乘或者 <span class="math inline">\(cosine\)</span> 函数来充当，也可使用多层感知机 (MLP) 来充当</p>
-<h5 id="nlp-领域常见的-attention-模型">NLP 领域常见的 Attention 模型</h5>
-<p><strong>1. multihead-attention</strong> 这是由 Google 17年在 <a href="https://arxiv.org/pdf/1706.03762.pdf" target="_blank" rel="noopener">《Attention is all you need》</a> 这篇论文提出的，区别于一般的 attention，multihead-attention 在计算时融合了不同子空间的信息，它的结构如下</p>
-<p><img src="/images/posts/deeplearning/attn01.png"></p>
-<p><strong>2. BIDAF (Bidirectional Attention Flow)</strong> 16 年在论文《Bidirectional Attention Flow for Machine Comprehension》中提出， 是机器阅读理解中常用的 Attention 计算方式</p>
-<p><img src="/images/posts/deeplearning/attn03.png"></p>
-<h5 id="使用-tensorflow-实现-self-attention">使用 TensorFlow 实现 Self-Attention</h5>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">attention</span><span class="params">(value,</span></span></span><br><span class="line"><span class="function"><span class="params">              initializer=tf.truncated_normal_initializer<span class="params">(stddev=<span class="number">0.1</span>)</span>)</span>:</span></span><br><span class="line">    Q = value</span><br><span class="line">    K = value</span><br><span class="line">    V = value</span><br><span class="line"></span><br><span class="line">    shape = V.get_shape().as_list()</span><br><span class="line"></span><br><span class="line">    W = tf.get_variable(<span class="string">'attn_W'</span>, </span><br><span class="line">                        shape=[shape[<span class="number">-1</span>], shape[<span class="number">-1</span>]],</span><br><span class="line">                        initializer=initializer)</span><br><span class="line"></span><br><span class="line">    U = tf.get_variable(<span class="string">'attn_U'</span>,</span><br><span class="line">                        shape=[shape[<span class="number">-1</span>], shape[<span class="number">-1</span>]],</span><br><span class="line">                        initializer=initializer)</span><br><span class="line"></span><br><span class="line">    P = tf.get_variable(<span class="string">'attn_P'</span>,</span><br><span class="line">                        shape=[shape[<span class="number">-1</span>], <span class="number">1</span>], </span><br><span class="line">                        initializer=initializer)</span><br><span class="line"></span><br><span class="line">    Q = tf.reshape(Q, [<span class="number">-1</span>, shape[<span class="number">-1</span>]])</span><br><span class="line">    K = tf.reshape(K, [<span class="number">-1</span>, shape[<span class="number">-1</span>]])</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># calculate similarity</span></span><br><span class="line">    S = tf.multiply(</span><br><span class="line">        tf.matmul(Q, W), </span><br><span class="line">        tf.matmul(K, U))</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># normalize</span></span><br><span class="line">    alpha = tf.nn.softmax(</span><br><span class="line">        tf.reshape(tf.matmul(S, P), [<span class="number">-1</span>, shape[<span class="number">1</span>], <span class="number">1</span>]), axis=<span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># apply attention</span></span><br><span class="line">    V_attn = tf.multiply(alpha, V)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> V_attn, alpha</span><br></pre></td></tr></table></figure>
-<h3 id="transformer">Transformer</h3>
-<p>《Attention is all you need》还提出了基于 multihead-attention 的 transformer 结构，现在来看可以把 transformer 当成 CNN、RNN 同等重要的基本结构了。</p>
+<p>$$S = similarity(Q, K) \<br>\alpha = softmax(S) \<br>V^{‘} = \alpha \cdot V$$</p>
+<p>其中 $similarity(*)$ 计算的是 Q 和 K 的相似度，该函数可由简单的点乘或者 $cosine$ 函数来充当，也可使用多层感知机 (MLP) 来充当</p>
+<h5 id="NLP-领域常见的-Attention-模型"><a href="#NLP-领域常见的-Attention-模型" class="headerlink" title="NLP 领域常见的 Attention 模型"></a>NLP 领域常见的 Attention 模型</h5><p><strong>1. multihead-attention</strong><br>这是由 Google 17年在 <a href="https://arxiv.org/pdf/1706.03762.pdf" target="_blank" rel="noopener">《Attention is all you need》</a> 这篇论文提出的，区别于一般的 attention，multihead-attention 在计算时融合了不同子空间的信息，它的结构如下</p>
+<p><img src="/images/posts/deeplearning/attn01.png" alt=""></p>
+<p><strong>2. BIDAF (Bidirectional Attention Flow)</strong><br>16 年在论文《Bidirectional Attention Flow for Machine Comprehension》中提出， 是机器阅读理解中常用的 Attention 计算方式</p>
+<p><img src="/images/posts/deeplearning/attn03.png" alt=""></p>
+<h5 id="使用-TensorFlow-实现-Self-Attention"><a href="#使用-TensorFlow-实现-Self-Attention" class="headerlink" title="使用 TensorFlow 实现 Self-Attention"></a>使用 TensorFlow 实现 Self-Attention</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">attention</span><span class="params">(value,</span></span></span><br><span class="line"><span class="function"><span class="params">              initializer=tf.truncated_normal_initializer<span class="params">(stddev=<span class="number">0.1</span>)</span>)</span>:</span></span><br><span class="line">    Q = value</span><br><span class="line">    K = value</span><br><span class="line">    V = value</span><br><span class="line"></span><br><span class="line">    shape = V.get_shape().as_list()</span><br><span class="line"></span><br><span class="line">    W = tf.get_variable(<span class="string">'attn_W'</span>, </span><br><span class="line">                        shape=[shape[<span class="number">-1</span>], shape[<span class="number">-1</span>]],</span><br><span class="line">                        initializer=initializer)</span><br><span class="line"></span><br><span class="line">    U = tf.get_variable(<span class="string">'attn_U'</span>,</span><br><span class="line">                        shape=[shape[<span class="number">-1</span>], shape[<span class="number">-1</span>]],</span><br><span class="line">                        initializer=initializer)</span><br><span class="line"></span><br><span class="line">    P = tf.get_variable(<span class="string">'attn_P'</span>,</span><br><span class="line">                        shape=[shape[<span class="number">-1</span>], <span class="number">1</span>], </span><br><span class="line">                        initializer=initializer)</span><br><span class="line"></span><br><span class="line">    Q = tf.reshape(Q, [<span class="number">-1</span>, shape[<span class="number">-1</span>]])</span><br><span class="line">    K = tf.reshape(K, [<span class="number">-1</span>, shape[<span class="number">-1</span>]])</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># calculate similarity</span></span><br><span class="line">    S = tf.multiply(</span><br><span class="line">        tf.matmul(Q, W), </span><br><span class="line">        tf.matmul(K, U))</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># normalize</span></span><br><span class="line">    alpha = tf.nn.softmax(</span><br><span class="line">        tf.reshape(tf.matmul(S, P), [<span class="number">-1</span>, shape[<span class="number">1</span>], <span class="number">1</span>]), axis=<span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># apply attention</span></span><br><span class="line">    V_attn = tf.multiply(alpha, V)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> V_attn, alpha</span><br></pre></td></tr></table></figure>
+<h3 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h3><p>《Attention is all you need》还提出了基于 multihead-attention 的 transformer 结构，现在来看可以把 transformer 当成 CNN、RNN 同等重要的基本结构了。</p>
 <p>近期热门的 GPT, BERT 都是基于 transformer 的，transformer 和 CNN 都可以支持并行计算，特征提取的能力也非常强，不过 transformer 也有缺点，它需要较大的参数量才能 work，所以当计算资源不是太强大时，transformer 往往不是很好的选择</p>
-<p><img src="/images/posts/deeplearning/transformer01.png"></p>
-<h2 id="常用的网络训练技巧">常用的网络训练技巧</h2>
-<h3 id="正则化的意义及使用方式">正则化的意义及使用方式</h3>
-<p>一般来说模型的风险可分为期望风险、经验风险和结构风险，损失函数是三者的基础，而讲到损失函数就不可避免的谈到成本函数、目标函数，所以借正则化这一节来区分这几个概念。</p>
-<h4 id="损失函数">损失函数</h4>
-<p>损失函数一般是指对单个样本做的损失，用来衡量对单个样本的预测和真实值之间的差距，损失函数一般可记为 <span class="math inline">\(L(y, f(x))\)</span> , <span class="math inline">\(f(x)\)</span> 代表预测值</p>
+<p><img src="/images/posts/deeplearning/transformer01.png" alt=""></p>
+<h2 id="常用的网络训练技巧"><a href="#常用的网络训练技巧" class="headerlink" title="常用的网络训练技巧"></a>常用的网络训练技巧</h2><h3 id="正则化的意义及使用方式"><a href="#正则化的意义及使用方式" class="headerlink" title="正则化的意义及使用方式"></a>正则化的意义及使用方式</h3><p>一般来说模型的风险可分为期望风险、经验风险和结构风险，损失函数是三者的基础，而讲到损失函数就不可避免的谈到成本函数、目标函数，所以借正则化这一节来区分这几个概念。</p>
+<h4 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h4><p>损失函数一般是指对单个样本做的损失，用来衡量对单个样本的预测和真实值之间的差距，损失函数一般可记为 $L(y, f(x))$ , $f(x)$ 代表预测值</p>
 <p>常见的损失函数有：</p>
 <ul>
-<li>0-1 损失函数： <span class="math inline">\(L(y, f(x)) = \begin{cases} 1 &amp; \text{ , } y\neq f(x) \\ 0 &amp; \text{ , } y = f(x) \end{cases}\)</span></li>
-<li>平方损失函数: <span class="math inline">\(L(y, f(x)) = (y- f(x))^{2}\)</span></li>
-<li>绝对损失函数: <span class="math inline">\(L(y, f(x)) = |y- f(x)|\)</span></li>
-<li>负对数似然: <span class="math inline">\(L(y, p(y|x)) = -log\ p(y|x)\)</span></li>
+<li>0-1 损失函数： $L(y, f(x)) = \begin{cases}<br>1 &amp; \text{ , } y\neq f(x) \<br>0 &amp; \text{ , } y = f(x)<br>\end{cases}$</li>
+<li>平方损失函数: $L(y, f(x)) = (y- f(x))^{2}$</li>
+<li>绝对损失函数: $L(y, f(x)) = |y- f(x)|$</li>
+<li>负对数似然: $L(y, p(y|x)) = -log\ p(y|x)$</li>
 </ul>
-<h4 id="经验风险-empirical-risk">经验风险 (empirical risk)</h4>
-<p>计算训练集中所有样本的平均损失值，用这个值去衡量模型的能力，这就是经验风险</p>
-<p><span class="math display">\[R_{emp} (f) = \frac{1}{N} \sum_{i=1}^{N} L(y_{i}, f(x_{i}))\]</span></p>
+<h4 id="经验风险-empirical-risk"><a href="#经验风险-empirical-risk" class="headerlink" title="经验风险 (empirical risk)"></a>经验风险 (empirical risk)</h4><p>计算训练集中所有样本的平均损失值，用这个值去衡量模型的能力，这就是经验风险</p>
+<p>$$R_{emp} (f) = \frac{1}{N} \sum_{i=1}^{N} L(y_{i}, f(x_{i}))$$</p>
 <p>所谓经验风险最小化就是让上述式子最小化，经验风险越小说明模型f(X)对训练集的拟合程度越好</p>
-<h4 id="期望风险-expected-risk">期望风险 (expected risk)</h4>
-<p>对于未知的样本数据的数量是不容易确定的，所以就没有办法和经验风险一样最小化所有样本损失函数的平均值，一般用期望来衡量未知样本的风险，称为期望风险。</p>
-<p>假设X和Y服从联合分布 <span class="math inline">\(P(X,Y)\)</span> ，那么期望风险就可以表示为：</p>
-<p><span class="math display">\[R_{exp}(f) = E_{p}[L(Y, f(X))] = \int_{x\times y} L(y, f(x)) P(x, y) dxdy\]</span></p>
+<h4 id="期望风险-expected-risk"><a href="#期望风险-expected-risk" class="headerlink" title="期望风险 (expected risk)"></a>期望风险 (expected risk)</h4><p>对于未知的样本数据的数量是不容易确定的，所以就没有办法和经验风险一样最小化所有样本损失函数的平均值，一般用期望来衡量未知样本的风险，称为期望风险。</p>
+<p>假设X和Y服从联合分布 $P(X,Y)$ ，那么期望风险就可以表示为：</p>
+<p>$$R_{exp}(f) = E_{p}[L(Y, f(X))] = \int_{x\times y} L(y, f(x)) P(x, y) dxdy$$</p>
 <p>期望风险表示的是全局的概念，表示的是决策函数对所有的样本预测能力的大小，而经验风险则是局部的概念，仅仅表示决策函数对训练数据集里样本的预测能力。因为期望风险比较难求，实际情况下用得比较多的还是经验风险。</p>
-<h4 id="结构风险-structual-risk">结构风险 (structual risk)</h4>
-<p>如果只考虑经验风险那么模型很容易过拟合，导致模型的泛化能力差，这时候需要引入结构风险，结构风险是对经验风险和期望风险的折衷，结构风险一般可通过<strong>正则化</strong>来引入，这里点了本节的题，稍后会更详细介绍常见的正则化手段</p>
-<p><span class="math display">\[R_{srm}(f) = \frac{1}{N} \sum_{i=1}^{N} L(y_{i}, f(x_{i})) + \lambda J(f)\]</span></p>
-<h4 id="成本函数">成本函数</h4>
-<p>一般指数据集上总的损失，为了降低结构风险，往往加上正则项，所以成本函数可记为</p>
-<p><span class="math display">\[J(W, b) = \frac{1}{N} \sum_{i=1}^{N} L(y_{i}, \hat{y_{i}})) + \lambda J(w)\]</span></p>
-<h4 id="目标函数">目标函数</h4>
-<p>目标函数是一个非常广泛的名称，一般我们先确定一个“目标函数”再去优化它，不同的任务中“目标函数”可以是：</p>
+<h4 id="结构风险-structual-risk"><a href="#结构风险-structual-risk" class="headerlink" title="结构风险 (structual risk)"></a>结构风险 (structual risk)</h4><p>如果只考虑经验风险那么模型很容易过拟合，导致模型的泛化能力差，这时候需要引入结构风险，结构风险是对经验风险和期望风险的折衷，结构风险一般可通过<strong>正则化</strong>来引入，这里点了本节的题，稍后会更详细介绍常见的正则化手段</p>
+<p>$$R_{srm}(f) = \frac{1}{N} \sum_{i=1}^{N} L(y_{i}, f(x_{i})) + \lambda J(f)$$</p>
+<h4 id="成本函数"><a href="#成本函数" class="headerlink" title="成本函数"></a>成本函数</h4><p>一般指数据集上总的损失，为了降低结构风险，往往加上正则项，所以成本函数可记为</p>
+<p>$$J(W, b) = \frac{1}{N} \sum_{i=1}^{N} L(y_{i}, \hat{y_{i}})) + \lambda J(w)$$</p>
+<h4 id="目标函数"><a href="#目标函数" class="headerlink" title="目标函数"></a>目标函数</h4><p>目标函数是一个非常广泛的名称，一般我们先确定一个“目标函数”再去优化它，不同的任务中“目标函数”可以是：</p>
 <ul>
 <li>最小化平方差错误成本函数 (CART, 线性回归等任务)</li>
 <li>最大化log-相似度或最小化信息熵损失函数</li>
 <li>最小化 hinge 损失函数 (SVM)</li>
 </ul>
-<h4 id="正则化">正则化</h4>
-<p>模型越复杂时包含的参数越多，当经验风险函数小到一定程度就出现了过拟合现象。</p>
+<h4 id="正则化"><a href="#正则化" class="headerlink" title="正则化"></a>正则化</h4><p>模型越复杂时包含的参数越多，当经验风险函数小到一定程度就出现了过拟合现象。</p>
 <p>可以简单理解为模型的复杂程度是过拟合的重要条件，那么我们要想防止过拟合现象的方式，就要破坏这个必要条件，即降低决策函数的复杂度，所以我们一般通过正则化的方式去惩罚参数。</p>
 <p>常用的正则化的方式有：</p>
 <ul>
@@ -801,27 +724,24 @@ V^{&#39;} = \alpha \cdot V\]</span></p>
 <li>L2 正则</li>
 <li>随机失活 dropout</li>
 </ul>
-<h5 id="l1-正则-l2正则">L1 正则， L2正则</h5>
-<p>L1 正则使用 L1 范数，倾向于把参数变稀疏；L2 正则使用 L2 范数，倾向于把参数变小；一般来说使用 L2 正则居多</p>
+<h5 id="L1-正则，-L2正则"><a href="#L1-正则，-L2正则" class="headerlink" title="L1 正则， L2正则"></a>L1 正则， L2正则</h5><p>L1 正则使用 L1 范数，倾向于把参数变稀疏；L2 正则使用 L2 范数，倾向于把参数变小；一般来说使用 L2 正则居多</p>
 <blockquote>
 <p><strong>范数</strong> 是具有“长度”概念的函数。在线性代数、泛函分析及相关的数学领域，是一个函数，其为向量空间内的所有向量赋予非零的正长度或大小</p>
 </blockquote>
 <p>在图像上两者的区别</p>
-<p><img src="/images/posts/deeplearning/norm01.png"></p>
+<p><img src="/images/posts/deeplearning/norm01.png" alt=""></p>
 <p>更一般的，在等高线图上有</p>
-<p><img src="/images/posts/deeplearning/norm02.png"></p>
+<p><img src="/images/posts/deeplearning/norm02.png" alt=""></p>
 <p>可以想到加上了 L1正则后损失函数的等高线和 L1正则图像 的交点集中在 (0, 1) , (1, 0) 等稀疏点，因此 L1 正则倾向于将参数稀疏化，而 L2 正则倾向于将参数变小。</p>
-<h5 id="dropout">dropout</h5>
-<p>随机失活 dropout 一般用于神经网络模型，它的原理是对于神经网络单元，按照一定的概率将其<strong>暂时</strong>从网络中丢弃。对于随机梯度下降来说，由于是随机丢弃，故而每一个 mini-batch 都能用不同的神经元训练不同的网络。</p>
-<p><img src="/images/posts/deeplearning/norm03.png"></p>
+<h5 id="dropout"><a href="#dropout" class="headerlink" title="dropout"></a>dropout</h5><p>随机失活 dropout 一般用于神经网络模型，它的原理是对于神经网络单元，按照一定的概率将其<strong>暂时</strong>从网络中丢弃。对于随机梯度下降来说，由于是随机丢弃，故而每一个 mini-batch 都能用不同的神经元训练不同的网络。</p>
+<p><img src="/images/posts/deeplearning/norm03.png" alt=""></p>
 <p>dropout 的实现方式非常简单，以下是用 numpy 来实现</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dropout</span><span class="params">(x, keep_prob=<span class="number">0.2</span>)</span></span></span><br><span class="line">    shape = list(x.shape)</span><br><span class="line">    mask = np.random.rand(shape[<span class="number">0</span>], shape[<span class="number">1</span>]) &lt; keep_prob</span><br><span class="line">    x = x * mask</span><br><span class="line">    output = x / keep_prob</span><br><span class="line">    <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure>
-<h3 id="规范化的作用及常用的规范化方式">规范化的作用及常用的规范化方式</h3>
-<p>规范化一般指标准规范化，将数据按比例缩放，使之落入一个小的特定区间。规范化可以在一定程度上抵制异常值 (outliers) 的影响，使得网络更稳定，更容易找到最优解</p>
+<h3 id="规范化的作用及常用的规范化方式"><a href="#规范化的作用及常用的规范化方式" class="headerlink" title="规范化的作用及常用的规范化方式"></a>规范化的作用及常用的规范化方式</h3><p>规范化一般指标准规范化，将数据按比例缩放，使之落入一个小的特定区间。规范化可以在一定程度上抵制异常值 (outliers) 的影响，使得网络更稳定，更容易找到最优解 </p>
 <p>未归一化的等高线图</p>
-<p><img src="/images/posts/deeplearning/bn01.png"></p>
+<p><img src="/images/posts/deeplearning/bn01.png" alt=""></p>
 <p>归一化的等高线图</p>
-<p><img src="/images/posts/deeplearning/bn02.png"></p>
+<p><img src="/images/posts/deeplearning/bn02.png" alt=""></p>
 <p>常见的归一化方式有：</p>
 <ul>
 <li>Batch Normalization</li>
@@ -830,11 +750,10 @@ V^{&#39;} = \alpha \cdot V\]</span></p>
 <li>Instance Normalization</li>
 </ul>
 <p>它们的原理都是</p>
-<p><span class="math display">\[a^{*} = \frac{a-\mu }{\sigma} \\
-a^{norm} = \eta a^{*} + \beta\]</span></p>
-<p>其中 <span class="math inline">\(a^{*}\)</span> 是标准归一化的结果， <span class="math inline">\(\eta\)</span> 和 <span class="math inline">\(\beta\)</span> 是网络自动学习的参数，它们的作用是对 <span class="math inline">\(a^{*}\)</span> 进行放缩移位</p>
-<p>它们的区别在于对统计量 <span class="math inline">\(\mu\)</span> 和 <span class="math inline">\(\sigma\)</span> 的求解，下图显示了各个 Normalization 使用不同的单元去计算两个统计量</p>
-<p><img src="/images/posts/deeplearning/bn03.png"></p>
+<p>$$a^{<em>} = \frac{a-\mu }{\sigma} \<br>a^{norm} = \eta a^{</em>} + \beta$$</p>
+<p>其中 $a^{<em>}$ 是标准归一化的结果， $\eta$ 和 $\beta$ 是网络自动学习的参数，它们的作用是对 $a^{</em>}$ 进行放缩移位</p>
+<p>它们的区别在于对统计量 $\mu$ 和 $\sigma$ 的求解，下图显示了各个 Normalization 使用不同的单元去计算两个统计量</p>
+<p><img src="/images/posts/deeplearning/bn03.png" alt=""></p>
 <p><strong>使用经验</strong></p>
 <ul>
 <li>Batch Normalization: 一般用于 CNN 和 MLP，不用于 RNN，实践证明一般用在激活函数后</li>
@@ -842,184 +761,125 @@ a^{norm} = \eta a^{*} + \beta\]</span></p>
 <li>Group Normalization: 一般用于 CNN</li>
 <li>Instance Normalization: 不常用</li>
 </ul>
-<h3 id="常见的激活函数及选择">常见的激活函数及选择</h3>
-<p>激活函数是非线性的，一般是全局可导的，常见的激活函数有</p>
+<h3 id="常见的激活函数及选择"><a href="#常见的激活函数及选择" class="headerlink" title="常见的激活函数及选择"></a>常见的激活函数及选择</h3><p>激活函数是非线性的，一般是全局可导的，常见的激活函数有</p>
 <ul>
 <li>sigmoid</li>
 <li>tanh</li>
-<li>relu (Rectified Linear Unit) 线性修正单元
-<ul>
+<li>relu (Rectified Linear Unit) 线性修正单元<ul>
 <li>leaky_relu</li>
 <li>gelu</li>
 <li>elu</li>
-</ul></li>
 </ul>
-<h4 id="sigmoid">sigmoid</h4>
-<p><span class="math display">\[\sigma(z) = \frac{1}{1+e^{-z}}\]</span></p>
-<p><img src="/images/posts/deeplearning/act01.png"></p>
+</li>
+</ul>
+<h4 id="sigmoid"><a href="#sigmoid" class="headerlink" title="sigmoid"></a>sigmoid</h4><p>$$\sigma(z) = \frac{1}{1+e^{-z}}$$</p>
+<p><img src="/images/posts/deeplearning/act01.png" alt=""></p>
 <p>sigmoid 一般用于二分类任务</p>
-<h4 id="tanh">tanh</h4>
-<p><span class="math display">\[tanh(z) = \frac{e^{z} - e^{-z}}{e^{z} + e^{-z}}\]</span></p>
-<p><img src="/images/posts/deeplearning/act02.png"></p>
+<h4 id="tanh"><a href="#tanh" class="headerlink" title="tanh"></a>tanh</h4><p>$$tanh(z) = \frac{e^{z} - e^{-z}}{e^{z} + e^{-z}}$$</p>
+<p><img src="/images/posts/deeplearning/act02.png" alt=""></p>
 <p>tanh 一般和 RNN 结合使用</p>
-<h4 id="relu">relu</h4>
-<p><span class="math display">\[ReLU(z) = max(0, z) = \begin{cases}
-0 &amp; \text{ , } x\leqslant 0 \\ 
-z &amp; \text{ , } x &gt; 0 
-\end{cases}\]</span></p>
-<p><img src="/images/posts/deeplearning/act03.png"></p>
+<h4 id="relu"><a href="#relu" class="headerlink" title="relu"></a>relu</h4><p>$$ReLU(z) = max(0, z) = \begin{cases}<br>0 &amp; \text{ , } x\leqslant 0 \<br>z &amp; \text{ , } x &gt; 0<br>\end{cases}$$</p>
+<p><img src="/images/posts/deeplearning/act03.png" alt=""></p>
 <p>对比三者的图像可知，sigmoid 和 tanh 只有很小部分区域的梯度变化比较明显，大部分区域梯度几乎没有变化，正是这个原因很容易导致梯度弥散问题。而 ReLU 没有这个缺点，所以 ReLU 广泛用做隐层的激活函数</p>
-<h3 id="常见的优化器及选择">常见的优化器及选择</h3>
-<p>深度学习中一般使用梯度下降算法来优化，常用的优化器有</p>
+<h3 id="常见的优化器及选择"><a href="#常见的优化器及选择" class="headerlink" title="常见的优化器及选择"></a>常见的优化器及选择</h3><p>深度学习中一般使用梯度下降算法来优化，常用的优化器有</p>
 <ul>
 <li>随机梯度下降 (Stochastic Gradient Decent, SGD)</li>
 <li>动量梯度下降 (Gradient Descent with Momentum)</li>
 <li>均方根支梯度下降 (Root Mean Square Prop, RMSProp)</li>
 <li>自适应矩估计 (Adaptive Moment Estimation, Adam)</li>
 </ul>
-<p><img src="/images/posts/deeplearning/loss01.gif"></p>
-<h4 id="sgd">SGD</h4>
-<p>每次通过一个样本来迭代更新</p>
-<p><span class="math display">\[\begin{align*}
-J(w, b) = L (\hat{y^{(i)}}, y^{(i)}) + \frac{\lambda }{2}\sum \left \| w \right \|_{F}^{2} \\
-w_{j} := w_{j} - \alpha \frac{\partial J(w, b)}{\partial w_{j}} \\
-b_{j} := b_{j} - \alpha \frac{\partial J(w, b)}{\partial b_{j}}
-\end{align*}\]</span></p>
-<p><img src="/images/posts/deeplearning/loss02.png"></p>
-<h4 id="momentum">Momentum</h4>
-<p>计算梯度的指数加权平均数，并利用该值来更新参数值</p>
-<p><span class="math display">\[\begin{align*}
-&amp; \upsilon_{dw} = \beta \upsilon_{dw} + (1-\beta) dw \\
-&amp; \upsilon_{db} = \beta \upsilon_{db} + (1-\beta) db \\
-&amp; w := w - \alpha \upsilon_{dw} \\
-&amp; b := b - \alpha \upsilon_{db}
-\end{align*}\]</span></p>
+<p><img src="/images/posts/deeplearning/loss01.gif" alt=""></p>
+<h4 id="SGD"><a href="#SGD" class="headerlink" title="SGD"></a>SGD</h4><p>每次通过一个样本来迭代更新</p>
+<p>$$\begin{align<em>}<br>J(w, b) = L (\hat{y^{(i)}}, y^{(i)}) + \frac{\lambda }{2}\sum \left | w \right |<em>{F}^{2} \<br>w</em>{j} := w_{j} - \alpha \frac{\partial J(w, b)}{\partial w_{j}} \<br>b_{j} := b_{j} - \alpha \frac{\partial J(w, b)}{\partial b_{j}}<br>\end{align</em>}$$</p>
+<p><img src="/images/posts/deeplearning/loss02.png" alt=""></p>
+<h4 id="Momentum"><a href="#Momentum" class="headerlink" title="Momentum"></a>Momentum</h4><p>计算梯度的指数加权平均数，并利用该值来更新参数值</p>
+<p>$$\begin{align<em>}<br>&amp; \upsilon_{dw} = \beta \upsilon_{dw} + (1-\beta) dw \<br>&amp; \upsilon_{db} = \beta \upsilon_{db} + (1-\beta) db \<br>&amp; w := w - \alpha \upsilon_{dw} \<br>&amp; b := b - \alpha \upsilon_{db}<br>\end{align</em>}$$</p>
 <p>SGD 在局部沟壑中很容易发生振荡，所以在这种情况下下降速度会很慢，而动量能在一定程度上抑制这种震荡，使得SGD的下降更平稳</p>
-<h4 id="rmsprop">RMSProp</h4>
-<p>在梯度进行指数加权平均的基础上引入了平方和平方根</p>
-<p><span class="math display">\[\begin{align*}
-&amp; S_{dw} = \beta S_{dw} + (1-\beta) dw^{2} \\\\
-&amp; S_{db} = \beta S_{db} + (1-\beta) db^{2} \\\\
-&amp; w := w - \alpha \frac{dw}{\sqrt{S_{dw} + \epsilon }} \\\\
-&amp; b := b - \alpha \frac{dw}{\sqrt{S_{db} + \epsilon }} \\\\
-\tag{10}
-\end{align*}\]</span></p>
-<p><span class="math inline">\(\epsilon\)</span> 一般值很小，主要是用来提高数值稳定性，防止分母过小</p>
-<p><strong>特点：</strong> 当 <span class="math inline">\(dw\)</span> 或 <span class="math inline">\(db\)</span> 较大时，<span class="math inline">\(dw^{2}\)</span> 和 <span class="math inline">\(db^{2}\)</span> 也会较大，因此 <span class="math inline">\(S_{dw}\)</span> <span class="math inline">\(S_{db}\)</span> 也是较大的，最终使得 <span class="math inline">\(\frac{dw}{\sqrt{S_{dw} + \epsilon}}\)</span> <span class="math inline">\(\frac{db}{\sqrt{S_{db} + \epsilon}}\)</span> 较小，这也减少了振荡</p>
-<h4 id="adam">Adam</h4>
-<p>可以认为是 <code>Momentum</code> 和 <code>RMSProp</code> 的结合</p>
-<p><span class="math display">\[\begin{align*}
-&amp; \upsilon_{dw} = \beta_{1} \upsilon_{dw} + (1-\beta _{1}) dw, \upsilon _{db} = \beta_{1} \upsilon_{db} + (1-\beta _{1}) db \\\\
-&amp; S_{dw} = \beta_{2} S_{dw} + (1-\beta _{2}) dw^{2}, S_{db} = \beta_{2} S_{db} + (1-\beta _{2}) db^{2} \\\\
-&amp; \upsilon_{dw}^{correct} = \frac{\upsilon _{dw}}{1-\beta_{1}^{t}}, \upsilon_{db}^{correct} = \frac{\upsilon_{db}}{1-\beta_{1}^{t}} \\\\
-&amp; S_{dw}^{correct} = \frac{S_{dw}}{1-\beta_{2}^{t}}, S_{db}^{correct} = \frac{S_{db}}{1-\beta_{2}^{t}} \\\\
-&amp; w := w - \alpha \frac{\upsilon_{dw}^{correct}}{\sqrt{S_{dw}^{correct}} + \epsilon} \\\\
-&amp; b := b - \alpha \frac{\upsilon_{db}^{correct}}{\sqrt{S_{db}^{correct}} + \epsilon} \\\\
-\tag{11}
-\end{align*}\]</span></p>
-<p><span class="math inline">\(\beta _{1}\)</span>为第一阶矩，<span class="math inline">\(\beta _{2}\)</span> 为第二阶矩</p>
-<h4 id="使用经验">使用经验</h4>
-<p>一般来说 Adam, Adamax, Adadelta, Adagrad, AdamW 等优化算法会更快更暴力的收敛，但是往往不易找到全局最优，经验上来说一般使用动量梯度下降更容易找到全局最优，不过收敛速度慢</p>
-<h3 id="mask-的作用">mask 的作用</h3>
-<p>mask 是网络训练的一种常用的 trick, 在 NLP 任务中训练数据通常以 mini-batch 的方式准备,一般来说 mini-batch 中的数据是长短不一的，所以往往需要对数据进行 padding，使得 mini-batch 长短一致。</p>
-<p><img src="/images/posts/deeplearning/mask01.png"></p>
+<h4 id="RMSProp"><a href="#RMSProp" class="headerlink" title="RMSProp"></a>RMSProp</h4><p>在梯度进行指数加权平均的基础上引入了平方和平方根</p>
+<p>$$\begin{align<em>}<br>&amp; S_{dw} = \beta S_{dw} + (1-\beta) dw^{2} \\<br>&amp; S_{db} = \beta S_{db} + (1-\beta) db^{2} \\<br>&amp; w := w - \alpha \frac{dw}{\sqrt{S_{dw} + \epsilon }} \\<br>&amp; b := b - \alpha \frac{dw}{\sqrt{S_{db} + \epsilon }} \\<br>\tag{10}<br>\end{align</em>}$$</p>
+<p>$\epsilon$ 一般值很小，主要是用来提高数值稳定性，防止分母过小</p>
+<p><strong>特点：</strong> 当 $dw$ 或 $db$ 较大时，$dw^{2}$ 和 $db^{2}$ 也会较大，因此 $S_{dw}$ $S_{db}$ 也是较大的，最终使得 $\frac{dw}{\sqrt{S_{dw} + \epsilon}}$ $\frac{db}{\sqrt{S_{db} + \epsilon}}$ 较小，这也减少了振荡</p>
+<h4 id="Adam"><a href="#Adam" class="headerlink" title="Adam"></a>Adam</h4><p>可以认为是 <code>Momentum</code> 和 <code>RMSProp</code> 的结合</p>
+<p>$$\begin{align<em>}<br>&amp; \upsilon_{dw} = \beta_{1} \upsilon_{dw} + (1-\beta _{1}) dw, \upsilon <em>{db} = \beta</em>{1} \upsilon_{db} + (1-\beta <em>{1}) db \\<br>&amp; S</em>{dw} = \beta_{2} S_{dw} + (1-\beta <em>{2}) dw^{2}, S</em>{db} = \beta_{2} S_{db} + (1-\beta <em>{2}) db^{2} \\<br>&amp; \upsilon</em>{dw}^{correct} = \frac{\upsilon <em>{dw}}{1-\beta</em>{1}^{t}}, \upsilon_{db}^{correct} = \frac{\upsilon_{db}}{1-\beta_{1}^{t}} \\<br>&amp; S_{dw}^{correct} = \frac{S_{dw}}{1-\beta_{2}^{t}}, S_{db}^{correct} = \frac{S_{db}}{1-\beta_{2}^{t}} \\<br>&amp; w := w - \alpha \frac{\upsilon_{dw}^{correct}}{\sqrt{S_{dw}^{correct}} + \epsilon} \\<br>&amp; b := b - \alpha \frac{\upsilon_{db}^{correct}}{\sqrt{S_{db}^{correct}} + \epsilon} \\<br>\tag{11}<br>\end{align</em>}$$</p>
+<p>$\beta _{1}$为第一阶矩，$\beta _{2}$ 为第二阶矩</p>
+<h4 id="使用经验"><a href="#使用经验" class="headerlink" title="使用经验"></a>使用经验</h4><p>一般来说 Adam, Adamax, Adadelta, Adagrad, AdamW 等优化算法会更快更暴力的收敛，但是往往不易找到全局最优，经验上来说一般使用动量梯度下降更容易找到全局最优，不过收敛速度慢</p>
+<h3 id="mask-的作用"><a href="#mask-的作用" class="headerlink" title="mask 的作用"></a>mask 的作用</h3><p>mask 是网络训练的一种常用的 trick, 在 NLP 任务中训练数据通常以 mini-batch 的方式准备,一般来说 mini-batch 中的数据是长短不一的，所以往往需要对数据进行 padding，使得 mini-batch 长短一致。</p>
+<p><img src="/images/posts/deeplearning/mask01.png" alt=""></p>
 <p>为了减弱 padding 部分的影响，一般对 mini-batch 进行 mask, 然后减小 padding 部分的权值</p>
-<p><img src="/images/posts/deeplearning/mask02.png"></p>
+<p><img src="/images/posts/deeplearning/mask02.png" alt=""></p>
 <p>对于抽取性的任务，如：机器阅读理解，文本摘要，使用 mask 一般会使模型效果有略微提升</p>
-<h4 id="tensorflow-实现-mask">TensorFlow 实现 mask</h4>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">batch_seq = tf.placeholder(tf.int32, </span><br><span class="line">                           [batch_size, <span class="keyword">None</span>],</span><br><span class="line">                           name=<span class="string">"sequence"</span>)</span><br><span class="line"><span class="comment"># TODO ...</span></span><br><span class="line"></span><br><span class="line">mask_value = <span class="number">1e-12</span></span><br><span class="line">seq_mask = tf.cast(</span><br><span class="line">              tf.cast(batch_seq, tf.bool), tf.float32)</span><br><span class="line">masked = batch_seq * seq_mask + mask_value * (<span class="number">1.</span> - seq_mask)</span><br></pre></td></tr></table></figure>
-<h3 id="模型效果提升偏方">模型效果提升偏方</h3>
-<h4 id="迁移学习">迁移学习</h4>
-<p>在 NLP 中迁移学习的思想一般是使用预训练词向量(如 word2vec、fasttext、glove)或者使用预训练语言模型 (ELMo、GPT、BERT)</p>
-<h5 id="预训练词向量">预训练词向量</h5>
-<p>由于向量表示是低维稠密的分布式向量，所以可以进行语义计算，但只是对词做了简单的空间映射，也就是说同一个词的向量表示是相同的。使用的话，一般将预训练的词向量权值表替换掉随机初始化的权值表，在 TensorFlow 实现可以是：</p>
+<h4 id="TensorFlow-实现-mask"><a href="#TensorFlow-实现-mask" class="headerlink" title="TensorFlow 实现 mask"></a>TensorFlow 实现 mask</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">batch_seq = tf.placeholder(tf.int32, </span><br><span class="line">                           [batch_size, <span class="keyword">None</span>],</span><br><span class="line">                           name=<span class="string">"sequence"</span>)</span><br><span class="line"><span class="comment"># TODO ...</span></span><br><span class="line"></span><br><span class="line">mask_value = <span class="number">1e-12</span></span><br><span class="line">seq_mask = tf.cast(</span><br><span class="line">              tf.cast(batch_seq, tf.bool), tf.float32)</span><br><span class="line">masked = batch_seq * seq_mask + mask_value * (<span class="number">1.</span> - seq_mask)</span><br></pre></td></tr></table></figure>
+<h3 id="模型效果提升偏方"><a href="#模型效果提升偏方" class="headerlink" title="模型效果提升偏方"></a>模型效果提升偏方</h3><h4 id="迁移学习"><a href="#迁移学习" class="headerlink" title="迁移学习"></a>迁移学习</h4><p>在 NLP 中迁移学习的思想一般是使用预训练词向量(如 word2vec、fasttext、glove)或者使用预训练语言模型 (ELMo、GPT、BERT)</p>
+<h5 id="预训练词向量"><a href="#预训练词向量" class="headerlink" title="预训练词向量"></a>预训练词向量</h5><p>由于向量表示是低维稠密的分布式向量，所以可以进行语义计算，但只是对词做了简单的空间映射，也就是说同一个词的向量表示是相同的。使用的话，一般将预训练的词向量权值表替换掉随机初始化的权值表，在 TensorFlow 实现可以是：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pretrained_word_matrix = tf.get_variable(</span><br><span class="line">    <span class="string">'word_embeddings'</span>,</span><br><span class="line">    shape=[vocab_size, embedding_size],</span><br><span class="line">    initializer=tf.constant_initializer(</span><br><span class="line">                    pretrained_word_embeddings),</span><br><span class="line">    trainable=<span class="keyword">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<h5 id="预训练语言模型">预训练语言模型</h5>
-<p>今年 (2018年) 预训练语言模型陆陆续续被提出, ELMo、GPT、BERT 是之中的三个代表，其中 BERT 的推出更是 (绝对地) 刷新了多项 NLP 任务 (一般来说 Google 一出手，其他人就没法做了)。</p>
-<p>预训练语言模型和预训练词向量的区别在于可以认为预训练语言模型训练的是模型 <span class="math inline">\(f(x)\)</span> ，预训练语言模型可以学到上下文信息，根据输入上下文的不同可以动态的得到不同的词向量。</p>
+<h5 id="预训练语言模型"><a href="#预训练语言模型" class="headerlink" title="预训练语言模型"></a>预训练语言模型</h5><p>今年 (2018年) 预训练语言模型陆陆续续被提出, ELMo、GPT、BERT 是之中的三个代表，其中 BERT 的推出更是 (绝对地) 刷新了多项 NLP 任务 (一般来说 Google 一出手，其他人就没法做了)。</p>
+<p>预训练语言模型和预训练词向量的区别在于可以认为预训练语言模型训练的是模型 $f(x)$ ，预训练语言模型可以学到上下文信息，根据输入上下文的不同可以动态的得到不同的词向量。</p>
 <p>比如：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">我喜欢吃 苹果 </span><br><span class="line">我喜欢用 苹果 电脑</span><br></pre></td></tr></table></figure>
 <p>预训练词向量中两个句子中的<strong>苹果</strong>的词向量是相同的，而预训练语言模型得到的<strong>苹果</strong>是不同的，因为两个句子的上下文是不同的</p>
 <p>关于 ELMo、GPT、BERT 的区别在下一节再做简要介绍</p>
-<h4 id="鉴别学习-identity-learning">鉴别学习 (identity learning)</h4>
-<p>其实这一块我并没有深入的研究，只是在实习中用到了相关的知识。</p>
+<h4 id="鉴别学习-identity-learning"><a href="#鉴别学习-identity-learning" class="headerlink" title="鉴别学习 (identity learning)"></a>鉴别学习 (identity learning)</h4><p>其实这一块我并没有深入的研究，只是在实习中用到了相关的知识。</p>
 <p>不同的 NLP 任务往往有不同的指标，而指标往往是评估模型的重要因素，我们往往希望指标朝着期望的方向发展，所以我们可以把指标加入到损失函数中让优化器也一同优化指标，当然怎么加、如何控制是一门学问，这个还得凭自己经验来添加。</p>
-<h4 id="模型融合-ensemble">模型融合 (ensemble)</h4>
-<p>融合是一门大学问，一般来说可分为：</p>
+<h4 id="模型融合-ensemble"><a href="#模型融合-ensemble" class="headerlink" title="模型融合 (ensemble)"></a>模型融合 (ensemble)</h4><p>融合是一门大学问，一般来说可分为：</p>
 <ul>
 <li>单模型融合</li>
 <li>多模型融合</li>
 </ul>
 <p>单模型融合一般通过 k-fold 交叉验证的方式进行</p>
-<p><img src="/images/posts/deeplearning/ensemble01.png"></p>
-<p align="center">
-来自：《花式自然语言处理》，苏剑林，中山大学
-</p>
-<p>多模型融合一般也是通过 k-fold 交叉验证的方式：假如有 <span class="math inline">\(m\)</span> 种不同的模型，每种模型做 <span class="math inline">\(n\)</span> 划分交叉验证，可以得到 <span class="math inline">\(m \times n\)</span> 个不同的模型，通过一个新模型来融合这 <span class="math inline">\(m\times n\)</span> 个模型</p>
-<p><img src="/images/posts/deeplearning/ensemble02.png"></p>
-<p align="center">
-来自：《花式自然语言处理》，苏剑林，中山大学
-</p>
-<h4 id="模型蒸馏">模型蒸馏</h4>
-<p>模型蒸馏是 G.Hinton 在 2015 年提出来的 (来自论文：《Distilling the Knowledge in a Neural Network》), 可以把它当作一种模型压缩方法、迁移学习、模型融合方法。</p>
+<p><img src="/images/posts/deeplearning/ensemble01.png" alt=""></p>
+<p align="center">来自：《花式自然语言处理》，苏剑林，中山大学</p>
+
+<p>多模型融合一般也是通过 k-fold 交叉验证的方式：假如有 $m$ 种不同的模型，每种模型做 $n$ 划分交叉验证，可以得到 $m \times n$ 个不同的模型，通过一个新模型来融合这 $m\times n$ 个模型</p>
+<p><img src="/images/posts/deeplearning/ensemble02.png" alt=""></p>
+<p align="center">来自：《花式自然语言处理》，苏剑林，中山大学</p>
+
+<h4 id="模型蒸馏"><a href="#模型蒸馏" class="headerlink" title="模型蒸馏"></a>模型蒸馏</h4><p>模型蒸馏是 G.Hinton 在 2015 年提出来的 (来自论文：《Distilling the Knowledge in a Neural Network》), 可以把它当作一种模型压缩方法、迁移学习、模型融合方法。</p>
 <p>它的主要思想是：通过训练一个（或多个）复杂的网络模型 (teacher)，然后用这个复杂模型去调教一个简单网络模型 (student) ，通过训练,简单模型会慢慢学到复杂模型的知识，甚至青出于蓝胜于蓝。</p>
 <p>一般通过对 softmax 函数添加温度(temperature， T) 来实现</p>
-<p><span class="math display">\[q_{i} = \frac{exp(z_{i} / T)}{\sum_{j} exp(z_{j}/T)}\]</span></p>
-<p><img src="/images/posts/deeplearning/distilling01.png"></p>
+<p>$$q_{i} = \frac{exp(z_{i} / T)}{\sum_{j} exp(z_{j}/T)}$$</p>
+<p><img src="/images/posts/deeplearning/distilling01.png" alt=""></p>
 <p>通过温度控制会使得 softmax 更稳定更<code>软</code>，最终有可能超过原模型。</p>
-<h2 id="深度学习与nlp">深度学习与NLP</h2>
-<h3 id="word2vec-vs-fasttext">word2vec vs fasttext</h3>
-<p>两者都是得到低维稠密的分布式向量的方法，分布式向量表示具有语义计算、语义推理的能力</p>
-<p><img src="/images/posts/deeplearning/word2vec01.png"></p>
-<h4 id="word2vec">word2vec</h4>
-<p>word2vec 是一种三层结构：输入层，投射层，输出层。</p>
-<p><img src="/images/posts/deeplearning/word2vec02.png"></p>
-<h5 id="输入层">输入层</h5>
-<p>输入层是输入词的 one-hot 编码。</p>
+<h2 id="深度学习与NLP"><a href="#深度学习与NLP" class="headerlink" title="深度学习与NLP"></a>深度学习与NLP</h2><h3 id="word2vec-vs-fasttext"><a href="#word2vec-vs-fasttext" class="headerlink" title="word2vec vs fasttext"></a>word2vec vs fasttext</h3><p>两者都是得到低维稠密的分布式向量的方法，分布式向量表示具有语义计算、语义推理的能力</p>
+<p><img src="/images/posts/deeplearning/word2vec01.png" alt=""></p>
+<h4 id="word2vec"><a href="#word2vec" class="headerlink" title="word2vec"></a>word2vec</h4><p>word2vec 是一种三层结构：输入层，投射层，输出层。</p>
+<p><img src="/images/posts/deeplearning/word2vec02.png" alt=""></p>
+<h5 id="输入层"><a href="#输入层" class="headerlink" title="输入层"></a>输入层</h5><p>输入层是输入词的 one-hot 编码。</p>
 <blockquote>
 <p>深度学习框架处理 NLP 任务时，输入一般采用压缩 one-hot编码（字典表示），深度学习框架会自动转化为 one-hot 矩阵</p>
 </blockquote>
-<p><img src="/images/posts/deeplearning/word2vec07.png"></p>
-<h5 id="投射层">投射层</h5>
-<p>投射层即要训练的 embedding 层，训练完毕后我们可以用这一层得到的权值作为 word embedding 去训练模型。</p>
-<h5 id="输出层">输出层</h5>
-<p>输出层是 softmax 分类器，word2vec 采用了树结构表示的 hierarchical softmax 和构造正负样本的 negative sampling 方式去优化输出层，使得输出层的 softmax 函数不必轮询每个词，大大减小了计算路径的长度，从而保证 word2vec 的高效性。</p>
-<h5 id="语料构造方式">语料构造方式</h5>
-<p>虽然表面上 word2vec 是无监督的，但实际的训练过程是有监督的，它的<code>有监督语料</code>主要受两种模型影响</p>
+<p><img src="/images/posts/deeplearning/word2vec07.png" alt=""></p>
+<h5 id="投射层"><a href="#投射层" class="headerlink" title="投射层"></a>投射层</h5><p>投射层即要训练的 embedding 层，训练完毕后我们可以用这一层得到的权值作为 word embedding 去训练模型。</p>
+<h5 id="输出层"><a href="#输出层" class="headerlink" title="输出层"></a>输出层</h5><p>输出层是 softmax 分类器，word2vec 采用了树结构表示的 hierarchical softmax 和构造正负样本的 negative sampling 方式去优化输出层，使得输出层的 softmax 函数不必轮询每个词，大大减小了计算路径的长度，从而保证 word2vec 的高效性。</p>
+<h5 id="语料构造方式"><a href="#语料构造方式" class="headerlink" title="语料构造方式"></a>语料构造方式</h5><p>虽然表面上 word2vec 是无监督的，但实际的训练过程是有监督的，它的<code>有监督语料</code>主要受两种模型影响</p>
 <ul>
 <li>CBOW (Continuous Bag of Words)</li>
 <li>Skip-Gram</li>
 </ul>
-<p><img src="/images/posts/deeplearning/word2vec03.png"></p>
-<h4 id="fasttext">fasttext</h4>
-<p>fasttext 和 word2vec 原理类似，训练方式类似，区别在于：</p>
+<p><img src="/images/posts/deeplearning/word2vec03.png" alt=""></p>
+<h4 id="fasttext"><a href="#fasttext" class="headerlink" title="fasttext"></a>fasttext</h4><p>fasttext 和 word2vec 原理类似，训练方式类似，区别在于：</p>
 <ul>
 <li>fasttext 需要提供有监督的语料</li>
 <li>fasttext 使用了 n-gram 特征</li>
 </ul>
-<p><img src="/images/posts/deeplearning/word2vec04.png"></p>
+<p><img src="/images/posts/deeplearning/word2vec04.png" alt=""></p>
 <p><strong>n-gram 特征的主要作用</strong>： 通过共享权值，改善生成词向量的质量</p>
-<h3 id="如何给网络添加特征">如何给网络添加特征</h3>
-<p>特征有很多种，词、字、词性、位置信息、偏旁部首、n-gram等，一般来说添加适量的特征可以提升模型效果，特别在小数据量的情况下。</p>
+<h3 id="如何给网络添加特征"><a href="#如何给网络添加特征" class="headerlink" title="如何给网络添加特征"></a>如何给网络添加特征</h3><p>特征有很多种，词、字、词性、位置信息、偏旁部首、n-gram等，一般来说添加适量的特征可以提升模型效果，特别在小数据量的情况下。</p>
 <p>本人经验，添加特征的方式一般有两种：</p>
 <ul>
 <li>embedding: 将不同特征的 embedding 拼接作为最终的词嵌入向量表示</li>
 <li>attention: 把特征当作 attention 里的 K (Key)</li>
 </ul>
-<h3 id="elmogptbert">ELMo、GPT、BERT</h3>
-<p>这三个模型在今年陆陆续续地刷新了各大 NLP 榜单，总结了一下，它们的都有一个特点：<strong>深</strong>层网络 + <strong>大</strong>规模训练语料 + <strong>微调</strong>即可迁移到其他下游任务</p>
+<h3 id="ELMo、GPT、BERT"><a href="#ELMo、GPT、BERT" class="headerlink" title="ELMo、GPT、BERT"></a>ELMo、GPT、BERT</h3><p>这三个模型在今年陆陆续续地刷新了各大 NLP 榜单，总结了一下，它们的都有一个特点：<strong>深</strong>层网络 + <strong>大</strong>规模训练语料 + <strong>微调</strong>即可迁移到其他下游任务</p>
 <ul>
 <li>ELMo: 来自 Allen Institue, 论文 《Deep contextualized word representations》</li>
 <li>GPT: 来自 OpenAI , 论文 《Improving Language Understanding by Generative Pre-Training》</li>
 <li>BERT: 来自 Google , 论文《BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding》</li>
 </ul>
-<p><img src="/images/posts/deeplearning/word2vec05.png"></p>
+<p><img src="/images/posts/deeplearning/word2vec05.png" alt=""></p>
 <p>ELMo 一般采用双向的 LSTM 或者 CNN 来训练，而 GPT、BERT 采用的是 transformer</p>
-<h4 id="word2vecelmogptbert四者的关系">Word2vec、ELMo、GPT、BERT四者的关系</h4>
-<p><img src="/images/posts/deeplearning/word2vec06.png"></p>
+<h4 id="Word2vec、ELMo、GPT、BERT四者的关系"><a href="#Word2vec、ELMo、GPT、BERT四者的关系" class="headerlink" title="Word2vec、ELMo、GPT、BERT四者的关系"></a>Word2vec、ELMo、GPT、BERT四者的关系</h4><p><img src="/images/posts/deeplearning/word2vec06.png" alt=""></p>
 <p><strong>BERT</strong>的 transformer 之所以是双向的，是因为它构造训练语料的时候采用了一种 <code>next sentence prediction</code> 策略，详细请查阅原论文</p>
-<h2 id="tensorflow-实战以dpcnn为例讲述如何实现一篇论文">Tensorflow 实战：以DPCNN为例讲述如何实现一篇论文</h2>
-<p>本人经验，实现论文常用步骤</p>
+<h2 id="Tensorflow-实战：以DPCNN为例讲述如何实现一篇论文"><a href="#Tensorflow-实战：以DPCNN为例讲述如何实现一篇论文" class="headerlink" title="Tensorflow 实战：以DPCNN为例讲述如何实现一篇论文"></a>Tensorflow 实战：以DPCNN为例讲述如何实现一篇论文</h2><p>本人经验，实现论文常用步骤</p>
 <ul>
 <li>首要条件是读懂论文，知道论文提出的模型采用了哪些结构，最好是看到公式心里就出现代码（比如说看到一堆 lstm 的公式就想起 lstm 相关的代码，这样可能一行代码就可以解决论文中一堆公式了）</li>
 <li>语料如何构造</li>
@@ -1027,33 +887,27 @@ b_{j} := b_{j} - \alpha \frac{\partial J(w, b)}{\partial b_{j}}
 <li>模型实现的 tricks 及调参说明 (最终能不能复现这部分很重要)</li>
 </ul>
 <p>本节以论文 <a href="https://ai.tencent.com/ailab/media/publications/ACL3-Brady.pdf" target="_blank" rel="noopener">DPCNN: Deep Pyramid Convolutional Neural Networks for Text Categorization</a> 为例讲述如何用 TensorFlow 实现一篇论文</p>
-<h3 id="读懂论文">1. 读懂论文</h3>
-<p>DPCNN 是腾讯 AI Lab提出的，被ACL 2017 收录，主要用于文本分类，是一种基于 CNN 的浅层（相比大多数残差网络来说有点浅）残差网络结构</p>
-<h3 id="实现模型结构">2. 实现模型结构</h3>
-<p>大多数论文都会给出模型的网络结构，以及网络结构的说明，要实现论文这一块内容非常重要。</p>
+<h3 id="1-读懂论文"><a href="#1-读懂论文" class="headerlink" title="1. 读懂论文"></a>1. 读懂论文</h3><p>DPCNN 是腾讯 AI Lab提出的，被ACL 2017 收录，主要用于文本分类，是一种基于 CNN 的浅层（相比大多数残差网络来说有点浅）残差网络结构</p>
+<h3 id="2-实现模型结构"><a href="#2-实现模型结构" class="headerlink" title="2. 实现模型结构"></a>2. 实现模型结构</h3><p>大多数论文都会给出模型的网络结构，以及网络结构的说明，要实现论文这一块内容非常重要。</p>
 <p>DPCNN 的模型结构为：</p>
-<p><img src="/images/posts/deeplearning/dpcnn01.png"></p>
+<p><img src="/images/posts/deeplearning/dpcnn01.png" alt=""></p>
 <p>可以看到这是一个残差结构，而且网络结构中的模块以卷积为主，那接下来的工作就是<code>搭乐高积木</code>的过程了</p>
 <blockquote>
 <p><strong>残差 = 预测值 - 观测值</strong> 神经网络在反向传播中会不断的更新梯度，当网络层数加深时，梯度在逐层传播的过程中会逐渐减弱，最后导致对先前的网络权重(由于采用了链式求导法则，所以必定要更新先前网络的权重)更新困难。<strong>在残差网络中，会在当前时刻的网络层中加入先前添加的观测连接（也称short connections)</strong>这样直接为当前层网络提供了一个直接连接先前层网络的通道使得可以直接更新先前网络的参数，因此缓解了梯度减小的问题</p>
 </blockquote>
-<p><strong>1. 首先定义好输入层的变量</strong> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 输入的 mini-batch 数据</span></span><br><span class="line">self.inputs = tf.placeholder(tf.int32, </span><br><span class="line">                            [<span class="keyword">None</span>, self.config.max_sent_len],</span><br><span class="line">                            name=<span class="string">"inputs"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 真实标签</span></span><br><span class="line">self.labels = tf.placeholder(tf.int32,</span><br><span class="line">                            [<span class="keyword">None</span>], </span><br><span class="line">                            name=<span class="string">"label"</span>)</span><br><span class="line"><span class="comment"># <span class="doctag">TODO:</span> others</span></span><br></pre></td></tr></table></figure></p>
-<p><strong>2. 词嵌入层</strong> 将压缩的 ont-hot 编码 (字典形式) 转为分布式编码</p>
+<p><strong>1. 首先定义好输入层的变量</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 输入的 mini-batch 数据</span></span><br><span class="line">self.inputs = tf.placeholder(tf.int32, </span><br><span class="line">                            [<span class="keyword">None</span>, self.config.max_sent_len],</span><br><span class="line">                            name=<span class="string">"inputs"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 真实标签</span></span><br><span class="line">self.labels = tf.placeholder(tf.int32,</span><br><span class="line">                            [<span class="keyword">None</span>], </span><br><span class="line">                            name=<span class="string">"label"</span>)</span><br><span class="line"><span class="comment"># <span class="doctag">TODO:</span> others</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>2. 词嵌入层</strong><br>将压缩的 ont-hot 编码 (字典形式) 转为分布式编码</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">word_matrix = tf.get_variable(<span class="string">'word_embeddings'</span>,</span><br><span class="line">                           shape=[vocab_size(), embedding_size],</span><br><span class="line">                           trainable=<span class="keyword">False</span>)</span><br><span class="line">self.input_embedding = tf.nn.embedding_lookup(word_matrix, self.inputs)</span><br></pre></td></tr></table></figure>
-<p><strong>3. 构造网络</strong> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">inputs = self.input_embedding</span><br><span class="line"></span><br><span class="line">conv1 = tf.layers.conv1d(inputs, </span><br><span class="line">                         <span class="number">250</span>,    <span class="comment"># filters</span></span><br><span class="line">                         <span class="number">3</span>,      <span class="comment"># kernel size</span></span><br><span class="line">                         activation=tf.nn.relu,</span><br><span class="line">                         name=<span class="string">'conv1'</span>)</span><br><span class="line"></span><br><span class="line">conv2 = tf.layers.conv1d(conv1, </span><br><span class="line">                         <span class="number">250</span>,    <span class="comment"># filters</span></span><br><span class="line">                         <span class="number">3</span>,      <span class="comment"># kernel size</span></span><br><span class="line">                         activation=tf.nn.relu,</span><br><span class="line">                         name=<span class="string">'conv2'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># short-connection (引入观测点)</span></span><br><span class="line">inputs = conv2 + inputs</span><br><span class="line"></span><br><span class="line"><span class="comment"># Repeat</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(self.config.num_blocks):</span><br><span class="line">    seq_len = inputs.get_shape()[<span class="number">1</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Downsampling: pooling / 2</span></span><br><span class="line">    poolings = tf.transpose(</span><br><span class="line">        tf.nn.top_k(tf.transpose(inputs, [<span class="number">0</span>,<span class="number">2</span>,<span class="number">1</span>]), k=seq_len // <span class="number">2</span>)[<span class="number">0</span>], [<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">    conv1 = tf.layers.conv1d(poolings, </span><br><span class="line">                             <span class="number">250</span>,    <span class="comment"># filters</span></span><br><span class="line">                             <span class="number">3</span>,      <span class="comment"># kernel size</span></span><br><span class="line">                             activation=tf.nn.relu,</span><br><span class="line">                             name=<span class="string">'conv1-%d'</span> % i)</span><br><span class="line">                             </span><br><span class="line">    conv2 = tf.layers.conv1d(conv1, </span><br><span class="line">                             <span class="number">250</span>,    <span class="comment"># filters</span></span><br><span class="line">                             <span class="number">3</span>,      <span class="comment"># kernel size</span></span><br><span class="line">                             activation=tf.nn.relu,</span><br><span class="line">                             name=<span class="string">'conv2-%d'</span> % i)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># short-connection (引入观测点)</span></span><br><span class="line">    inputs = conv2 + poolings</span><br><span class="line"></span><br><span class="line"><span class="comment"># pooling</span></span><br><span class="line">self.outputs = tf.reduce_max(inputs, axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
-<h3 id="完善模型加入-tricks-调参数">3. 完善模型，加入 tricks, 调参数</h3>
-<h3 id="本节后记">本节后记</h3>
-<p>本节涉及到的完整代码已经放在 <a href="https://github.com/SeanLee97/clfzoo" target="_blank" rel="noopener">github / clfzoo</a> 上，欢迎给这个 repo 添砖加瓦</p>
+<p><strong>3. 构造网络</strong><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">inputs = self.input_embedding</span><br><span class="line"></span><br><span class="line">conv1 = tf.layers.conv1d(inputs, </span><br><span class="line">                         <span class="number">250</span>,    <span class="comment"># filters</span></span><br><span class="line">                         <span class="number">3</span>,      <span class="comment"># kernel size</span></span><br><span class="line">                         activation=tf.nn.relu,</span><br><span class="line">                         name=<span class="string">'conv1'</span>)</span><br><span class="line"></span><br><span class="line">conv2 = tf.layers.conv1d(conv1, </span><br><span class="line">                         <span class="number">250</span>,    <span class="comment"># filters</span></span><br><span class="line">                         <span class="number">3</span>,      <span class="comment"># kernel size</span></span><br><span class="line">                         activation=tf.nn.relu,</span><br><span class="line">                         name=<span class="string">'conv2'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># short-connection (引入观测点)</span></span><br><span class="line">inputs = conv2 + inputs</span><br><span class="line"></span><br><span class="line"><span class="comment"># Repeat</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(self.config.num_blocks):</span><br><span class="line">    seq_len = inputs.get_shape()[<span class="number">1</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Downsampling: pooling / 2</span></span><br><span class="line">    poolings = tf.transpose(</span><br><span class="line">        tf.nn.top_k(tf.transpose(inputs, [<span class="number">0</span>,<span class="number">2</span>,<span class="number">1</span>]), k=seq_len // <span class="number">2</span>)[<span class="number">0</span>], [<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">    conv1 = tf.layers.conv1d(poolings, </span><br><span class="line">                             <span class="number">250</span>,    <span class="comment"># filters</span></span><br><span class="line">                             <span class="number">3</span>,      <span class="comment"># kernel size</span></span><br><span class="line">                             activation=tf.nn.relu,</span><br><span class="line">                             name=<span class="string">'conv1-%d'</span> % i)</span><br><span class="line">                             </span><br><span class="line">    conv2 = tf.layers.conv1d(conv1, </span><br><span class="line">                             <span class="number">250</span>,    <span class="comment"># filters</span></span><br><span class="line">                             <span class="number">3</span>,      <span class="comment"># kernel size</span></span><br><span class="line">                             activation=tf.nn.relu,</span><br><span class="line">                             name=<span class="string">'conv2-%d'</span> % i)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># short-connection (引入观测点)</span></span><br><span class="line">    inputs = conv2 + poolings</span><br><span class="line"></span><br><span class="line"><span class="comment"># pooling</span></span><br><span class="line">self.outputs = tf.reduce_max(inputs, axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
+<h3 id="3-完善模型，加入-tricks-调参数"><a href="#3-完善模型，加入-tricks-调参数" class="headerlink" title="3. 完善模型，加入 tricks, 调参数"></a>3. 完善模型，加入 tricks, 调参数</h3><h3 id="本节后记"><a href="#本节后记" class="headerlink" title="本节后记"></a>本节后记</h3><p>本节涉及到的完整代码已经放在 <a href="https://github.com/SeanLee97/clfzoo" target="_blank" rel="noopener">github / clfzoo</a> 上，欢迎给这个 repo 添砖加瓦</p>
 <p>代码能力其实就一句话：无他，但手熟尔。</p>
 <p>一定要向别人学习，学习阶段要多动手自己造轮子。</p>
-<h2 id="写在最后">写在最后</h2>
-<p>本人才疏学浅、思维深度浅加之表达能力几乎为 0，所以不免有所遗漏和错误的地方，欢迎大家指正，多交流！</p>
-<h2 id="refrence">Refrence</h2>
-<ul>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>本人才疏学浅、思维深度浅加之表达能力几乎为 0，所以不免有所遗漏和错误的地方，欢迎大家指正，多交流！</p>
+<h2 id="Refrence"><a href="#Refrence" class="headerlink" title="Refrence"></a>Refrence</h2><ul>
 <li><a href="http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/#/Neural_Networks_and_Deep_Learning/浅层神经网络" target="_blank" rel="noopener">浅层神经网络</a></li>
 <li><a href="https://yq.aliyun.com/articles/617314" target="_blank" rel="noopener">直观理解深度学习的卷积操作，超赞！</a></li>
 <li><a href="http://ufldl.stanford.edu/wiki/index.php/%E6%B1%A0%E5%8C%96" target="_blank" rel="noopener">池化</a></li>
-<li>部分动图来自 https://github.com/vdumoulin/conv_arithmetic</li>
+<li>部分动图来自 <a href="https://github.com/vdumoulin/conv_arithmetic" target="_blank" rel="noopener">https://github.com/vdumoulin/conv_arithmetic</a></li>
 <li><a href="https://blog.goodaudience.com/introduction-to-1d-convolutional-neural-networks-in-keras-for-time-sequences-3a7ff801a2cf" target="_blank" rel="noopener">Introduction to 1D Convolutional Neural Networks in Keras for Time Sequences</a></li>
 <li><a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="noopener">Understanding-LSTMs</a></li>
 <li><a href="https://kexue.fm/archives/4765" target="_blank" rel="noopener">《Attention is All You Need》浅读（简介+代码）</a></li>
@@ -1320,7 +1174,7 @@ b_{j} := b_{j} - \alpha \frac{\partial J(w, b)}{\partial b_{j}}
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#大纲"><span class="nav-number">1.</span> <span class="nav-text">大纲</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是深度学习"><span class="nav-number">2.</span> <span class="nav-text">什么是深度学习？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#神经网络"><span class="nav-number">2.1.</span> <span class="nav-text">神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#神经网络表示"><span class="nav-number">2.1.1.</span> <span class="nav-text">神经网络表示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#神经网络的计算"><span class="nav-number">2.1.2.</span> <span class="nav-text">神经网络的计算</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#前向传播"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">前向传播</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#反向传播"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">反向传播</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#神经网络学习建议"><span class="nav-number">2.1.3.</span> <span class="nav-text">神经网络学习建议</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#热门的深度学习框架及选择建议"><span class="nav-number">3.</span> <span class="nav-text">热门的深度学习框架及选择建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#静态图和动态图的区别"><span class="nav-number">3.1.</span> <span class="nav-text">静态图和动态图的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#静态图"><span class="nav-number">3.1.1.</span> <span class="nav-text">静态图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#动态图"><span class="nav-number">3.1.2.</span> <span class="nav-text">动态图</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#两种框架的对比"><span class="nav-number">3.2.</span> <span class="nav-text">两种框架的对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#选择建议"><span class="nav-number">3.3.</span> <span class="nav-text">选择建议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用深度学习模块原理及应用"><span class="nav-number">4.</span> <span class="nav-text">常用深度学习模块原理及应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cnn"><span class="nav-number">4.1.</span> <span class="nav-text">CNN</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#卷积"><span class="nav-number">4.1.1.</span> <span class="nav-text">卷积</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#池化"><span class="nav-number">4.1.2.</span> <span class="nav-text">池化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他概念"><span class="nav-number">4.1.3.</span> <span class="nav-text">其他概念</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#感受野"><span class="nav-number">4.1.3.1.</span> <span class="nav-text">感受野</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#空洞膨胀卷积"><span class="nav-number">4.1.3.2.</span> <span class="nav-text">空洞(膨胀)卷积</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tensorflow-的封装"><span class="nav-number">4.2.</span> <span class="nav-text">TensorFlow 的封装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rnn及其变体"><span class="nav-number">4.3.</span> <span class="nav-text">RNN及其变体</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#最简单的神经网络模型"><span class="nav-number">4.3.1.</span> <span class="nav-text">最简单的神经网络模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rnn"><span class="nav-number">4.3.2.</span> <span class="nav-text">RNN</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#原理"><span class="nav-number">4.3.2.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#缺点"><span class="nav-number">4.3.2.2.</span> <span class="nav-text">缺点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#lstm-long-short-term-memory-长短时记忆"><span class="nav-number">4.3.3.</span> <span class="nav-text">LSTM (Long Short-Term Memory) 长短时记忆</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#lstm-的工作原理"><span class="nav-number">4.3.3.1.</span> <span class="nav-text">LSTM 的工作原理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#lstm-的变种"><span class="nav-number">4.3.3.2.</span> <span class="nav-text">LSTM 的变种</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#双向-rnn"><span class="nav-number">4.3.3.3.</span> <span class="nav-text">双向 RNN</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#attention机制的原理以及实现"><span class="nav-number">4.4.</span> <span class="nav-text">Attention机制的原理以及实现</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#nlp-领域常见的-attention-模型"><span class="nav-number">4.4.0.1.</span> <span class="nav-text">NLP 领域常见的 Attention 模型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用-tensorflow-实现-self-attention"><span class="nav-number">4.4.0.2.</span> <span class="nav-text">使用 TensorFlow 实现 Self-Attention</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#transformer"><span class="nav-number">4.5.</span> <span class="nav-text">Transformer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用的网络训练技巧"><span class="nav-number">5.</span> <span class="nav-text">常用的网络训练技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#正则化的意义及使用方式"><span class="nav-number">5.1.</span> <span class="nav-text">正则化的意义及使用方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#损失函数"><span class="nav-number">5.1.1.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#经验风险-empirical-risk"><span class="nav-number">5.1.2.</span> <span class="nav-text">经验风险 (empirical risk)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#期望风险-expected-risk"><span class="nav-number">5.1.3.</span> <span class="nav-text">期望风险 (expected risk)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结构风险-structual-risk"><span class="nav-number">5.1.4.</span> <span class="nav-text">结构风险 (structual risk)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#成本函数"><span class="nav-number">5.1.5.</span> <span class="nav-text">成本函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#目标函数"><span class="nav-number">5.1.6.</span> <span class="nav-text">目标函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#正则化"><span class="nav-number">5.1.7.</span> <span class="nav-text">正则化</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#l1-正则-l2正则"><span class="nav-number">5.1.7.1.</span> <span class="nav-text">L1 正则， L2正则</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#dropout"><span class="nav-number">5.1.7.2.</span> <span class="nav-text">dropout</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#规范化的作用及常用的规范化方式"><span class="nav-number">5.2.</span> <span class="nav-text">规范化的作用及常用的规范化方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的激活函数及选择"><span class="nav-number">5.3.</span> <span class="nav-text">常见的激活函数及选择</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sigmoid"><span class="nav-number">5.3.1.</span> <span class="nav-text">sigmoid</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tanh"><span class="nav-number">5.3.2.</span> <span class="nav-text">tanh</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#relu"><span class="nav-number">5.3.3.</span> <span class="nav-text">relu</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的优化器及选择"><span class="nav-number">5.4.</span> <span class="nav-text">常见的优化器及选择</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sgd"><span class="nav-number">5.4.1.</span> <span class="nav-text">SGD</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#momentum"><span class="nav-number">5.4.2.</span> <span class="nav-text">Momentum</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rmsprop"><span class="nav-number">5.4.3.</span> <span class="nav-text">RMSProp</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#adam"><span class="nav-number">5.4.4.</span> <span class="nav-text">Adam</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用经验"><span class="nav-number">5.4.5.</span> <span class="nav-text">使用经验</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mask-的作用"><span class="nav-number">5.5.</span> <span class="nav-text">mask 的作用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#tensorflow-实现-mask"><span class="nav-number">5.5.1.</span> <span class="nav-text">TensorFlow 实现 mask</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模型效果提升偏方"><span class="nav-number">5.6.</span> <span class="nav-text">模型效果提升偏方</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#迁移学习"><span class="nav-number">5.6.1.</span> <span class="nav-text">迁移学习</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#预训练词向量"><span class="nav-number">5.6.1.1.</span> <span class="nav-text">预训练词向量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#预训练语言模型"><span class="nav-number">5.6.1.2.</span> <span class="nav-text">预训练语言模型</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#鉴别学习-identity-learning"><span class="nav-number">5.6.2.</span> <span class="nav-text">鉴别学习 (identity learning)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模型融合-ensemble"><span class="nav-number">5.6.3.</span> <span class="nav-text">模型融合 (ensemble)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模型蒸馏"><span class="nav-number">5.6.4.</span> <span class="nav-text">模型蒸馏</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深度学习与nlp"><span class="nav-number">6.</span> <span class="nav-text">深度学习与NLP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#word2vec-vs-fasttext"><span class="nav-number">6.1.</span> <span class="nav-text">word2vec vs fasttext</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#word2vec"><span class="nav-number">6.1.1.</span> <span class="nav-text">word2vec</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#输入层"><span class="nav-number">6.1.1.1.</span> <span class="nav-text">输入层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#投射层"><span class="nav-number">6.1.1.2.</span> <span class="nav-text">投射层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#输出层"><span class="nav-number">6.1.1.3.</span> <span class="nav-text">输出层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#语料构造方式"><span class="nav-number">6.1.1.4.</span> <span class="nav-text">语料构造方式</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fasttext"><span class="nav-number">6.1.2.</span> <span class="nav-text">fasttext</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何给网络添加特征"><span class="nav-number">6.2.</span> <span class="nav-text">如何给网络添加特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#elmogptbert"><span class="nav-number">6.3.</span> <span class="nav-text">ELMo、GPT、BERT</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#word2vecelmogptbert四者的关系"><span class="nav-number">6.3.1.</span> <span class="nav-text">Word2vec、ELMo、GPT、BERT四者的关系</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tensorflow-实战以dpcnn为例讲述如何实现一篇论文"><span class="nav-number">7.</span> <span class="nav-text">Tensorflow 实战：以DPCNN为例讲述如何实现一篇论文</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读懂论文"><span class="nav-number">7.1.</span> <span class="nav-text">1. 读懂论文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现模型结构"><span class="nav-number">7.2.</span> <span class="nav-text">2. 实现模型结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#完善模型加入-tricks-调参数"><span class="nav-number">7.3.</span> <span class="nav-text">3. 完善模型，加入 tricks, 调参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本节后记"><span class="nav-number">7.4.</span> <span class="nav-text">本节后记</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写在最后"><span class="nav-number">8.</span> <span class="nav-text">写在最后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#refrence"><span class="nav-number">9.</span> <span class="nav-text">Refrence</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#大纲"><span class="nav-number">1.</span> <span class="nav-text">大纲</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是深度学习？"><span class="nav-number">2.</span> <span class="nav-text">什么是深度学习？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#神经网络"><span class="nav-number">2.1.</span> <span class="nav-text">神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#神经网络表示"><span class="nav-number">2.1.1.</span> <span class="nav-text">神经网络表示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#神经网络的计算"><span class="nav-number">2.1.2.</span> <span class="nav-text">神经网络的计算</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#前向传播"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">前向传播</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#反向传播"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">反向传播</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#神经网络学习建议"><span class="nav-number">2.1.3.</span> <span class="nav-text">神经网络学习建议</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#热门的深度学习框架及选择建议"><span class="nav-number">3.</span> <span class="nav-text">热门的深度学习框架及选择建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#静态图和动态图的区别"><span class="nav-number">3.1.</span> <span class="nav-text">静态图和动态图的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#静态图"><span class="nav-number">3.1.1.</span> <span class="nav-text">静态图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#动态图"><span class="nav-number">3.1.2.</span> <span class="nav-text">动态图</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#两种框架的对比"><span class="nav-number">3.2.</span> <span class="nav-text">两种框架的对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#选择建议"><span class="nav-number">3.3.</span> <span class="nav-text">选择建议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用深度学习模块原理及应用"><span class="nav-number">4.</span> <span class="nav-text">常用深度学习模块原理及应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CNN"><span class="nav-number">4.1.</span> <span class="nav-text">CNN</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#卷积"><span class="nav-number">4.1.1.</span> <span class="nav-text">卷积</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#池化"><span class="nav-number">4.1.2.</span> <span class="nav-text">池化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他概念"><span class="nav-number">4.1.3.</span> <span class="nav-text">其他概念</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#感受野"><span class="nav-number">4.1.3.1.</span> <span class="nav-text">感受野</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#空洞-膨胀-卷积"><span class="nav-number">4.1.3.2.</span> <span class="nav-text">空洞(膨胀)卷积</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TensorFlow-的封装"><span class="nav-number">4.2.</span> <span class="nav-text">TensorFlow 的封装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RNN及其变体"><span class="nav-number">4.3.</span> <span class="nav-text">RNN及其变体</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#最简单的神经网络模型"><span class="nav-number">4.3.1.</span> <span class="nav-text">最简单的神经网络模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RNN"><span class="nav-number">4.3.2.</span> <span class="nav-text">RNN</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#原理"><span class="nav-number">4.3.2.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#缺点"><span class="nav-number">4.3.2.2.</span> <span class="nav-text">缺点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LSTM-Long-Short-Term-Memory-长短时记忆"><span class="nav-number">4.3.3.</span> <span class="nav-text">LSTM (Long Short-Term Memory) 长短时记忆</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#LSTM-的工作原理"><span class="nav-number">4.3.3.1.</span> <span class="nav-text">LSTM 的工作原理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#LSTM-的变种"><span class="nav-number">4.3.3.2.</span> <span class="nav-text">LSTM 的变种</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#双向-RNN"><span class="nav-number">4.3.3.3.</span> <span class="nav-text">双向 RNN</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Attention机制的原理以及实现"><span class="nav-number">4.4.</span> <span class="nav-text">Attention机制的原理以及实现</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#NLP-领域常见的-Attention-模型"><span class="nav-number">4.4.0.1.</span> <span class="nav-text">NLP 领域常见的 Attention 模型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用-TensorFlow-实现-Self-Attention"><span class="nav-number">4.4.0.2.</span> <span class="nav-text">使用 TensorFlow 实现 Self-Attention</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Transformer"><span class="nav-number">4.5.</span> <span class="nav-text">Transformer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用的网络训练技巧"><span class="nav-number">5.</span> <span class="nav-text">常用的网络训练技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#正则化的意义及使用方式"><span class="nav-number">5.1.</span> <span class="nav-text">正则化的意义及使用方式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#损失函数"><span class="nav-number">5.1.1.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#经验风险-empirical-risk"><span class="nav-number">5.1.2.</span> <span class="nav-text">经验风险 (empirical risk)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#期望风险-expected-risk"><span class="nav-number">5.1.3.</span> <span class="nav-text">期望风险 (expected risk)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结构风险-structual-risk"><span class="nav-number">5.1.4.</span> <span class="nav-text">结构风险 (structual risk)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#成本函数"><span class="nav-number">5.1.5.</span> <span class="nav-text">成本函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#目标函数"><span class="nav-number">5.1.6.</span> <span class="nav-text">目标函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#正则化"><span class="nav-number">5.1.7.</span> <span class="nav-text">正则化</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#L1-正则，-L2正则"><span class="nav-number">5.1.7.1.</span> <span class="nav-text">L1 正则， L2正则</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#dropout"><span class="nav-number">5.1.7.2.</span> <span class="nav-text">dropout</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#规范化的作用及常用的规范化方式"><span class="nav-number">5.2.</span> <span class="nav-text">规范化的作用及常用的规范化方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的激活函数及选择"><span class="nav-number">5.3.</span> <span class="nav-text">常见的激活函数及选择</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sigmoid"><span class="nav-number">5.3.1.</span> <span class="nav-text">sigmoid</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tanh"><span class="nav-number">5.3.2.</span> <span class="nav-text">tanh</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#relu"><span class="nav-number">5.3.3.</span> <span class="nav-text">relu</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的优化器及选择"><span class="nav-number">5.4.</span> <span class="nav-text">常见的优化器及选择</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SGD"><span class="nav-number">5.4.1.</span> <span class="nav-text">SGD</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Momentum"><span class="nav-number">5.4.2.</span> <span class="nav-text">Momentum</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RMSProp"><span class="nav-number">5.4.3.</span> <span class="nav-text">RMSProp</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Adam"><span class="nav-number">5.4.4.</span> <span class="nav-text">Adam</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用经验"><span class="nav-number">5.4.5.</span> <span class="nav-text">使用经验</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mask-的作用"><span class="nav-number">5.5.</span> <span class="nav-text">mask 的作用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TensorFlow-实现-mask"><span class="nav-number">5.5.1.</span> <span class="nav-text">TensorFlow 实现 mask</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模型效果提升偏方"><span class="nav-number">5.6.</span> <span class="nav-text">模型效果提升偏方</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#迁移学习"><span class="nav-number">5.6.1.</span> <span class="nav-text">迁移学习</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#预训练词向量"><span class="nav-number">5.6.1.1.</span> <span class="nav-text">预训练词向量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#预训练语言模型"><span class="nav-number">5.6.1.2.</span> <span class="nav-text">预训练语言模型</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#鉴别学习-identity-learning"><span class="nav-number">5.6.2.</span> <span class="nav-text">鉴别学习 (identity learning)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模型融合-ensemble"><span class="nav-number">5.6.3.</span> <span class="nav-text">模型融合 (ensemble)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模型蒸馏"><span class="nav-number">5.6.4.</span> <span class="nav-text">模型蒸馏</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深度学习与NLP"><span class="nav-number">6.</span> <span class="nav-text">深度学习与NLP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#word2vec-vs-fasttext"><span class="nav-number">6.1.</span> <span class="nav-text">word2vec vs fasttext</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#word2vec"><span class="nav-number">6.1.1.</span> <span class="nav-text">word2vec</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#输入层"><span class="nav-number">6.1.1.1.</span> <span class="nav-text">输入层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#投射层"><span class="nav-number">6.1.1.2.</span> <span class="nav-text">投射层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#输出层"><span class="nav-number">6.1.1.3.</span> <span class="nav-text">输出层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#语料构造方式"><span class="nav-number">6.1.1.4.</span> <span class="nav-text">语料构造方式</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fasttext"><span class="nav-number">6.1.2.</span> <span class="nav-text">fasttext</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何给网络添加特征"><span class="nav-number">6.2.</span> <span class="nav-text">如何给网络添加特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ELMo、GPT、BERT"><span class="nav-number">6.3.</span> <span class="nav-text">ELMo、GPT、BERT</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Word2vec、ELMo、GPT、BERT四者的关系"><span class="nav-number">6.3.1.</span> <span class="nav-text">Word2vec、ELMo、GPT、BERT四者的关系</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tensorflow-实战：以DPCNN为例讲述如何实现一篇论文"><span class="nav-number">7.</span> <span class="nav-text">Tensorflow 实战：以DPCNN为例讲述如何实现一篇论文</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-读懂论文"><span class="nav-number">7.1.</span> <span class="nav-text">1. 读懂论文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-实现模型结构"><span class="nav-number">7.2.</span> <span class="nav-text">2. 实现模型结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-完善模型，加入-tricks-调参数"><span class="nav-number">7.3.</span> <span class="nav-text">3. 完善模型，加入 tricks, 调参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本节后记"><span class="nav-number">7.4.</span> <span class="nav-text">本节后记</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写在最后"><span class="nav-number">8.</span> <span class="nav-text">写在最后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Refrence"><span class="nav-number">9.</span> <span class="nav-text">Refrence</span></a></li></ol></div>
             
 
           </div>
