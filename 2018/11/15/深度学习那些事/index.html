@@ -104,7 +104,7 @@
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/deeplearning/rnn02.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/deeplearning/rnn03.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/deeplearning/rnn04.png">
-<meta property="og:image" content="http://seanlee97.github.io/images/posts/deeplearning/rnn04.png">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/deeplearning/rnn05.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/deeplearning/rnn06.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/deeplearning/rnn07.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/deeplearning/rnn03.png">
@@ -139,7 +139,7 @@
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/deeplearning/word2vec05.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/deeplearning/word2vec06.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/deeplearning/dpcnn01.png">
-<meta property="og:updated_time" content="2018-11-22T03:06:56.087Z">
+<meta property="og:updated_time" content="2018-11-22T13:24:46.463Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深度学习那些事">
 <meta name="twitter:description" content="现今使用深度学习的方法解决 NLP 领域的问题变得越来越流行，近年来，学界上出现了越来越多有关深度学习的论文;业界上各种深度学习框架、深度学习应用也被推出。 本文主要分享本人对于深度学习的理解及一些经验。 大纲  什么是深度学习？ 热门的深度学习框架及选择建议 常用深度学习模块原理及应用  CNN RNN及其变体 Attention机制的原理以及实现 Transformer  常用的网络训练技巧">
@@ -696,7 +696,7 @@ h_{t} &amp; = o_{t} \odot tanh(c_{t})
 <p><span class="math display">\[i_{t} = \sigma(W_{i} [h_{t-1}, x_{t}] + b_{i})\]</span></p>
 <p>有了候选的长期记忆和选择函数后，我们就可以确定哪些记忆是要添加到长期记忆的。在 t 时刻：</p>
 <p><span class="math display">\[new\_ltm_{t} = save_{t} \odot lsm^{&#39;}\]</span></p>
-<p><img src="/images/posts/deeplearning/rnn04.png"></p>
+<p><img src="/images/posts/deeplearning/rnn05.png"></p>
 <p>上面已经得到了老的长期记忆中在当前时刻要保留的部分 <span class="math inline">\(old\_ltm_{t}\)</span> ，以及当前时刻的候选记忆中要保留的部分 <span class="math inline">\(new\_ltm_{t}\)</span> ，因此 t 时刻最终确定的长期记忆为</p>
 <p><span class="math display">\[ltm_{t} = old\_ltm_{t} + new\_ltm_{t}\]</span></p>
 <p>上述公式还可表示成：</p>

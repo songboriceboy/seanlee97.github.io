@@ -829,7 +829,7 @@ h_{t} &amp; = o_{t} \odot tanh(c_{t})
 <p><span class="math display">\[i_{t} = \sigma(W_{i} [h_{t-1}, x_{t}] + b_{i})\]</span></p>
 <p>有了候选的长期记忆和选择函数后，我们就可以确定哪些记忆是要添加到长期记忆的。在 t 时刻：</p>
 <p><span class="math display">\[new\_ltm_{t} = save_{t} \odot lsm^{&#39;}\]</span></p>
-<p><img src="/images/posts/deeplearning/rnn04.png"></p>
+<p><img src="/images/posts/deeplearning/rnn05.png"></p>
 <p>上面已经得到了老的长期记忆中在当前时刻要保留的部分 <span class="math inline">\(old\_ltm_{t}\)</span> ，以及当前时刻的候选记忆中要保留的部分 <span class="math inline">\(new\_ltm_{t}\)</span> ，因此 t 时刻最终确定的长期记忆为</p>
 <p><span class="math display">\[ltm_{t} = old\_ltm_{t} + new\_ltm_{t}\]</span></p>
 <p>上述公式还可表示成：</p>
