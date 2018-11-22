@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="为了理解深度学习框架的大致机理，决定使用numpy实现一个简单的神经网络框架 深度学习框架我觉得最重要的是实现了链式求导法则，而计算图就是建立在链式求导法则之上的，目前大多数深度学习是基于反向传播思想的，如何在链式计算图中进行前向传播和反向传播是深度学习框架重点要考虑的  计算图  目前主流的深度学习框架有两种计算图实现方式：  静态图：先构建好图再让数据流入，优点是结构清晰，理论上速度占优（实际">
+<meta name="description" content="为了理解深度学习框架的大致机理，决定使用numpy实现一个简单的神经网络框架 深度学习框架我觉得最重要的是实现了链式求导法则，而计算图就是建立在链式求导法则之上的，目前大多数深度学习是基于反向传播思想的，如何在链式计算图中进行前向传播和反向传播是深度学习框架重点要考虑的   计算图  目前主流的深度学习框架有两种计算图实现方式：  静态图：先构建好图再让数据流入，优点是结构清晰，理论上速度占优（实">
 <meta name="keywords" content="DL">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用numpy实现一个深度学习框架">
 <meta property="og:url" content="http://seanlee97.github.io/2018/10/03/使用numpy实现一个深度学习框架/index.html">
 <meta property="og:site_name" content="明天探索者">
-<meta property="og:description" content="为了理解深度学习框架的大致机理，决定使用numpy实现一个简单的神经网络框架 深度学习框架我觉得最重要的是实现了链式求导法则，而计算图就是建立在链式求导法则之上的，目前大多数深度学习是基于反向传播思想的，如何在链式计算图中进行前向传播和反向传播是深度学习框架重点要考虑的  计算图  目前主流的深度学习框架有两种计算图实现方式：  静态图：先构建好图再让数据流入，优点是结构清晰，理论上速度占优（实际">
+<meta property="og:description" content="为了理解深度学习框架的大致机理，决定使用numpy实现一个简单的神经网络框架 深度学习框架我觉得最重要的是实现了链式求导法则，而计算图就是建立在链式求导法则之上的，目前大多数深度学习是基于反向传播思想的，如何在链式计算图中进行前向传播和反向传播是深度学习框架重点要考虑的   计算图  目前主流的深度学习框架有两种计算图实现方式：  静态图：先构建好图再让数据流入，优点是结构清晰，理论上速度占优（实">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/simnet/01.png">
 <meta property="og:image" content="http://seanlee97.github.io/images/posts/simnet/sigmoid.png">
@@ -96,7 +96,7 @@
 <meta property="og:updated_time" content="2018-10-04T14:21:59.058Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用numpy实现一个深度学习框架">
-<meta name="twitter:description" content="为了理解深度学习框架的大致机理，决定使用numpy实现一个简单的神经网络框架 深度学习框架我觉得最重要的是实现了链式求导法则，而计算图就是建立在链式求导法则之上的，目前大多数深度学习是基于反向传播思想的，如何在链式计算图中进行前向传播和反向传播是深度学习框架重点要考虑的  计算图  目前主流的深度学习框架有两种计算图实现方式：  静态图：先构建好图再让数据流入，优点是结构清晰，理论上速度占优（实际">
+<meta name="twitter:description" content="为了理解深度学习框架的大致机理，决定使用numpy实现一个简单的神经网络框架 深度学习框架我觉得最重要的是实现了链式求导法则，而计算图就是建立在链式求导法则之上的，目前大多数深度学习是基于反向传播思想的，如何在链式计算图中进行前向传播和反向传播是深度学习框架重点要考虑的   计算图  目前主流的深度学习框架有两种计算图实现方式：  静态图：先构建好图再让数据流入，优点是结构清晰，理论上速度占优（实">
 <meta name="twitter:image" content="http://seanlee97.github.io/images/posts/simnet/01.png">
 
 
@@ -350,9 +350,10 @@
       
         <p>为了理解深度学习框架的大致机理，决定使用numpy实现一个简单的神经网络框架</p>
 <p>深度学习框架我觉得最重要的是实现了<code>链式求导法则</code>，而计算图就是建立在<code>链式求导法则</code>之上的，目前大多数深度学习是基于<code>反向传播</code>思想的，如何在链式计算图中进行<code>前向传播</code>和<code>反向传播</code>是深度学习框架重点要考虑的</p>
-<p><img src="/images/posts/simnet/01.png" alt=""></p>
-<p align="center">计算图</p>
-
+<p><img src="/images/posts/simnet/01.png"></p>
+<p align="center">
+计算图
+</p>
 <p>目前主流的深度学习框架有两种计算图实现方式：</p>
 <ul>
 <li>静态图：先构建好图再让数据流入，优点是结构清晰，理论上速度占优（实际不一定）；缺点是debug困难，对初学者学习不友好（我认为主要是对计算图的理解不深刻导致的）。典型的框架代表：Tensorflow</li>
@@ -360,75 +361,118 @@
 </ul>
 <p>个人现在更倾向于使用<code>tensorflow</code>，一方面是<code>tensorflow</code>生态较成熟，另一方面个人感觉静态图更<code>数学化</code>，而动态图更<code>工程化</code></p>
 <p>不过本文实现的是一个类似pytorch风格的动态图框架</p>
-<h2 id="知识储备"><a href="#知识储备" class="headerlink" title="知识储备"></a>知识储备</h2><h3 id="链式求导法则"><a href="#链式求导法则" class="headerlink" title="链式求导法则"></a>链式求导法则</h3><p>$$\begin{align<em>}<br>&amp; f{‘} = f(x) \\<br>&amp; g{‘} = g(f{‘}) \\<br>&amp; y{‘} = k(g{‘}) \\<br>&amp; loss = L(y, y{‘})<br>\end{align</em>}$$</p>
+<h2 id="知识储备">知识储备</h2>
+<h3 id="链式求导法则">链式求导法则</h3>
+<p><span class="math display">\[\begin{align*}
+&amp; f{&#39;} = f(x) \\\\
+&amp; g{&#39;} = g(f{&#39;}) \\\\
+&amp; y{&#39;} = k(g{&#39;}) \\\\
+&amp; loss = L(y, y{&#39;}) 
+\end{align*}\]</span></p>
 <p>用链式求导法则计算可得</p>
-<p>$$\begin{align<em>}<br>\frac{d(loss)}{d(x)} = \frac{d(f{‘})}{d(x)} \times \frac{d(g{‘})}{d(f{‘})} \times \frac{d(y{‘})}{d(g{‘})} \times \frac{d(loss)}{y{‘}}\\<br>\tag{1}<br>\end{align</em>}<br>$$</p>
-<h3 id="常见的激活函数"><a href="#常见的激活函数" class="headerlink" title="常见的激活函数"></a>常见的激活函数</h3><p>激活函数几乎都是非线性且尽可能全局可导的，激活函数的选择是很重要的，<code>sigmoid</code>, <code>tanh</code> 由于自身函数的特点，只有很小的区间梯度变化比较明显，大部分的区间梯度变化很小很容易造成梯度消失，本人更倾向于使用<code>relu</code>，或者是 <code>batch normalization</code>和<code>tanh</code>搭配使用</p>
-<h4 id="sigmoid"><a href="#sigmoid" class="headerlink" title="sigmoid"></a>sigmoid</h4><p>$$\sigma (z) = \frac{1}{1+e^{-z}} \tag{2}$$</p>
-<p>用matplotlib画出它的图像<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1.</span> / (<span class="number">1.</span> + np.exp(-x))</span><br><span class="line"></span><br><span class="line">x = np.arange(<span class="number">-10</span>, <span class="number">10</span>, <span class="number">0.2</span>)</span><br><span class="line">y = sigmoid(x)</span><br><span class="line"></span><br><span class="line">plt.plot(x, y, label=<span class="string">"sigmoid"</span>, color=<span class="string">"blue"</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/posts/simnet/sigmoid.png" alt=""></p>
-<h4 id="tanh"><a href="#tanh" class="headerlink" title="tanh"></a>tanh</h4><p>$$tanh(z) = \frac{e^{z} - e^{-z}}{e^{z} + e^{-z}} \tag{3}$$</p>
+<p><span class="math display">\[\begin{align*}
+\frac{d(loss)}{d(x)} = \frac{d(f{&#39;})}{d(x)} \times \frac{d(g{&#39;})}{d(f{&#39;})} \times \frac{d(y{&#39;})}{d(g{&#39;})} \times \frac{d(loss)}{y{&#39;}}\\\\
+\tag{1}
+\end{align*}
+\]</span></p>
+<h3 id="常见的激活函数">常见的激活函数</h3>
+<p>激活函数几乎都是非线性且尽可能全局可导的，激活函数的选择是很重要的，<code>sigmoid</code>, <code>tanh</code> 由于自身函数的特点，只有很小的区间梯度变化比较明显，大部分的区间梯度变化很小很容易造成梯度消失，本人更倾向于使用<code>relu</code>，或者是 <code>batch normalization</code>和<code>tanh</code>搭配使用</p>
+<h4 id="sigmoid">sigmoid</h4>
+<p><span class="math display">\[\sigma (z) = \frac{1}{1+e^{-z}} \tag{2}\]</span></p>
+<p>用matplotlib画出它的图像 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1.</span> / (<span class="number">1.</span> + np.exp(-x))</span><br><span class="line"></span><br><span class="line">x = np.arange(<span class="number">-10</span>, <span class="number">10</span>, <span class="number">0.2</span>)</span><br><span class="line">y = sigmoid(x)</span><br><span class="line"></span><br><span class="line">plt.plot(x, y, label=<span class="string">"sigmoid"</span>, color=<span class="string">"blue"</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/posts/simnet/sigmoid.png"></p>
+<h4 id="tanh">tanh</h4>
+<p><span class="math display">\[tanh(z) = \frac{e^{z} - e^{-z}}{e^{z} + e^{-z}} \tag{3}\]</span></p>
 <p>用matplotlib画出它的图像</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">tanh</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> (np.exp(x) - np.exp(-x)) / (np.exp(x) + np.exp(-x))</span><br><span class="line"></span><br><span class="line">x = np.arange(<span class="number">-10</span>, <span class="number">10</span>, <span class="number">0.2</span>)</span><br><span class="line">y = tanh(x)</span><br><span class="line"></span><br><span class="line">plt.plot(x, y, label=<span class="string">"tanh"</span>, color=<span class="string">"blue"</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="/images/posts/simnet/tanh.png" alt=""></p>
-<h4 id="relu"><a href="#relu" class="headerlink" title="relu"></a>relu</h4><p>$$relu(z) = max(0, z) = relu(z) = \begin{cases}<br>0 &amp; \text{ if } x \leqslant 0 \<br>z &amp; \text{ if } x &gt; 0<br>\end{cases} \tag{4}$$</p>
+<p><img src="/images/posts/simnet/tanh.png"></p>
+<h4 id="relu">relu</h4>
+<p><span class="math display">\[relu(z) = max(0, z) = relu(z) = \begin{cases}
+0 &amp; \text{ if } x \leqslant 0 \\ 
+z &amp; \text{ if } x &gt; 0 
+\end{cases} \tag{4}\]</span></p>
 <p>用matplotlib画出它的图像</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">relu</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> np.maximum(<span class="number">0</span>, x)</span><br><span class="line"></span><br><span class="line">x = np.arange(<span class="number">-10</span>, <span class="number">10</span>, <span class="number">0.2</span>)</span><br><span class="line">y = relu(x)</span><br><span class="line"></span><br><span class="line">plt.plot(x, y, label=<span class="string">"relu"</span>, color=<span class="string">"blue"</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="/images/posts/simnet/relu.png" alt=""></p>
-<h3 id="常见的优化器"><a href="#常见的优化器" class="headerlink" title="常见的优化器"></a>常见的优化器</h3><p>SGD、Adam等，推荐阅读本人的另一篇文章 <a href="https://seanlee97.github.io/2018/10/01/%E5%B8%B8%E7%94%A8%E7%9A%84%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/">常用的梯度下降优化算法</a></p>
-<h3 id="常见的损失函数"><a href="#常见的损失函数" class="headerlink" title="常见的损失函数"></a>常见的损失函数</h3><h4 id="MSE"><a href="#MSE" class="headerlink" title="MSE"></a>MSE</h4><p>$$L(x_{i}, y_{i}) = (x_{i} - y_{i})^{2} \tag{5}$$</p>
-<h4 id="NLL-负对数似然"><a href="#NLL-负对数似然" class="headerlink" title="NLL 负对数似然"></a>NLL 负对数似然</h4><p>$$L(x, label) = -x_{label} \tag{6}$$</p>
-<h4 id="BCE"><a href="#BCE" class="headerlink" title="BCE"></a>BCE</h4><p>BinCrossEntropy 是二分类用的交叉熵</p>
-<p>$$L(x_{i}, y_{i}) = -w_{i}[y_{i} logx_{i} + (1-y_{i})log(1-x_{i})]  \tag{7}$$</p>
-<h4 id="CrossEntropy-交叉熵"><a href="#CrossEntropy-交叉熵" class="headerlink" title="CrossEntropy 交叉熵"></a>CrossEntropy 交叉熵</h4><p>$$\begin{align<em>}<br>L(x, label) &amp; = -w_{label} log\frac{e^{x_label}}{\sum_{j=1}^{N} e^{x_{j}}} \\<br>&amp; = w_{label} [-x_{label} + log\sum_{j=1}^{N} e^{x_{j}}]<br>\end{align</em>} \tag{8}$$</p>
-<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><ul>
-<li>nn：核心的网络包<ul>
+<p><img src="/images/posts/simnet/relu.png"></p>
+<h3 id="常见的优化器">常见的优化器</h3>
+<p>SGD、Adam等，推荐阅读本人的另一篇文章 <a href="https://seanlee97.github.io/2018/10/01/%E5%B8%B8%E7%94%A8%E7%9A%84%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/">常用的梯度下降优化算法</a></p>
+<h3 id="常见的损失函数">常见的损失函数</h3>
+<h4 id="mse">MSE</h4>
+<p><span class="math display">\[L(x_{i}, y_{i}) = (x_{i} - y_{i})^{2} \tag{5}\]</span></p>
+<h4 id="nll-负对数似然">NLL 负对数似然</h4>
+<p><span class="math display">\[L(x, label) = -x_{label} \tag{6}\]</span></p>
+<h4 id="bce">BCE</h4>
+<p>BinCrossEntropy 是二分类用的交叉熵</p>
+<p><span class="math display">\[L(x_{i}, y_{i}) = -w_{i}[y_{i} logx_{i} + (1-y_{i})log(1-x_{i})]  \tag{7}\]</span></p>
+<h4 id="crossentropy-交叉熵">CrossEntropy 交叉熵</h4>
+<p><span class="math display">\[\begin{align*}
+L(x, label) &amp; = -w_{label} log\frac{e^{x_label}}{\sum_{j=1}^{N} e^{x_{j}}} \\\\
+&amp; = w_{label} [-x_{label} + log\sum_{j=1}^{N} e^{x_{j}}]
+\end{align*} \tag{8}\]</span></p>
+<h2 id="目录结构">目录结构</h2>
+<ul>
+<li>nn：核心的网络包
+<ul>
 <li>NN: 基础网络类</li>
 <li>Linear：全连接层</li>
 <li>Variable：基础参数类</li>
 <li>ReLU / Sigmoid / Tanh：激活函数</li>
-</ul>
-</li>
-<li>optim：优化器<ul>
+</ul></li>
+<li>optim：优化器
+<ul>
 <li>SGD</li>
 <li>Adam</li>
-</ul>
-</li>
-<li>loss：损失函数<ul>
+</ul></li>
+<li>loss：损失函数
+<ul>
 <li>MSE</li>
 <li>CrossEntropy</li>
-</ul>
-</li>
-<li>init：初始化器<ul>
+</ul></li>
+<li>init：初始化器
+<ul>
 <li>Normal：高斯分布</li>
 <li>TruncatedNormal：截断高斯分布</li>
 <li>Uniform：均匀分布</li>
-</ul>
-</li>
+</ul></li>
 <li>fn.py：激活函数</li>
 <li>pipe.py：pipeline</li>
 </ul>
-<h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><h3 id="NN"><a href="#NN" class="headerlink" title="NN"></a>NN</h3><p><code>NN</code> 是最基础的网络基类，所有定义的网络都要继承该类<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NN</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, *args)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span><span class="params">(self, grad)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">params</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self, *args)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.forward(*args)</span><br></pre></td></tr></table></figure></p>
-<h3 id="Variable"><a href="#Variable" class="headerlink" title="Variable"></a>Variable</h3><p>用于保存可导变量，求导时会用到此类封装的参数</p>
+<h2 id="实现细节">实现细节</h2>
+<h3 id="nn">NN</h3>
+<p><code>NN</code> 是最基础的网络基类，所有定义的网络都要继承该类 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NN</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, *args)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span><span class="params">(self, grad)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">params</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self, *args)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.forward(*args)</span><br></pre></td></tr></table></figure></p>
+<h3 id="variable">Variable</h3>
+<p>用于保存可导变量，求导时会用到此类封装的参数</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Variable</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, wt, dw, b, db)</span>:</span></span><br><span class="line">        self.wt = wt</span><br><span class="line">        self.dw = dw</span><br><span class="line">        self.b = b</span><br><span class="line">        self.db = db</span><br></pre></td></tr></table></figure>
-<h3 id="Linear"><a href="#Linear" class="headerlink" title="Linear"></a>Linear</h3><p>定义全连接层, 全连接层可以实现网络空间大小的放缩，全连接层是实现深网的一种方式(但不推荐，深网的构建可以使用残差网络或者高速网络来构建)</p>
-<p><img src="/images/posts/simnet/02.png" alt=""></p>
+<h3 id="linear">Linear</h3>
+<p>定义全连接层, 全连接层可以实现网络空间大小的放缩，全连接层是实现深网的一种方式(但不推荐，深网的构建可以使用残差网络或者高速网络来构建)</p>
+<p><img src="/images/posts/simnet/02.png"></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Linear</span><span class="params">(NN)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, </span></span></span><br><span class="line"><span class="function"><span class="params">                 dim_in, </span></span></span><br><span class="line"><span class="function"><span class="params">                 dim_out, </span></span></span><br><span class="line"><span class="function"><span class="params">                 init=None, </span></span></span><br><span class="line"><span class="function"><span class="params">                 pretrained=None,</span></span></span><br><span class="line"><span class="function"><span class="params">                 zero_bias=False)</span>:</span></span><br><span class="line">        super(Linear, self).__init__()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> isinstance(pretrained, tuple):</span><br><span class="line">            self.wt, self.b = pretrained</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> isinstance(init, Init):</span><br><span class="line">               init = ini.Random([dim_in, dim_out])</span><br><span class="line">            self.wt = init()</span><br><span class="line">            <span class="keyword">if</span> zero_bias:</span><br><span class="line">                self.b = ini.Zero([dim_out])()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                self.b = ini.Random([dim_out])()</span><br><span class="line"></span><br><span class="line">        self.input = <span class="keyword">None</span></span><br><span class="line">        self.output = <span class="keyword">None</span></span><br><span class="line">        self.dw = ini.Zero(self.wt.shape)()</span><br><span class="line">        self.db = ini.Zero([dim_out])()</span><br><span class="line">        self.variable = Variable(self.wt, self.dw, self.b, self.db)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">params</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.variable</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, *args)</span>:</span></span><br><span class="line">        self.input = args[<span class="number">0</span>]</span><br><span class="line">        self.output = np.dot(self.input, self.wt) + self.b</span><br><span class="line">        <span class="keyword">return</span> self.output</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span><span class="params">(self, grad)</span>:</span></span><br><span class="line">        self.db = grad</span><br><span class="line">        self.dw += np.dot(self.input.T, grad)</span><br><span class="line">        grad = np.dot(grad, self.wt.T)</span><br><span class="line">        <span class="keyword">return</span> grad</span><br></pre></td></tr></table></figure>
-<h3 id="Sigmoid的实现"><a href="#Sigmoid的实现" class="headerlink" title="Sigmoid的实现"></a>Sigmoid的实现</h3><p>Sigmoid的前向推导很容易实现，也就是将输入放入sigmoid函数即可，难点在Sigmoid的求导上，以下是sigmoid的求导过程</p>
-<p>$$\begin{align<em>}<br>f{‘}(z) &amp; = (\frac{1}{1+e^{-z}}){‘} \\<br>&amp; = \frac{e^{-z}}{(1+e^{-z})^{2}} \\<br>&amp; = \frac{1+e^{-z}-1}{(1+e^{-z})^{2}} \\<br>&amp; = \frac{1}{1+e^{-z}}(1-\frac{1}{1+e^{-z}}) \\<br>&amp; = f(z)(1-f(z))<br>\end{align</em>} \tag{9}$$</p>
+<h3 id="sigmoid的实现">Sigmoid的实现</h3>
+<p>Sigmoid的前向推导很容易实现，也就是将输入放入sigmoid函数即可，难点在Sigmoid的求导上，以下是sigmoid的求导过程</p>
+<p><span class="math display">\[\begin{align*}
+f{&#39;}(z) &amp; = (\frac{1}{1+e^{-z}}){&#39;} \\\\
+&amp; = \frac{e^{-z}}{(1+e^{-z})^{2}} \\\\
+&amp; = \frac{1+e^{-z}-1}{(1+e^{-z})^{2}} \\\\
+&amp; = \frac{1}{1+e^{-z}}(1-\frac{1}{1+e^{-z}}) \\\\
+&amp; = f(z)(1-f(z))
+\end{align*} \tag{9}\]</span></p>
 <p>知道了前向推导和反向推导的结果就可以用代码实现了</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sigmoid</span><span class="params">(NN)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(Sigmoid, self).__init__()</span><br><span class="line">        self.input = <span class="keyword">None</span></span><br><span class="line">        self.output = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, *args)</span>:</span></span><br><span class="line">        self.input = args[<span class="number">0</span>]</span><br><span class="line">        self.output = <span class="number">1.0</span> / (<span class="number">1.0</span> + np.exp(-self.input))</span><br><span class="line">        <span class="keyword">return</span> self.output</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span><span class="params">(self, grad)</span>:</span></span><br><span class="line">        grad *= self.output*(<span class="number">1.0</span>-self.output)</span><br><span class="line">        <span class="keyword">return</span> grad</span><br></pre></td></tr></table></figure>
-<h3 id="tanh的实现"><a href="#tanh的实现" class="headerlink" title="tanh的实现"></a>tanh的实现</h3><p>tanh的实现和sigmoid的类似，只要计算出tanh的导函数就可以很容易实现反向传播部分，tanh的求导结果是</p>
-<p>$$f(z){‘} = 1-(f(z))^{2} \tag{10}$$</p>
+<h3 id="tanh的实现">tanh的实现</h3>
+<p>tanh的实现和sigmoid的类似，只要计算出tanh的导函数就可以很容易实现反向传播部分，tanh的求导结果是</p>
+<p><span class="math display">\[f(z){&#39;} = 1-(f(z))^{2} \tag{10}\]</span></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Tanh</span><span class="params">(NN)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(Tanh, self).__init__()</span><br><span class="line">        self.input = <span class="keyword">None</span></span><br><span class="line">        self.output = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, *args)</span>:</span></span><br><span class="line">        self.input = args[<span class="number">0</span>]</span><br><span class="line">        self.output = ((np.exp(self.input) - np.exp(-self.input)) / </span><br><span class="line">                        np.exp(self.input) + np.exp(-self.input))</span><br><span class="line">        <span class="keyword">return</span> self.output</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span><span class="params">(self, grad)</span>:</span></span><br><span class="line">        grad *= <span class="number">1.0</span> - np.power(self.output, <span class="number">2</span>)</span><br><span class="line">        <span class="keyword">return</span> grad</span><br></pre></td></tr></table></figure>
 <p>同理其他模块的实现也类似，主要包括前向传播和反向传播两部分</p>
-<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>以下构造了一个简单的BP网络</p>
+<h2 id="实例">实例</h2>
+<p>以下构造了一个简单的BP网络</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BPNet</span><span class="params">(nn.NN)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,D_in, D_hidden, D_out)</span>:</span></span><br><span class="line">        super(Mnistnet,self).__init__()</span><br><span class="line"></span><br><span class="line">        self.layers = Pipe(</span><br><span class="line">            nn.Linear(D_in, D_hidden),</span><br><span class="line">            nn.ReLU(),</span><br><span class="line">            nn.Linear(D_hidden, D_out)</span><br><span class="line">        )</span><br><span class="line">        self.criterion = loss.MSE()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self,*args)</span>:</span></span><br><span class="line">        x = args[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">return</span> self.layers.forward(x)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span><span class="params">(self,grad=None)</span>:</span></span><br><span class="line">        grad=self.criterion.backward(grad)</span><br><span class="line">        self.layers.backward(grad)</span><br></pre></td></tr></table></figure>
-<h2 id="可视化训练"><a href="#可视化训练" class="headerlink" title="可视化训练"></a>可视化训练</h2><p>使用simnet实现了一个简单的BP网络，数据集是 <code>mnist</code>，做了可视化训练<code>demo</code> , 效果如下图</p>
-<p><img src="/images/posts/simnet/bp.png" alt=""></p>
+<h2 id="可视化训练">可视化训练</h2>
+<p>使用simnet实现了一个简单的BP网络，数据集是 <code>mnist</code>，做了可视化训练<code>demo</code> , 效果如下图</p>
+<p><img src="/images/posts/simnet/bp.png"></p>
 <p>详细的demo地址 <a href="https://github.com/SeanLee97/simnet/tree/master/examples/mnist" target="_blank" rel="noopener">examples/mnist</a></p>
 <p>本项目地址<a href="https://github.com/SeanLee97/simnet" target="_blank" rel="noopener">simnet</a></p>
-<h2 id="refrence"><a href="#refrence" class="headerlink" title="refrence"></a>refrence</h2><ul>
+<h2 id="refrence">refrence</h2>
+<ul>
 <li><a href="https://github.com/guyuchao/BP-Neural-Network" target="_blank" rel="noopener">BP-Neural-Network</a></li>
 </ul>
 
@@ -679,7 +723,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#知识储备"><span class="nav-number">1.</span> <span class="nav-text">知识储备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#链式求导法则"><span class="nav-number">1.1.</span> <span class="nav-text">链式求导法则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的激活函数"><span class="nav-number">1.2.</span> <span class="nav-text">常见的激活函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sigmoid"><span class="nav-number">1.2.1.</span> <span class="nav-text">sigmoid</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tanh"><span class="nav-number">1.2.2.</span> <span class="nav-text">tanh</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#relu"><span class="nav-number">1.2.3.</span> <span class="nav-text">relu</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的优化器"><span class="nav-number">1.3.</span> <span class="nav-text">常见的优化器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的损失函数"><span class="nav-number">1.4.</span> <span class="nav-text">常见的损失函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MSE"><span class="nav-number">1.4.1.</span> <span class="nav-text">MSE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NLL-负对数似然"><span class="nav-number">1.4.2.</span> <span class="nav-text">NLL 负对数似然</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BCE"><span class="nav-number">1.4.3.</span> <span class="nav-text">BCE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CrossEntropy-交叉熵"><span class="nav-number">1.4.4.</span> <span class="nav-text">CrossEntropy 交叉熵</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目录结构"><span class="nav-number">2.</span> <span class="nav-text">目录结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现细节"><span class="nav-number">3.</span> <span class="nav-text">实现细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NN"><span class="nav-number">3.1.</span> <span class="nav-text">NN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Variable"><span class="nav-number">3.2.</span> <span class="nav-text">Variable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linear"><span class="nav-number">3.3.</span> <span class="nav-text">Linear</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sigmoid的实现"><span class="nav-number">3.4.</span> <span class="nav-text">Sigmoid的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tanh的实现"><span class="nav-number">3.5.</span> <span class="nav-text">tanh的实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例"><span class="nav-number">4.</span> <span class="nav-text">实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可视化训练"><span class="nav-number">5.</span> <span class="nav-text">可视化训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#refrence"><span class="nav-number">6.</span> <span class="nav-text">refrence</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#知识储备"><span class="nav-number">1.</span> <span class="nav-text">知识储备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#链式求导法则"><span class="nav-number">1.1.</span> <span class="nav-text">链式求导法则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的激活函数"><span class="nav-number">1.2.</span> <span class="nav-text">常见的激活函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#sigmoid"><span class="nav-number">1.2.1.</span> <span class="nav-text">sigmoid</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tanh"><span class="nav-number">1.2.2.</span> <span class="nav-text">tanh</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#relu"><span class="nav-number">1.2.3.</span> <span class="nav-text">relu</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的优化器"><span class="nav-number">1.3.</span> <span class="nav-text">常见的优化器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见的损失函数"><span class="nav-number">1.4.</span> <span class="nav-text">常见的损失函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mse"><span class="nav-number">1.4.1.</span> <span class="nav-text">MSE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nll-负对数似然"><span class="nav-number">1.4.2.</span> <span class="nav-text">NLL 负对数似然</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bce"><span class="nav-number">1.4.3.</span> <span class="nav-text">BCE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#crossentropy-交叉熵"><span class="nav-number">1.4.4.</span> <span class="nav-text">CrossEntropy 交叉熵</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目录结构"><span class="nav-number">2.</span> <span class="nav-text">目录结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现细节"><span class="nav-number">3.</span> <span class="nav-text">实现细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#nn"><span class="nav-number">3.1.</span> <span class="nav-text">NN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#variable"><span class="nav-number">3.2.</span> <span class="nav-text">Variable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linear"><span class="nav-number">3.3.</span> <span class="nav-text">Linear</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sigmoid的实现"><span class="nav-number">3.4.</span> <span class="nav-text">Sigmoid的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tanh的实现"><span class="nav-number">3.5.</span> <span class="nav-text">tanh的实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实例"><span class="nav-number">4.</span> <span class="nav-text">实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可视化训练"><span class="nav-number">5.</span> <span class="nav-text">可视化训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#refrence"><span class="nav-number">6.</span> <span class="nav-text">refrence</span></a></li></ol></div>
             
 
           </div>
