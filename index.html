@@ -1151,7 +1151,11 @@ b_{j} := b_{j} - \alpha \frac{\partial J(w, b)}{\partial b_{j}}
 <p>ELMo 一般采用双向的 LSTM 或者 CNN 来训练，而 GPT、BERT 采用的是 transformer</p>
 <h4 id="word2vecelmogptbert四者的关系">Word2vec、ELMo、GPT、BERT四者的关系</h4>
 <p><img src="/images/posts/deeplearning/word2vec06.png"></p>
-<p><strong>BERT</strong>的 transformer 之所以是双向的，是因为它构造训练语料的时候采用了一种 <code>next sentence prediction</code> 策略，详细请查阅原论文</p>
+<p>区别于 GPT , <strong>BERT</strong>的 transformer 之所以是双向的，是因为 BERT 采用的是 transformer 的 encoder 部分进行编码，而这部分是双向的，而 GPT 采用了 transformer 的 decoder 这部分是单向的，BERT 论文中关于单向和双向的讨论如下：</p>
+<blockquote>
+<p>We note that in the literature the bidirectional Transformer is often referred to as a “Transformer encoder” while the left-context-only version is referred to as a “Transformer decoder” since it can be used for text generation.</p>
+</blockquote>
+<p>详细请查阅原论文</p>
 <h2 id="tensorflow-实战以dpcnn为例讲述如何实现一篇论文">Tensorflow 实战：以DPCNN为例讲述如何实现一篇论文</h2>
 <p>本人经验，实现论文常用步骤</p>
 <ul>
