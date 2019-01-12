@@ -79,14 +79,19 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://seanlee97.github.io/categories/index.html">
+<meta name="description" content="pLSA 原理 pLSA 和 LDA 一样都是主题模型，主要区别在于 pLSA 采用的是频率学派的思想，而 LDA 采用的是贝叶斯学派的思想。 假设有 M 篇文档（文档集合用 \(\mathbb{D}\) 表示），有 N 个词（词集合用 \(\mathbb{W}\) 表示），文档和词都是可观察的，pLSA 基于文档-词共现矩阵（不考虑词序）通过引入了主题（topic） \(z\) 这个隐变量去关联">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅谈pLSA主题模型">
+<meta property="og:url" content="http://seanlee97.github.io/2018/12/28/浅谈pLSA主题模型/index.html">
 <meta property="og:site_name" content="明天探索者">
+<meta property="og:description" content="pLSA 原理 pLSA 和 LDA 一样都是主题模型，主要区别在于 pLSA 采用的是频率学派的思想，而 LDA 采用的是贝叶斯学派的思想。 假设有 M 篇文档（文档集合用 \(\mathbb{D}\) 表示），有 N 个词（词集合用 \(\mathbb{W}\) 表示），文档和词都是可观察的，pLSA 基于文档-词共现矩阵（不考虑词序）通过引入了主题（topic） \(z\) 这个隐变量去关联">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-07T13:34:14.277Z">
+<meta property="og:image" content="http://seanlee97.github.io/images/posts/plsa/graph_model.png">
+<meta property="og:updated_time" content="2019-01-12T15:56:30.225Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="categories">
+<meta name="twitter:title" content="浅谈pLSA主题模型">
+<meta name="twitter:description" content="pLSA 原理 pLSA 和 LDA 一样都是主题模型，主要区别在于 pLSA 采用的是频率学派的思想，而 LDA 采用的是贝叶斯学派的思想。 假设有 M 篇文档（文档集合用 \(\mathbb{D}\) 表示），有 N 个词（词集合用 \(\mathbb{W}\) 表示），文档和词都是可观察的，pLSA 基于文档-词共现矩阵（不考虑词序）通过引入了主题（topic） \(z\) 这个隐变量去关联">
+<meta name="twitter:image" content="http://seanlee97.github.io/images/posts/plsa/graph_model.png">
 
 
 
@@ -116,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://seanlee97.github.io/categories/"/>
+  <link rel="canonical" href="http://seanlee97.github.io/2018/12/28/浅谈pLSA主题模型/"/>
 
 
 
 
 
-  <title>categories | 明天探索者</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <title>浅谈pLSA主题模型 | 明天探索者</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -247,40 +252,219 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/12/28/浅谈pLSA主题模型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="明天探索者">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">categories</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <div class="category-all-page">
-            <div class="category-all-title">
-                目前共计 1 个分类
-            </div>
-            <div class="category-all">
-              <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/programming/">技术日志</a><span class="category-list-count">16</span></li></ul>
-            </div>
-          </div>
+          <h1 class="post-title" itemprop="name headline">浅谈pLSA主题模型</h1>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-28T14:46:50+08:00">
+                2018-12-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/12/28/浅谈pLSA主题模型/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/12/28/浅谈pLSA主题模型/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <h3 id="plsa-原理">pLSA 原理</h3>
+<p>pLSA 和 LDA 一样都是主题模型，主要区别在于 pLSA 采用的是频率学派的思想，而 LDA 采用的是贝叶斯学派的思想。</p>
+<p>假设有 M 篇文档（文档集合用 <span class="math inline">\(\mathbb{D}\)</span> 表示），有 N 个词（词集合用 <span class="math inline">\(\mathbb{W}\)</span> 表示），文档和词都是可观察的，pLSA 基于文档-词共现矩阵（不考虑词序）通过引入了主题（topic） <span class="math inline">\(z\)</span> 这个隐变量去关联文档和词，假设有 K 个主题（主题集合用 <span class="math inline">\(\mathbb{Z}\)</span> 表示）</p>
+<p>pLSA 中一篇文档是怎么生成的呢？ 它的生成过程可描述如下：</p>
+<ul>
+<li>首先我们要以概率 <span class="math inline">\(p(d_{m})\)</span> 去选择一篇文档</li>
+<li>每篇文档都隐含有主题，在文档 <span class="math inline">\(d_{m}\)</span> 中主题 <span class="math inline">\(z_{k}\)</span> 发生的概率为 <span class="math inline">\(p(z_{k}|d_{m})\)</span></li>
+<li>而主题会包含主题词，在主题 <span class="math inline">\(z_{k}\)</span> 中主题词是 <span class="math inline">\(w_{n}\)</span> 的概率为 <span class="math inline">\(p(w_{n}|z_{k})\)</span></li>
+</ul>
+<p>假设每个词之间相互独立，在没有引入隐变量前对于一篇文档我们可以得到</p>
+<p><span class="math display">\[p(\overrightarrow{w} | dm) = \prod_{n=1}^{N}p(w_{n}|d_{m}) \tag{1}\]</span></p>
+<p>现在引入主题这个隐变量则有</p>
+<p><span class="math display">\[p(w_{n}|d_{m}) =  \sum_{k=1}^{K} p(z_{k}|d_{m})p(w_{n}|z_{k}, d_{m}) \tag{2}\]</span></p>
+<p><span class="math inline">\(z\)</span> 已知时 pLSA 假设 <span class="math inline">\(d\)</span> 和 <span class="math inline">\(w\)</span> 独立，也就是说 <span class="math inline">\(w\)</span> 不直接受 <span class="math inline">\(d\)</span> 影响而是直接受 <span class="math inline">\(z\)</span> 影响，此时有</p>
+<p><span class="math display">\[p(w_{n}|d_{m}) = \sum_{k=1}^{K} p(z_{k}|d_{m})p(w_{n}|z_{k}) \tag{3}\]</span></p>
+<p>因此可得到联合分布表达式为</p>
+<p><span class="math display">\[p(d_{m}, w_{n}) = p(d_{m}) \sum_{k=1}^{K} p(z_{k}|d_{m})p(w_{n}|z_{k}) \tag{4}\]</span></p>
+<p>pLSA 的概率图模型是：</p>
+<p><img src="/images/posts/plsa/graph_model.png"></p>
+<h3 id="似然估计">似然估计</h3>
+<p>似然估计是频率学派用得较多的估计方法，似然估计对参数 <span class="math inline">\(\theta\)</span> 的常见形式是：</p>
+<p><span class="math display">\[L(\theta) = p(x|\theta)\]</span></p>
+<p>但是实际建模中我们往往需要计算一些经验值（如词频）等，所以对于一些任务我们可以用似然估计的一般形式：</p>
+<p><span class="math display">\[L_{\bar{p}} = \prod_{x} p(x)^{\bar{p}(x)}\]</span></p>
+<p>其中 <span class="math inline">\(p(x)\)</span> 为对模型参数进行估计的概率分布，<span class="math inline">\(\bar{p}(x)\)</span> 为实验得到的经验概率分布</p>
+<p>在此使用一般形式的似然估计，假设 <span class="math inline">\(n(d_{m}, w_{n})\)</span> 代表词 <span class="math inline">\(w_{n}\)</span> 在 <span class="math inline">\(d_{m}\)</span> 中的词频，此时似然函数为</p>
+<p><span class="math display">\[\begin{align*}
+L(\theta) &amp; = log \prod_{m=1}^{M} \prod_{n=1}^{N} p(d_{m}, w_{n})^{n(d_{m}, w_{n})} \\\\
+&amp; = \sum_{m=1}^{M} \sum_{n=1}^{N} n(d_{m}, w_{n}) log\ p(d_{m}, w_{n}) \\\\
+&amp; = \sum_{m=1}^{M} \sum_{n=1}^{N} n(d_{m}, w_{n})(log\ p(d_{m}) + log\ p(w_{n}|d_{m})) \\\\
+&amp; = \sum_{m=1}^{M} \sum_{n=1}^{N} n(d_{m}, w_{n}) log\ p(d_{m}) + \sum_{m=1}^{M} \sum_{n=1}^{N} n(d_{m}, w_{n}) log\ p(w_{n}|d_{m}) \\\\
+&amp; \Rightarrow \sum_{m=1}^{M} \sum_{n=1}^{N} n(d_{m}, w_{n}) log\ p(w_{n}|d_{m}) \tag{5}
+\end{align*}\]</span></p>
+<p>将 <span class="math inline">\((3)\)</span> 代入 <span class="math inline">\((5)\)</span> 式最终可得</p>
+<p><span class="math display">\[\begin{align*}
+L(\theta) &amp; = \sum_{m=1}^{M} \sum_{n=1}^{N} n(d_{m}, w_{n}) log\ p(w_{n}|d_{m}) \\\\
+&amp; = \sum_{m=1}^{M} \sum_{n=1}^{N} n(d_{m}, w_{n}) log[\sum_{k=1}^{K} p(z_{k}|d_{m})p(w_{n}|z_{k})]
+\end{align*} \tag{6}\]</span></p>
+<p>对于 <span class="math inline">\((6)\)</span> 式的求解一般用 EM 算法，在此不做叙述.</p>
+
       
     </div>
     
     
     
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechat-qcode.jpg" alt="sean lee wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎关注我的公众号！</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>感谢支持！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="sean lee 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/30/numpy经验及技巧/" rel="next" title="numpy经验及技巧">
+                <i class="fa fa-chevron-left"></i> numpy经验及技巧
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -323,8 +507,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -416,6 +609,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#plsa-原理"><span class="nav-number">1.</span> <span class="nav-text">pLSA 原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#似然估计"><span class="nav-number">2.</span> <span class="nav-text">似然估计</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -588,9 +797,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://seanlee97.github.io/categories/index.html';
-          this.page.identifier = 'categories/index.html';
-          this.page.title = 'categories';
+          this.page.url = 'http://seanlee97.github.io/2018/12/28/浅谈pLSA主题模型/';
+          this.page.identifier = '2018/12/28/浅谈pLSA主题模型/';
+          this.page.title = '浅谈pLSA主题模型';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://seanlee97.disqus.com/embed.js';
