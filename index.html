@@ -262,6 +262,292 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2019/02/09/Pandas数据处理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/02/09/Pandas数据处理/" itemprop="url">Pandas数据处理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-09T12:27:17+08:00">
+                2019-02-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/02/09/Pandas数据处理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2019/02/09/Pandas数据处理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>注意：这是一篇英文文章</strong></p>
+<p>Pandas is a powerful python library for data processing, here I will introduce some Apis in Pandas that is frequently used.</p>
+<h2 id="two-basic-data-structures">Two basic data structures</h2>
+<h3 id="series">Series</h3>
+<p>Pandas Series. Pandas Series is a <strong>one-dimensional labeled array</strong> capable of holding data of any type (integer, string, float, python objects, etc.). The axis labels are collectively called index. Pandas Series is nothing but <strong>a column</strong> in an excel sheet.</p>
+<h3 id="dataframe">DataFrame</h3>
+<p><strong>Two-dimensional size-mutable</strong>, potentially heterogeneous tabular data structure with labeled axes (rows and columns). Arithmetic operations align on both row and column labels. Can be thought of as a dict-like container for Series objects or <strong>a table with rows and columns</strong>. The primary pandas data structure.</p>
+<h2 id="basic-usage">Basic usage</h2>
+<h3 id="import-pandas">import pandas</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br></pre></td></tr></table></figure>
+<h3 id="read-data-from-file">Read data from file</h3>
+<p>You can get a DataFame data structure from dataset.</p>
+<h4 id="csv-dataset">CSV dataset</h4>
+<h5 id="read-data">read data</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df = pd.read_csv(<span class="string">"/path/to/file.csv"</span>)</span><br></pre></td></tr></table></figure>
+<p>More arguments please visit <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html#pandas-read-csv" target="_blank" rel="noopener">pandas.read_csv</a></p>
+<h5 id="write-data">write data</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.to_csv(<span class="string">"/path/to/save.csv"</span>, sep=<span class="string">","</span>, index=<span class="keyword">False</span>)</span><br></pre></td></tr></table></figure>
+<p><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_csv.html#pandas-dataframe-to-csv" target="_blank" rel="noopener">documentation</a></p>
+<h4 id="excel-dataset">Excel dataset</h4>
+<h5 id="read-data-1">read data</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df = pd.read_excel(<span class="string">"/path/to/file.xlsx"</span>)</span><br></pre></td></tr></table></figure>
+<p>More arguments please visit <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_excel.html#pandas-read-excel" target="_blank" rel="noopener">pandas.read_excel</a></p>
+<h5 id="write-data-1">write data</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.to_excel(<span class="string">"/path/to/save.csv"</span>, sep=<span class="string">","</span>, index=<span class="keyword">False</span>)</span><br></pre></td></tr></table></figure>
+<p><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_excel.html#pandas-dataframe-to-excel" target="_blank" rel="noopener">documentation</a></p>
+<h3 id="create-series">Create Series</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">names = [<span class="string">'sean li'</span>, <span class="string">'joey liu'</span>, <span class="string">'mary chan'</span>, <span class="string">'john zhang'</span>, <span class="string">'harry liang'</span>, <span class="string">'tim huang'</span>, <span class="string">'chandler tan'</span>]</span><br><span class="line">series = pd.Series(data=names)</span><br><span class="line"></span><br><span class="line">print(series)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">0         sean li</span><br><span class="line">1        joey liu</span><br><span class="line">2       mary chan</span><br><span class="line">3      john zhang</span><br><span class="line">4     harry liang</span><br><span class="line">5       tim huang</span><br><span class="line">6    chandler tan</span><br><span class="line">dtype: object</span><br></pre></td></tr></table></figure>
+<h3 id="create-datafram">Create DataFram</h3>
+<h4 id="from-list">from list</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">datas = [</span><br><span class="line">    (<span class="string">"sean li"</span>, <span class="string">"male"</span>, <span class="number">22</span>, <span class="number">99</span>, <span class="number">98</span>),</span><br><span class="line">    (<span class="string">"joey liu"</span>, <span class="string">"female"</span>, <span class="number">22</span>, <span class="number">100</span>, <span class="number">99</span>),</span><br><span class="line">    (<span class="string">"mary chan"</span>, <span class="string">"female"</span>, <span class="number">21</span>, <span class="number">97</span>, <span class="number">98</span>),</span><br><span class="line">    (<span class="string">"john zhang"</span>, <span class="string">"male"</span>, <span class="number">22</span>, <span class="number">99</span>, <span class="number">96</span>),</span><br><span class="line">    (<span class="string">"harry liang"</span>, <span class="string">"male"</span>, <span class="number">20</span>, <span class="number">89</span>, <span class="number">86</span>),</span><br><span class="line">    (<span class="string">"tim huang"</span>, <span class="string">"male"</span>, <span class="number">21</span>, <span class="number">90</span>, <span class="number">94</span>),</span><br><span class="line">    (<span class="string">"chandler tan"</span>, <span class="string">"male"</span>, <span class="number">20</span>, <span class="number">93</span>, <span class="number">95</span>)</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">df = pd.DataFrame(data=datas, columns=[<span class="string">"name"</span>, <span class="string">"gender"</span>, <span class="string">"age"</span>, </span><br><span class="line">	                                   <span class="string">"math"</span>, <span class="string">"english"</span>])</span><br></pre></td></tr></table></figure>
+<h4 id="from-dict">from dict</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">data_dict = &#123;</span><br><span class="line">	<span class="string">"name"</span>: [<span class="string">'sean li'</span>, <span class="string">'joey liu'</span>, <span class="string">'mary chan'</span>, <span class="string">'john zhang'</span>, <span class="string">'harry liang'</span>, <span class="string">'tim huang'</span>, <span class="string">'chandler tan'</span>],</span><br><span class="line">	<span class="string">"gender"</span>: [<span class="string">'male'</span>, <span class="string">'female'</span>, <span class="string">'female'</span>, <span class="string">'male'</span>, <span class="string">'male'</span>, <span class="string">'male'</span>, <span class="string">'male'</span>], </span><br><span class="line">	<span class="string">"math"</span>: [<span class="number">99</span>, <span class="number">100</span>, <span class="number">97</span>, <span class="number">99</span>, <span class="number">89</span>, <span class="number">90</span>, <span class="number">93</span>],</span><br><span class="line">	<span class="string">"english"</span>: [<span class="number">98</span>, <span class="number">99</span>, <span class="number">98</span>, <span class="number">96</span>, <span class="number">86</span>, <span class="number">94</span>, <span class="number">95</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">df = pd.DataFrame(data_dict)</span><br></pre></td></tr></table></figure>
+<h3 id="basic-information-of-dataframe">Basic information of DataFrame</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.info()</span><br></pre></td></tr></table></figure>
+<p>The function will print the DataFrame`s structure information.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;class &apos;pandas.core.frame.DataFrame&apos;&gt;</span><br><span class="line">RangeIndex: 7 entries, 0 to 6</span><br><span class="line">Data columns (total 5 columns):</span><br><span class="line">name       7 non-null object</span><br><span class="line">gender     7 non-null object</span><br><span class="line">age        7 non-null int64</span><br><span class="line">math       7 non-null int64</span><br><span class="line">english    7 non-null int64</span><br><span class="line">dtypes: int64(3), object(2)</span><br><span class="line">memory usage: 352.0+ bytes</span><br></pre></td></tr></table></figure>
+<h3 id="print-overview-of-columns-whose-values-are-all-of-numeric">print overview of columns whose values are all of numeric</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(df.describe())</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">             age        math    english</span><br><span class="line">count   7.000000    7.000000   7.000000</span><br><span class="line">mean   21.142857   95.285714  95.142857</span><br><span class="line">std     0.899735    4.572173   4.413184</span><br><span class="line">min    20.000000   89.000000  86.000000</span><br><span class="line">25%    20.500000   91.500000  94.500000</span><br><span class="line">50%    21.000000   97.000000  96.000000</span><br><span class="line">75%    22.000000   99.000000  98.000000</span><br><span class="line">max    22.000000  100.000000  99.000000</span><br></pre></td></tr></table></figure>
+<h3 id="list-the-column-names">list the column names</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.columns</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&apos;name&apos;, &apos;gender&apos;, &apos;age&apos;, &apos;math&apos;, &apos;english&apos;]</span><br></pre></td></tr></table></figure>
+<h3 id="list-the-index-names">list the index names</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.index</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RangeIndex(start=0, stop=7, step=1)</span><br></pre></td></tr></table></figure>
+<h3 id="get-shape">get shape</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(df.shape)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(7, 5)</span><br></pre></td></tr></table></figure>
+<h2 id="get-rows">Get rows</h2>
+<h3 id="print-the-first-3-rows">print the first 3 rows</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.head(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">        name  gender  age  math  english</span><br><span class="line">0    sean li    male   22    99       98</span><br><span class="line">1   joey liu  female   22   100       99</span><br><span class="line">2  mary chan  female   21    97       9</span><br></pre></td></tr></table></figure>
+<h3 id="print-the-last-3-rows">print the last 3 rows</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.tail(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">           name gender  age  math  english</span><br><span class="line">4   harry liang   male   20    89       86</span><br><span class="line">5     tim huang   male   21    90       94</span><br><span class="line">6  chandler tan   male   20    93       95</span><br></pre></td></tr></table></figure>
+<h3 id="print-the-nth-row">print the <code>nth</code> row</h3>
+<h4 id="pandas.dataframe.iloc"><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.iloc.html#pandas-dataframe-iloc" target="_blank" rel="noopener">pandas.DataFrame.iloc</a></h4>
+<p>Purely <strong>integer-location based indexing</strong> for selection by position.</p>
+<h5 id="get-single-row">get single row</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.iloc[<span class="number">3</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">name       john zhang</span><br><span class="line">gender           male</span><br><span class="line">age                22</span><br><span class="line">math               99</span><br><span class="line">english            96</span><br><span class="line">Name: 3, dtype: object</span><br></pre></td></tr></table></figure>
+<h5 id="get-rows-in-a-continuous-range">get rows in a continuous range</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.iloc[<span class="number">0</span>:<span class="number">2</span>]  <span class="comment">#== df.iloc[range(3)]</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">        name  gender  age  math  english</span><br><span class="line">0    sean li    male   22    99       98</span><br><span class="line">1   joey liu  female   22   100       99</span><br><span class="line">2  mary chan  female   21    97       98</span><br></pre></td></tr></table></figure>
+<h5 id="get-rows-in-a-discontinuous-range">get rows in a discontinuous range</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.iloc[[<span class="number">0</span>,<span class="number">2</span>]]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">        name  gender  age  math  english</span><br><span class="line">0    sean li    male   22    99       98</span><br><span class="line">2  mary chan  female   21    97       98</span><br></pre></td></tr></table></figure>
+<h4 id="pandas.dataframe.loc"><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.loc.html#pandas-dataframe-loc" target="_blank" rel="noopener">pandas.DataFrame.loc</a></h4>
+<p>Access a group of rows and columns by <strong>label(s)</strong> or a boolean array. It`s similar usage to <code>iloc</code> to get row(s) with default index (<strong>not specify index names</strong>), but two differences in them:</p>
+<ul>
+<li><code>loc</code> can only use positive integer to indicate number or range, so <code>df.loc[-1]</code> is incorrect, <code>df.iloc[-1]</code> is correct syntax.</li>
+<li><code>df.iloc[:2]</code> == <code>df.iloc[range(2)]</code> == <code>df.loc[range(2)]</code> <span class="math inline">\(\neq\)</span> <code>df.loc[:2]</code>, three rows(0, 1, 2) in <code>df.loc[:2]</code>, while two rows(0, 1) in others.</li>
+</ul>
+<h2 id="get-columns">Get columns</h2>
+<h3 id="just-specify-the-column-name-in-square-bracketslike-with-a-dictionary">just specify the column name in square brackets,(like with a dictionary)</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">'name'</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">0         sean li</span><br><span class="line">1        joey liu</span><br><span class="line">2       mary chan</span><br><span class="line">3      john zhang</span><br><span class="line">4     harry liang</span><br><span class="line">5       tim huang</span><br><span class="line">6    chandler tan</span><br><span class="line">Name: name, dtype: object</span><br></pre></td></tr></table></figure>
+<h3 id="pick-columns-by-df.columns">pick column(s) by df.columns</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[df.columns[<span class="number">0</span>:<span class="number">2</span>]]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">           name  gender</span><br><span class="line">0       sean li    male</span><br><span class="line">1      joey liu  female</span><br><span class="line">2     mary chan  female</span><br><span class="line">3    john zhang    male</span><br><span class="line">4   harry liang    male</span><br><span class="line">5     tim huang    male</span><br><span class="line">6  chandler tan    male</span><br></pre></td></tr></table></figure>
+<h2 id="get-specific-rows-and-columns">Get specific rows and columns</h2>
+<h3 id="usage">usage</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 1. selection is integer-based</span><br><span class="line">df.iloc[&lt;row selection], &lt;column selection] </span><br><span class="line"># 2. selection is label-based</span><br><span class="line">df.loc[&lt;row selection], &lt;column selection&gt;]</span><br></pre></td></tr></table></figure>
+<h3 id="iloc">iloc</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.iloc[:<span class="number">2</span>, [<span class="number">0</span>,<span class="number">3</span>,<span class="number">4</span>]]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">       name  math  english</span><br><span class="line">0   sean li    99       98</span><br><span class="line">1  joey liu   100       99</span><br></pre></td></tr></table></figure>
+<h3 id="loc">loc</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.loc[:<span class="number">2</span>, [<span class="string">'name'</span>, <span class="string">'math'</span>, <span class="string">'english'</span>]]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">        name  math  english</span><br><span class="line">0    sean li    99       98</span><br><span class="line">1   joey liu   100       99</span><br><span class="line">2  mary chan    97       98</span><br></pre></td></tr></table></figure>
+<h2 id="basic-functions-of-pandas">Basic functions of pandas</h2>
+<h3 id="logical-operations">logical operations</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">df[df[<span class="string">'age'</span>] == <span class="number">22</span>]</span><br><span class="line">df[(df[<span class="string">'age'</span>] == <span class="number">22</span>) &amp; (df[<span class="string">'math'</span>] &gt; <span class="number">96</span>)]</span><br><span class="line">df[(df[<span class="string">'age'</span>] == <span class="number">22</span>) &amp; (df[<span class="string">'math'</span>] &gt; <span class="number">96</span>) &amp; ~(df[<span class="string">'english'</span>] &lt; <span class="number">96</span>)]</span><br></pre></td></tr></table></figure>
+<p>Subset the data</p>
+<h3 id="pandas-dataframe-methods">pandas DataFrame methods</h3>
+<h4 id="type">type</h4>
+<h5 id="series-1">Series</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type(df[<span class="string">'name'</span>])</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;class &apos;pandas.core.series.Series&apos;&gt;</span><br></pre></td></tr></table></figure>
+<h5 id="dataframe-1">DataFrame</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type(df[[<span class="string">'name'</span>, <span class="string">'age'</span>]])</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;class &apos;pandas.core.frame.DataFrame&apos;&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="head-tail">head() / tail()</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">'name'</span>].head()</span><br><span class="line">df[<span class="string">'name'</span>].tail()</span><br></pre></td></tr></table></figure>
+<h4 id="get-the-unique-entries-of-a-column">get the unique entries of a column</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">'math'</span>].unique()</span><br></pre></td></tr></table></figure>
+<h4 id="split-string">split string</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.name.str.split(<span class="string">" "</span>, expand=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">          0      1</span><br><span class="line">0      sean     li</span><br><span class="line">1      joey    liu</span><br><span class="line">2      mary   chan</span><br><span class="line">3      john  zhang</span><br><span class="line">4     harry  liang</span><br><span class="line">5       tim  huang</span><br><span class="line">6  chandler    tan</span><br></pre></td></tr></table></figure>
+<h4 id="renaming-a-column">renaming a column</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.rename(columns = &#123;<span class="string">'name'</span>: <span class="string">'fullname'</span>&#125;, inplace=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="calculate-for-numerical-columns">calculate for numerical columns</h4>
+<ul>
+<li>pandas.DataFrame.corr() — finds the correlation between columns in a DataFrame.</li>
+<li>pandas.DataFrame.count() — counts the number of non-null values in each DataFrame column.</li>
+<li>pandas.DataFrame.max() — finds the highest value in each column.</li>
+<li>pandas.DataFrame.min() — finds the lowest value in each column.</li>
+<li>pandas.DataFrame.median() — finds the median of each column.</li>
+<li>pandas.DataFrame.std() — finds the standard deviation of each column.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df.mean()</span><br><span class="line">df[<span class="string">'age'</span>].mean()</span><br></pre></td></tr></table></figure>
+<h4 id="counting-occurrences">counting occurrences</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">'age'</span>].value_counts()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">22    3</span><br><span class="line">21    2</span><br><span class="line">20    2</span><br><span class="line">Name: age, dtype: int64</span><br></pre></td></tr></table></figure>
+<h4 id="group-by-and-value_counts">group by and value_counts</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.groupby(<span class="string">'age'</span>)[<span class="string">"math"</span>].value_counts()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">age  math</span><br><span class="line">20   89      1</span><br><span class="line">     93      1</span><br><span class="line">21   90      1</span><br><span class="line">     97      1</span><br><span class="line">22   99      2</span><br><span class="line">     100     1</span><br><span class="line">Name: math, dtype: int64</span><br></pre></td></tr></table></figure>
+<h4 id="map-apply-applymap">map(), apply(), applymap()</h4>
+<ul>
+<li>map() : applies a function to <strong>each element of a column</strong>.</li>
+<li>apply() : applies a function to columns. Use .apply(, axis=1) to do it on the rows.</li>
+<li>applymap() : applies a function to all cells in the table (DataFrame).</li>
+</ul>
+<h5 id="map">map()</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">'name_lens'</span>] = df[<span class="string">'name'</span>].map(len)</span><br><span class="line">print(df[[<span class="string">'name'</span>, <span class="string">'name_lens'</span>]])</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">           name  name_lens</span><br><span class="line">0       sean li          7</span><br><span class="line">1      joey liu          8</span><br><span class="line">2     mary chan          9</span><br><span class="line">3    john zhang         10</span><br><span class="line">4   harry liang         11</span><br><span class="line">5     tim huang          9</span><br><span class="line">6  chandler tan         12</span><br></pre></td></tr></table></figure>
+<h5 id="apply">apply()</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.apply(len)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">name       7</span><br><span class="line">gender     7</span><br><span class="line">age        7</span><br><span class="line">math       7</span><br><span class="line">english    7</span><br><span class="line">dtype: int64</span><br></pre></td></tr></table></figure>
+<h5 id="applymap">applymap()</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.applymap(<span class="keyword">lambda</span> x: len(str(x)))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">   name  gender  age  math  english</span><br><span class="line">0     7       4    2     2        2</span><br><span class="line">1     8       6    2     3        2</span><br><span class="line">2     9       6    2     2        2</span><br><span class="line">3    10       4    2     2        2</span><br><span class="line">4    11       4    2     2        2</span><br><span class="line">5     9       4    2     2        2</span><br><span class="line">6    12       4    2     2        2</span><br></pre></td></tr></table></figure>
+<h2 id="advanced-operations-in-pandas">Advanced operations in pandas</h2>
+<h3 id="sql-join">SQL join</h3>
+<p>joining on 3 columns takes just one line <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.merge(other_df, on=[<span class="string">'column_1'</span>, <span class="string">'column_2'</span>, <span class="string">'column_3'</span>])</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.merge.html#pandas-dataframe-merge" target="_blank" rel="noopener">pandas.DataFrame.merge</a></p>
+<h3 id="groupby">groupby</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> gid, item <span class="keyword">in</span> df.groupby(<span class="string">'age'</span>):</span><br><span class="line">    <span class="comment"># TODO</span></span><br></pre></td></tr></table></figure>
+<p>Group DataFrame or Series using a mapper or by a Series of columns. <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.groupby.html#pandas-dataframe-groupby" target="_blank" rel="noopener">pandas.DataFrame.groupby</a></p>
+<h2 id="refrence">Refrence</h2>
+<ul>
+<li><a href="https://towardsdatascience.com/be-a-more-efficient-data-scientist-today-master-pandas-with-this-guide-ea362d27386" target="_blank" rel="noopener">Be a more efficient data scientist, master pandas with this guide</a></li>
+<li><a href="https://towardsdatascience.com/pandas-tips-and-tricks-33bcc8a40bb9" target="_blank" rel="noopener">Pandas tips and tricks</a></li>
+<li><a href="https://towardsdatascience.com/23-great-pandas-codes-for-data-scientists-cca5ed9d8a38" target="_blank" rel="noopener">23 great Pandas codes for Data Scientists</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/12/28/浅谈pLSA主题模型/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3015,287 +3301,6 @@ Y_{1} &amp; \text{ if } t=1\\
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2018/09/09/简单理解上帝算法EM/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="sean lee">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="明天探索者">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/09/简单理解上帝算法EM/" itemprop="url">简单理解"上帝算法"EM</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-09T20:00:07+08:00">
-                2018-09-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index">
-                    <span itemprop="name">技术日志</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/09/09/简单理解上帝算法EM/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2018/09/09/简单理解上帝算法EM/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>EM(Expectation Maximization, 期望最大)算法也称“上帝算法”，能称为“上帝”可见它有多牛掰。</p>
-<p>EM的原理很简单但真正理解起来是挺痛苦的一件事，本文以凡人视角尝试理解上帝本意。</p>
-<h2 id="知识储备">知识储备</h2>
-<h3 id="kl距离">KL距离</h3>
-<p>KL距离又称相对熵(relative entropy)，用来衡量空间上两个概率分布 <span class="math inline">\(P(x)\)</span>，<span class="math inline">\(Q(x)\)</span> 的相对差距的测度（通俗的说就是两个概率分布的距离）</p>
-<p><span class="math display">\[\begin{align*}
-D_{KL}(P||Q) &amp; = \sum_{i} P(i)log\ \frac{P(i)}{Q(i)} \\
-&amp; = \sum_{i} P(i) log\ P(i) - \sum_{i} P(i) log\  Q(i) \\
-&amp; = E_{P}(log\ P(i)) - E_{P}(log\ Q(i))
-\end{align*} \tag{1}\]</span></p>
-<p><span class="math inline">\((1)\)</span> 式便于理解“距离”的概念，因为A, B两点的距离我们一般表示为 <span class="math inline">\(|A-B|\)</span> ，当 <span class="math inline">\(P\)</span> 和 <span class="math inline">\(Q\)</span> 是同概率分布时KL距离为0</p>
-<h3 id="极大似然估计">极大似然估计</h3>
-<p>极大似然估计，是用来估计一个概率模型的参数的一种方法，它一般求解似然函数</p>
-<p><span class="math display">\[L(\theta | x_{1}...x_{m}) = f_{\theta}(x_{1}...x_{m})\]</span></p>
-<p>取最大值时的参数 <span class="math inline">\(\widehat{\theta}\)</span></p>
-<p><span class="math display">\[\widehat{\theta} = \underset{\theta}{argmax} L(\theta | x_{1}...x_{m})\]</span></p>
-<h3 id="隐变量">隐变量</h3>
-<p>在统计学中，隐变量或潜变量指的是不可观测的随机变量,隐变量可以通过使用数学模型依据观测得的数据被推断出来。</p>
-<p>通俗的说隐变量是存在的但是你无法看到。举个例子吧，分类和聚类看起来是差不多的，都是把一堆相似的东西分到一起，但是分类（显式）提供了类别信息，而聚类没有（显式）提供类别信息，聚类之所以能把一堆相似的东西分到一起可以认为它内部定义了一个“隐藏”的类别信息，可以认为是隐变量</p>
-<p>（上述解释系本人捏造的，不一定正确）</p>
-<h3 id="jensen-不等式">Jensen 不等式</h3>
-<p><img src="/images/posts/em/jensen.jpg"></p>
-<p>如果 <span class="math inline">\(f\)</span> 是凸函数(如上图)， <span class="math inline">\(x\)</span> 是随机变量有</p>
-<p><span class="math display">\[E(f(x)) \geq f(E(x)) \tag{2}\]</span></p>
-<p>凹函数则相反</p>
-<p><span class="math display">\[E(f(x)) \leq f(E(x))\]</span></p>
-<p><strong>当 <span class="math inline">\(x\)</span> 是常量时上式取等</strong>，即上图<span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>两点重合时取等</p>
-<p>Jensen不等式在下述EM算法的推导中很重要</p>
-<h4 id="凹凸函数">凹凸函数</h4>
-<p>可能受中文<code>凹凸</code>字型的影响会对<code>凹凸</code>函数有歧义，凸函数可理解为<code>下凸</code>，凹函数可理解为<code>上凸</code></p>
-<p><img src="/images/posts/em/aotufunc.png"></p>
-<h2 id="em算法的推导">EM算法的推导</h2>
-<p>EM算法主要分两个求解步骤，称为E步和M步</p>
-<h3 id="e步">E步</h3>
-<p>假设有训练集</p>
-<p><span class="math display">\[{x^{1}, ...., x^{m}}\]</span></p>
-<p>包含 <span class="math inline">\(m\)</span> 个独立样本，我们希望从中找到该组数据的模型 <span class="math inline">\(p(x, z)\)</span> 的参数</p>
-<p>在这里我们先以<strong>极大似然</strong>的思想去建立目标函数，取对数似然函数</p>
-<p><span class="math display">\[L(\theta) = \sum_{i=1}^{m} log\ p(x; \theta) \tag{3}\]</span></p>
-<p>我们给 <span class="math inline">\((3)\)</span> 式加入隐变量 <span class="math inline">\(z\)</span> , 对于联合分布 <span class="math inline">\(p(x, z; \theta)\)</span> 有 <span class="math inline">\(\sum_{z}\ p(x, z; \theta) = p(x; \theta)\)</span>, 故有</p>
-<p><span class="math display">\[
-\begin{align*}
-L(\theta) &amp; = \sum_{i=1}^{m} log\ p(x; \theta) \\
-&amp; = \sum_{i=1}^{m} log\ \sum_{z} p(x, z; \theta)
-\end{align*} \tag{4}
-\]</span></p>
-<p><span class="math inline">\(z\)</span> 是随机的隐变量，直接找到参数的估计是很困难的，我们要做的是建立 <span class="math inline">\(L(\theta)\)</span> 的下界，然后<strong>求该下界的最大值，重复求解直至收敛到局部最大值</strong></p>
-<p>因为假设了样本是独立的，故整体的概率有</p>
-<p><span class="math display">\[P = \prod_{i} p(x^{(i)}; \theta) = \prod_{i} \sum_{z^{(i)}}  p(x^{(i)}, z^{(i)}; \theta)\]</span></p>
-<p>为了方便推导，一般两边取对数，故有</p>
-<p><span class="math display">\[\begin{align*}
-log\ P &amp; = \sum_{i} log\ p(x^{(i)}; \theta) \\
-&amp; = \sum_{i} log\  \sum_{z^{(i)}} p(x^{(i)}, z^{(i)}; \theta)
-\end{align*} \tag{5}\]</span></p>
-<p>现在我们假设 <span class="math inline">\(Q_{i}\)</span> 是 <span class="math inline">\(z\)</span> 的某一分布，<span class="math inline">\(Q_{i} \geqslant 0\)</span>， <span class="math inline">\(\sum_{i} Q_{i} = 1\)</span>，此时 <span class="math inline">\((5)\)</span> 有</p>
-<p><span class="math display">\[\begin{align*}
-log\ P &amp; = \sum_{i} log\ p(x^{(i)}; \theta) \\
-&amp; = \sum_{i} log\  \sum_{z^{(i)}} p(x^{(i)}, z^{(i)}; \theta) \\
-&amp; = \sum_{i} log\  \sum_{z^{(i)}} Q_{i}(z^{(i)}) \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}
-\end{align*} \tag{6}\]</span></p>
-<p>对于 <span class="math inline">\((6)\)</span> 有</p>
-<p><span class="math display">\[\sum_{i} log\  \sum_{z^{(i)}} Q_{i}(z^{(i)}) \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} = \sum_{i} log(E_{Q_{i}} (\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}) ) \tag{7}\]</span></p>
-<p>因为<code>log(x)</code>是凹函数，根据<strong>Jensen不等式</strong>，对于<span class="math inline">\((7)\)</span> 有</p>
-<p><span class="math display">\[\begin{align*}
-\sum_{i} log(E_{Q_{i}} ( \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}) )
-\geq \sum_{i} E_{Q_{i}}(log( \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})}) )
-=\sum_{i} \sum_{z^{(i)}} Q_{i}(z^{(i)}) log\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} 
-\end{align*} \tag{8}\]</span></p>
-<p>因此由<span class="math inline">\((8)\)</span>可得</p>
-<p><span class="math display">\[\begin{align*}
-log\ P &amp; = \sum_{i} log\ p(x^{(i)}; \theta) \\
-&amp; = \sum_{i} log\  \sum_{z^{(i)}} p(x^{(i)}, z^{(i)}; \theta) \\
-&amp; = \sum_{i} log\  \sum_{z^{(i)}} Q_{i}(z^{(i)}) \frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} \\
-&amp; \geq \sum_{i} \sum_{z^{(i)}} Q_{i}(z^{(i)}) log\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} 
-\end{align*} \tag{9}\]</span></p>
-<p>因为之前已经说了我们要求最大下界，回到Jensen不等式 <span class="math inline">\((2)\)</span> 当x为常量时才能取等号，也就是对于 <span class="math inline">\((8)\)</span> 当</p>
-<p><span class="math display">\[\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} = c \tag{10}\]</span></p>
-<p><span class="math inline">\(c\)</span> 为常数时才能取等，从<strong>KL距离</strong>解释就是当<span class="math inline">\(p\)</span> 和 <span class="math inline">\(Q\)</span> 的KL距离为0时才能取等，也就是说 <span class="math inline">\(p\)</span> 和 <span class="math inline">\(Q\)</span> 是同分布的，而由 <span class="math inline">\((10)\)</span>可知 <strong><span class="math inline">\(p\)</span> 和 <span class="math inline">\(Q\)</span> 是线性关系</strong>，故属于同分布, 对<span class="math inline">\(p\)</span>归一化有</p>
-<p><span class="math display">\[\frac{p(x^{(i)}, z^{(i)}; \theta)}{\sum_{z} p(x^{(i)}, z; \theta)} = 1 \tag{11}\]</span></p>
-<p>此时刚好满足 <span class="math inline">\(\sum_{z} Q_{i}(z^{(i)}) = 1\)</span>，因此我们可以用 <span class="math inline">\(p\)</span> 来表示 <span class="math inline">\(Q\)</span></p>
-<p><span class="math display">\[\begin{align*}
-Q_{i}(z^{(i)}) &amp; = \frac{p(x^{(i)}, z^{(i)}; \theta)}{\sum_{z} p(x^{(i)}, z; \theta)} \\
-&amp; = \frac{p(x^{(i)}, z^{(i)}; \theta)}{p(x^{(i)}; \theta)} \\
-&amp; = p(z^{(i)} | x^{(i)}; \theta)
-\end{align*} \tag{12}\]</span></p>
-<p>由<span class="math inline">\((12)\)</span>可知，<span class="math inline">\(Q_{i}(z^{(i)})\)</span> 的估计就是给定 <span class="math inline">\(x^{(i)}\)</span> 下 <span class="math inline">\(z^{(i)}\)</span> 发生的条件分布，此时可以使得 <span class="math inline">\((9)\)</span> 式取等</p>
-<p>因此<strong>E步可以认为是固定参数 <span class="math inline">\(\theta\)</span> 最大化 <span class="math inline">\(Q_{i}(z^{(i)})\)</span></strong></p>
-<h3 id="m步">M步</h3>
-<p><strong>M步的思想是固定住 <span class="math inline">\(Q_{i}(z^{(i)})\)</span> 最大化 <span class="math inline">\(\theta\)</span></strong>，即</p>
-<p><span class="math display">\[\theta := \underset{\theta}{argmax} \sum_{i} \sum_{z^{(i)}} Q_{i}(z^{(i)}) log\frac{p(x^{(i)}, z^{(i)}; \theta)}{Q_{i}(z^{(i)})} \tag{13}\]</span></p>
-<p>至于M步如何求解就是EM算法计算的难点所在，此文不做详细讨论</p>
-<h3 id="综述">综述</h3>
-<p>由上可知EM算法，就是通过E步和M步来循环更新 <span class="math inline">\(\theta\)</span> 和 <span class="math inline">\(Q\)</span> 使得极值推向设定的收敛值</p>
-<h2 id="gmmgaussian-mixed-model-高斯混合模型与em">GMM(Gaussian Mixed Model) 高斯混合模型与EM</h2>
-<p>高斯混合模型是指多个高斯分布的混合 <img src="/images/posts/em/gmm.png"></p>
-<h3 id="一个经典的高斯混合模型的例子">一个经典的高斯混合模型的例子</h3>
-<p>随机挑选10000个志愿者，然后测量他们的身高，若样本中存在男性和女性，且他们的身高分别服从 <span class="math inline">\(N(\mu_{1}, \sigma_{1})\)</span> 和 <span class="math inline">\(N(\mu_{2}, \sigma_{2})\)</span> 的分布，在性别未知的情况下试估计参数 <span class="math inline">\(\mu_{1}\)</span>、<span class="math inline">\(\sigma_{1}\)</span>、<span class="math inline">\(\mu_{2}\)</span>、<span class="math inline">\(\sigma_{2}\)</span></p>
-<p>由于性别未知，用常规的方法是无法求得男女身高对应的高斯分布的，一般用EM算法求解</p>
-<p>在将EM算法求解GMM前，先要知道高斯分布的极大似然估计</p>
-<h3 id="高斯分布的极大似然估计">高斯分布的极大似然估计</h3>
-<p>假定给定一组样本 <span class="math inline">\(x_{1}, x_{2}, ..., x_{n}\)</span> ，已知他们来自于高斯分布 <span class="math inline">\(N(\mu, \sigma)\)</span> ，试估计参数 <span class="math inline">\(\mu\)</span>, <span class="math inline">\(\sigma\)</span></p>
-<p>对数似然估计有</p>
-<p><span class="math display">\[\begin{align*}
-L(x) &amp; = \sum_{i} log \frac{1}{\sqrt{2\pi} \sigma} e^{-\frac{(x_{i}-\mu)^{2}}{2\sigma^{2}}} \\
-&amp; = (\sum_{i} log \frac{1}{\sqrt{2\pi} \sigma}) + (\sum_{i} -\frac{(x_{i}-\mu)^{2}}{2\sigma^{2}}) \\
-&amp; = -\frac{n}{2} log\ 2\pi \sigma^{2} - \frac{1}{2\sigma^{2}} \sum_{i}(x_{i} - \mu)^{2}
-\end{align*} \tag{14}\]</span></p>
-<p>对 <span class="math inline">\(L(x)\)</span> 求偏导有</p>
-<p><span class="math display">\[\frac{\partial L(x)}{\partial \mu} \Rightarrow \mu = \frac{1}{n} \sum_{i} x_{i} \tag{15}\]</span></p>
-<p><span class="math display">\[\frac{\partial L(x)}{\partial \sigma^{2}} \Rightarrow \sigma^{2} = \frac{1}{n}\sum_{i} (x_{i}-\mu)^{2} \tag{16}\]</span></p>
-<p>可知极大似然估计使用了样本均值和样本伪方差（样本方差的分母是 <span class="math inline">\(n-1\)</span>, 这里是 <span class="math inline">\(n\)</span>）来估计参数</p>
-<h3 id="gmm">GMM</h3>
-<p>随机变量 <span class="math inline">\(X\)</span> 是由k个高斯分布混合而成，取各个高斯分布的概率为 <span class="math inline">\(\pi_{1}, \pi_{2}, ..., \pi_{k}\)</span> 第 <span class="math inline">\(i\)</span> 个高斯分布的均值为 <span class="math inline">\(\mu_{i}\)</span> ，方差为 <span class="math inline">\(\Sigma_{i}\)</span> 。若观测到随机变量的一系列样本 <span class="math inline">\(x_{1}, x_{2}, ..., x_{n}\)</span> ,试估计参数 <span class="math inline">\(\underset{\pi}{\rightarrow} (\pi_{1}, \pi_{2}, ..., \pi_{k})\)</span> 、<span class="math inline">\(\underset{\mu}{\rightarrow} (\mu_{1}, \mu_{2}, ..., \mu_{k})\)</span> 和 <span class="math inline">\(\underset{\Sigma}{\rightarrow} (\Sigma_{1}, \Sigma_{2}, ..., \Sigma_{k})\)</span></p>
-<p>对上述问题先建立对数似然函数</p>
-<p><span class="math display">\[L_{\pi, \mu, \Sigma} (x) = \sum_{i=1}^{n}log(\sum_{k=1}^{K} \pi_{k} N(x_{i} | \mu_{k}, \Sigma_{k})) \tag{17}\]</span></p>
-<p>由于在对数函数里有加和一般是不以直接求偏导的，故采用EM算法取估计参数</p>
-<h4 id="e步-1">E步</h4>
-<p>E步主要估计数据来自哪个组份(E步假设待估计参数是固定的)：对于每个样本 <span class="math inline">\(x_{i}\)</span> 它由<strong>第k个组份生成的概率</strong>为：</p>
-<p><span class="math display">\[\gamma(i, k) = \frac{\pi_{k} N(x_{i}|\mu_{k}, \Sigma_{k})}{\sum_{j=1}^{k} \pi_{j}N(X_{i} | \mu_{j}, \Sigma_{j})} \tag{18}\]</span></p>
-<p>#### M步 对于所有样本点，对于组份k而言，可看做生成了 { <span class="math inline">\(\gamma(i, k)x_{i} | i=1, 2, ..., N\)</span> } 这些点，组分k是一个标准的高斯分布，由 <span class="math inline">\((15), (16)\)</span> 可得</p>
-<p><span class="math display">\[\left\{\begin{matrix}
-N_{k} = \sum_{i=1}^{n}\gamma (i, k) \\ 
-\mu_{k} = \frac{1}{N_{k}} \sum_{i=1}^{n}\gamma (i, k) x_{i} \\ 
-\Sigma_{k} = \frac{1}{N_{k}} \sum_{i=1}^{n}\gamma (i, k)(x_{i} - \mu_{i})^{2} \\ 
-\pi_{k} = \frac{N_{k}}{n} = \frac{1}{n} \sum_{i}^{n}\gamma (i, k)
-\end{matrix}\right. \tag{19}\]</span></p>
-<h2 id="refrence">Refrence</h2>
-<p>[0] https://zh.wikipedia.org/wiki/%E9%9A%90%E5%8F%98%E9%87%8F</p>
-<p>[1] 李航 《统计学习方法》</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3350,7 +3355,7 @@ N_{k} = \sum_{i=1}^{n}\gamma (i, k) \\
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3360,7 +3365,7 @@ N_{k} = \sum_{i=1}^{n}\gamma (i, k) \\
               
               
               <div class="site-state-item site-state-categories">
-                <a href="/categories/index-1.html">
+                <a href="/categories/index.html">
                   <span class="site-state-item-count">1</span>
                   <span class="site-state-item-name">分类</span>
                 </a>

@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="sean lee`s blog" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="注意：这是一篇英文文章 Pandas is a powerful python library for data processing, here I will introduce some Apis in Pandas that is frequently used. Two basic data structures Series Pandas Series. Pandas Series is">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pandas数据处理">
+<meta property="og:url" content="http://seanlee97.github.io/2019/02/09/Pandas数据处理/index.html">
+<meta property="og:site_name" content="明天探索者">
+<meta property="og:description" content="注意：这是一篇英文文章 Pandas is a powerful python library for data processing, here I will introduce some Apis in Pandas that is frequently used. Two basic data structures Series Pandas Series. Pandas Series is">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-09T10:30:07.813Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pandas数据处理">
+<meta name="twitter:description" content="注意：这是一篇英文文章 Pandas is a powerful python library for data processing, here I will introduce some Apis in Pandas that is frequently used. Two basic data structures Series Pandas Series. Pandas Series is">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://seanlee97.github.io/2019/02/09/Pandas数据处理/"/>
+
+
+
+
+
+  <title>Pandas数据处理 | 明天探索者</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">明天探索者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2019/02/09/Pandas数据处理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Pandas数据处理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-09T12:27:17+08:00">
+                2019-02-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/02/09/Pandas数据处理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2019/02/09/Pandas数据处理/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>注意：这是一篇英文文章</strong></p>
+<p>Pandas is a powerful python library for data processing, here I will introduce some Apis in Pandas that is frequently used.</p>
+<h2 id="two-basic-data-structures">Two basic data structures</h2>
+<h3 id="series">Series</h3>
+<p>Pandas Series. Pandas Series is a <strong>one-dimensional labeled array</strong> capable of holding data of any type (integer, string, float, python objects, etc.). The axis labels are collectively called index. Pandas Series is nothing but <strong>a column</strong> in an excel sheet.</p>
+<h3 id="dataframe">DataFrame</h3>
+<p><strong>Two-dimensional size-mutable</strong>, potentially heterogeneous tabular data structure with labeled axes (rows and columns). Arithmetic operations align on both row and column labels. Can be thought of as a dict-like container for Series objects or <strong>a table with rows and columns</strong>. The primary pandas data structure.</p>
+<h2 id="basic-usage">Basic usage</h2>
+<h3 id="import-pandas">import pandas</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br></pre></td></tr></table></figure>
+<h3 id="read-data-from-file">Read data from file</h3>
+<p>You can get a DataFame data structure from dataset.</p>
+<h4 id="csv-dataset">CSV dataset</h4>
+<h5 id="read-data">read data</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df = pd.read_csv(<span class="string">"/path/to/file.csv"</span>)</span><br></pre></td></tr></table></figure>
+<p>More arguments please visit <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html#pandas-read-csv" target="_blank" rel="noopener">pandas.read_csv</a></p>
+<h5 id="write-data">write data</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.to_csv(<span class="string">"/path/to/save.csv"</span>, sep=<span class="string">","</span>, index=<span class="keyword">False</span>)</span><br></pre></td></tr></table></figure>
+<p><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_csv.html#pandas-dataframe-to-csv" target="_blank" rel="noopener">documentation</a></p>
+<h4 id="excel-dataset">Excel dataset</h4>
+<h5 id="read-data-1">read data</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df = pd.read_excel(<span class="string">"/path/to/file.xlsx"</span>)</span><br></pre></td></tr></table></figure>
+<p>More arguments please visit <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_excel.html#pandas-read-excel" target="_blank" rel="noopener">pandas.read_excel</a></p>
+<h5 id="write-data-1">write data</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.to_excel(<span class="string">"/path/to/save.csv"</span>, sep=<span class="string">","</span>, index=<span class="keyword">False</span>)</span><br></pre></td></tr></table></figure>
+<p><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_excel.html#pandas-dataframe-to-excel" target="_blank" rel="noopener">documentation</a></p>
+<h3 id="create-series">Create Series</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">names = [<span class="string">'sean li'</span>, <span class="string">'joey liu'</span>, <span class="string">'mary chan'</span>, <span class="string">'john zhang'</span>, <span class="string">'harry liang'</span>, <span class="string">'tim huang'</span>, <span class="string">'chandler tan'</span>]</span><br><span class="line">series = pd.Series(data=names)</span><br><span class="line"></span><br><span class="line">print(series)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">0         sean li</span><br><span class="line">1        joey liu</span><br><span class="line">2       mary chan</span><br><span class="line">3      john zhang</span><br><span class="line">4     harry liang</span><br><span class="line">5       tim huang</span><br><span class="line">6    chandler tan</span><br><span class="line">dtype: object</span><br></pre></td></tr></table></figure>
+<h3 id="create-datafram">Create DataFram</h3>
+<h4 id="from-list">from list</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">datas = [</span><br><span class="line">    (<span class="string">"sean li"</span>, <span class="string">"male"</span>, <span class="number">22</span>, <span class="number">99</span>, <span class="number">98</span>),</span><br><span class="line">    (<span class="string">"joey liu"</span>, <span class="string">"female"</span>, <span class="number">22</span>, <span class="number">100</span>, <span class="number">99</span>),</span><br><span class="line">    (<span class="string">"mary chan"</span>, <span class="string">"female"</span>, <span class="number">21</span>, <span class="number">97</span>, <span class="number">98</span>),</span><br><span class="line">    (<span class="string">"john zhang"</span>, <span class="string">"male"</span>, <span class="number">22</span>, <span class="number">99</span>, <span class="number">96</span>),</span><br><span class="line">    (<span class="string">"harry liang"</span>, <span class="string">"male"</span>, <span class="number">20</span>, <span class="number">89</span>, <span class="number">86</span>),</span><br><span class="line">    (<span class="string">"tim huang"</span>, <span class="string">"male"</span>, <span class="number">21</span>, <span class="number">90</span>, <span class="number">94</span>),</span><br><span class="line">    (<span class="string">"chandler tan"</span>, <span class="string">"male"</span>, <span class="number">20</span>, <span class="number">93</span>, <span class="number">95</span>)</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">df = pd.DataFrame(data=datas, columns=[<span class="string">"name"</span>, <span class="string">"gender"</span>, <span class="string">"age"</span>, </span><br><span class="line">	                                   <span class="string">"math"</span>, <span class="string">"english"</span>])</span><br></pre></td></tr></table></figure>
+<h4 id="from-dict">from dict</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">data_dict = &#123;</span><br><span class="line">	<span class="string">"name"</span>: [<span class="string">'sean li'</span>, <span class="string">'joey liu'</span>, <span class="string">'mary chan'</span>, <span class="string">'john zhang'</span>, <span class="string">'harry liang'</span>, <span class="string">'tim huang'</span>, <span class="string">'chandler tan'</span>],</span><br><span class="line">	<span class="string">"gender"</span>: [<span class="string">'male'</span>, <span class="string">'female'</span>, <span class="string">'female'</span>, <span class="string">'male'</span>, <span class="string">'male'</span>, <span class="string">'male'</span>, <span class="string">'male'</span>], </span><br><span class="line">	<span class="string">"math"</span>: [<span class="number">99</span>, <span class="number">100</span>, <span class="number">97</span>, <span class="number">99</span>, <span class="number">89</span>, <span class="number">90</span>, <span class="number">93</span>],</span><br><span class="line">	<span class="string">"english"</span>: [<span class="number">98</span>, <span class="number">99</span>, <span class="number">98</span>, <span class="number">96</span>, <span class="number">86</span>, <span class="number">94</span>, <span class="number">95</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">df = pd.DataFrame(data_dict)</span><br></pre></td></tr></table></figure>
+<h3 id="basic-information-of-dataframe">Basic information of DataFrame</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.info()</span><br></pre></td></tr></table></figure>
+<p>The function will print the DataFrame`s structure information.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;class &apos;pandas.core.frame.DataFrame&apos;&gt;</span><br><span class="line">RangeIndex: 7 entries, 0 to 6</span><br><span class="line">Data columns (total 5 columns):</span><br><span class="line">name       7 non-null object</span><br><span class="line">gender     7 non-null object</span><br><span class="line">age        7 non-null int64</span><br><span class="line">math       7 non-null int64</span><br><span class="line">english    7 non-null int64</span><br><span class="line">dtypes: int64(3), object(2)</span><br><span class="line">memory usage: 352.0+ bytes</span><br></pre></td></tr></table></figure>
+<h3 id="print-overview-of-columns-whose-values-are-all-of-numeric">print overview of columns whose values are all of numeric</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(df.describe())</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">             age        math    english</span><br><span class="line">count   7.000000    7.000000   7.000000</span><br><span class="line">mean   21.142857   95.285714  95.142857</span><br><span class="line">std     0.899735    4.572173   4.413184</span><br><span class="line">min    20.000000   89.000000  86.000000</span><br><span class="line">25%    20.500000   91.500000  94.500000</span><br><span class="line">50%    21.000000   97.000000  96.000000</span><br><span class="line">75%    22.000000   99.000000  98.000000</span><br><span class="line">max    22.000000  100.000000  99.000000</span><br></pre></td></tr></table></figure>
+<h3 id="list-the-column-names">list the column names</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.columns</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&apos;name&apos;, &apos;gender&apos;, &apos;age&apos;, &apos;math&apos;, &apos;english&apos;]</span><br></pre></td></tr></table></figure>
+<h3 id="list-the-index-names">list the index names</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.index</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RangeIndex(start=0, stop=7, step=1)</span><br></pre></td></tr></table></figure>
+<h3 id="get-shape">get shape</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(df.shape)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(7, 5)</span><br></pre></td></tr></table></figure>
+<h2 id="get-rows">Get rows</h2>
+<h3 id="print-the-first-3-rows">print the first 3 rows</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.head(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">        name  gender  age  math  english</span><br><span class="line">0    sean li    male   22    99       98</span><br><span class="line">1   joey liu  female   22   100       99</span><br><span class="line">2  mary chan  female   21    97       9</span><br></pre></td></tr></table></figure>
+<h3 id="print-the-last-3-rows">print the last 3 rows</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.tail(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">           name gender  age  math  english</span><br><span class="line">4   harry liang   male   20    89       86</span><br><span class="line">5     tim huang   male   21    90       94</span><br><span class="line">6  chandler tan   male   20    93       95</span><br></pre></td></tr></table></figure>
+<h3 id="print-the-nth-row">print the <code>nth</code> row</h3>
+<h4 id="pandas.dataframe.iloc"><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.iloc.html#pandas-dataframe-iloc" target="_blank" rel="noopener">pandas.DataFrame.iloc</a></h4>
+<p>Purely <strong>integer-location based indexing</strong> for selection by position.</p>
+<h5 id="get-single-row">get single row</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.iloc[<span class="number">3</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">name       john zhang</span><br><span class="line">gender           male</span><br><span class="line">age                22</span><br><span class="line">math               99</span><br><span class="line">english            96</span><br><span class="line">Name: 3, dtype: object</span><br></pre></td></tr></table></figure>
+<h5 id="get-rows-in-a-continuous-range">get rows in a continuous range</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.iloc[<span class="number">0</span>:<span class="number">2</span>]  <span class="comment">#== df.iloc[range(3)]</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">        name  gender  age  math  english</span><br><span class="line">0    sean li    male   22    99       98</span><br><span class="line">1   joey liu  female   22   100       99</span><br><span class="line">2  mary chan  female   21    97       98</span><br></pre></td></tr></table></figure>
+<h5 id="get-rows-in-a-discontinuous-range">get rows in a discontinuous range</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.iloc[[<span class="number">0</span>,<span class="number">2</span>]]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">        name  gender  age  math  english</span><br><span class="line">0    sean li    male   22    99       98</span><br><span class="line">2  mary chan  female   21    97       98</span><br></pre></td></tr></table></figure>
+<h4 id="pandas.dataframe.loc"><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.loc.html#pandas-dataframe-loc" target="_blank" rel="noopener">pandas.DataFrame.loc</a></h4>
+<p>Access a group of rows and columns by <strong>label(s)</strong> or a boolean array. It`s similar usage to <code>iloc</code> to get row(s) with default index (<strong>not specify index names</strong>), but two differences in them:</p>
+<ul>
+<li><code>loc</code> can only use positive integer to indicate number or range, so <code>df.loc[-1]</code> is incorrect, <code>df.iloc[-1]</code> is correct syntax.</li>
+<li><code>df.iloc[:2]</code> == <code>df.iloc[range(2)]</code> == <code>df.loc[range(2)]</code> <span class="math inline">\(\neq\)</span> <code>df.loc[:2]</code>, three rows(0, 1, 2) in <code>df.loc[:2]</code>, while two rows(0, 1) in others.</li>
+</ul>
+<h2 id="get-columns">Get columns</h2>
+<h3 id="just-specify-the-column-name-in-square-bracketslike-with-a-dictionary">just specify the column name in square brackets,(like with a dictionary)</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">'name'</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">0         sean li</span><br><span class="line">1        joey liu</span><br><span class="line">2       mary chan</span><br><span class="line">3      john zhang</span><br><span class="line">4     harry liang</span><br><span class="line">5       tim huang</span><br><span class="line">6    chandler tan</span><br><span class="line">Name: name, dtype: object</span><br></pre></td></tr></table></figure>
+<h3 id="pick-columns-by-df.columns">pick column(s) by df.columns</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[df.columns[<span class="number">0</span>:<span class="number">2</span>]]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">           name  gender</span><br><span class="line">0       sean li    male</span><br><span class="line">1      joey liu  female</span><br><span class="line">2     mary chan  female</span><br><span class="line">3    john zhang    male</span><br><span class="line">4   harry liang    male</span><br><span class="line">5     tim huang    male</span><br><span class="line">6  chandler tan    male</span><br></pre></td></tr></table></figure>
+<h2 id="get-specific-rows-and-columns">Get specific rows and columns</h2>
+<h3 id="usage">usage</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 1. selection is integer-based</span><br><span class="line">df.iloc[&lt;row selection], &lt;column selection] </span><br><span class="line"># 2. selection is label-based</span><br><span class="line">df.loc[&lt;row selection], &lt;column selection&gt;]</span><br></pre></td></tr></table></figure>
+<h3 id="iloc">iloc</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.iloc[:<span class="number">2</span>, [<span class="number">0</span>,<span class="number">3</span>,<span class="number">4</span>]]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">       name  math  english</span><br><span class="line">0   sean li    99       98</span><br><span class="line">1  joey liu   100       99</span><br></pre></td></tr></table></figure>
+<h3 id="loc">loc</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.loc[:<span class="number">2</span>, [<span class="string">'name'</span>, <span class="string">'math'</span>, <span class="string">'english'</span>]]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">        name  math  english</span><br><span class="line">0    sean li    99       98</span><br><span class="line">1   joey liu   100       99</span><br><span class="line">2  mary chan    97       98</span><br></pre></td></tr></table></figure>
+<h2 id="basic-functions-of-pandas">Basic functions of pandas</h2>
+<h3 id="logical-operations">logical operations</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">df[df[<span class="string">'age'</span>] == <span class="number">22</span>]</span><br><span class="line">df[(df[<span class="string">'age'</span>] == <span class="number">22</span>) &amp; (df[<span class="string">'math'</span>] &gt; <span class="number">96</span>)]</span><br><span class="line">df[(df[<span class="string">'age'</span>] == <span class="number">22</span>) &amp; (df[<span class="string">'math'</span>] &gt; <span class="number">96</span>) &amp; ~(df[<span class="string">'english'</span>] &lt; <span class="number">96</span>)]</span><br></pre></td></tr></table></figure>
+<p>Subset the data</p>
+<h3 id="pandas-dataframe-methods">pandas DataFrame methods</h3>
+<h4 id="type">type</h4>
+<h5 id="series-1">Series</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type(df[<span class="string">'name'</span>])</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;class &apos;pandas.core.series.Series&apos;&gt;</span><br></pre></td></tr></table></figure>
+<h5 id="dataframe-1">DataFrame</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type(df[[<span class="string">'name'</span>, <span class="string">'age'</span>]])</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;class &apos;pandas.core.frame.DataFrame&apos;&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="head-tail">head() / tail()</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">'name'</span>].head()</span><br><span class="line">df[<span class="string">'name'</span>].tail()</span><br></pre></td></tr></table></figure>
+<h4 id="get-the-unique-entries-of-a-column">get the unique entries of a column</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">'math'</span>].unique()</span><br></pre></td></tr></table></figure>
+<h4 id="split-string">split string</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.name.str.split(<span class="string">" "</span>, expand=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">          0      1</span><br><span class="line">0      sean     li</span><br><span class="line">1      joey    liu</span><br><span class="line">2      mary   chan</span><br><span class="line">3      john  zhang</span><br><span class="line">4     harry  liang</span><br><span class="line">5       tim  huang</span><br><span class="line">6  chandler    tan</span><br></pre></td></tr></table></figure>
+<h4 id="renaming-a-column">renaming a column</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.rename(columns = &#123;<span class="string">'name'</span>: <span class="string">'fullname'</span>&#125;, inplace=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="calculate-for-numerical-columns">calculate for numerical columns</h4>
+<ul>
+<li>pandas.DataFrame.corr() — finds the correlation between columns in a DataFrame.</li>
+<li>pandas.DataFrame.count() — counts the number of non-null values in each DataFrame column.</li>
+<li>pandas.DataFrame.max() — finds the highest value in each column.</li>
+<li>pandas.DataFrame.min() — finds the lowest value in each column.</li>
+<li>pandas.DataFrame.median() — finds the median of each column.</li>
+<li>pandas.DataFrame.std() — finds the standard deviation of each column.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df.mean()</span><br><span class="line">df[<span class="string">'age'</span>].mean()</span><br></pre></td></tr></table></figure>
+<h4 id="counting-occurrences">counting occurrences</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">'age'</span>].value_counts()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">22    3</span><br><span class="line">21    2</span><br><span class="line">20    2</span><br><span class="line">Name: age, dtype: int64</span><br></pre></td></tr></table></figure>
+<h4 id="group-by-and-value_counts">group by and value_counts</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.groupby(<span class="string">'age'</span>)[<span class="string">"math"</span>].value_counts()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">age  math</span><br><span class="line">20   89      1</span><br><span class="line">     93      1</span><br><span class="line">21   90      1</span><br><span class="line">     97      1</span><br><span class="line">22   99      2</span><br><span class="line">     100     1</span><br><span class="line">Name: math, dtype: int64</span><br></pre></td></tr></table></figure>
+<h4 id="map-apply-applymap">map(), apply(), applymap()</h4>
+<ul>
+<li>map() : applies a function to <strong>each element of a column</strong>.</li>
+<li>apply() : applies a function to columns. Use .apply(, axis=1) to do it on the rows.</li>
+<li>applymap() : applies a function to all cells in the table (DataFrame).</li>
+</ul>
+<h5 id="map">map()</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">'name_lens'</span>] = df[<span class="string">'name'</span>].map(len)</span><br><span class="line">print(df[[<span class="string">'name'</span>, <span class="string">'name_lens'</span>]])</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">           name  name_lens</span><br><span class="line">0       sean li          7</span><br><span class="line">1      joey liu          8</span><br><span class="line">2     mary chan          9</span><br><span class="line">3    john zhang         10</span><br><span class="line">4   harry liang         11</span><br><span class="line">5     tim huang          9</span><br><span class="line">6  chandler tan         12</span><br></pre></td></tr></table></figure>
+<h5 id="apply">apply()</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.apply(len)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">name       7</span><br><span class="line">gender     7</span><br><span class="line">age        7</span><br><span class="line">math       7</span><br><span class="line">english    7</span><br><span class="line">dtype: int64</span><br></pre></td></tr></table></figure>
+<h5 id="applymap">applymap()</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.applymap(<span class="keyword">lambda</span> x: len(str(x)))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">   name  gender  age  math  english</span><br><span class="line">0     7       4    2     2        2</span><br><span class="line">1     8       6    2     3        2</span><br><span class="line">2     9       6    2     2        2</span><br><span class="line">3    10       4    2     2        2</span><br><span class="line">4    11       4    2     2        2</span><br><span class="line">5     9       4    2     2        2</span><br><span class="line">6    12       4    2     2        2</span><br></pre></td></tr></table></figure>
+<h2 id="advanced-operations-in-pandas">Advanced operations in pandas</h2>
+<h3 id="sql-join">SQL join</h3>
+<p>joining on 3 columns takes just one line <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.merge(other_df, on=[<span class="string">'column_1'</span>, <span class="string">'column_2'</span>, <span class="string">'column_3'</span>])</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.merge.html#pandas-dataframe-merge" target="_blank" rel="noopener">pandas.DataFrame.merge</a></p>
+<h3 id="groupby">groupby</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> gid, item <span class="keyword">in</span> df.groupby(<span class="string">'age'</span>):</span><br><span class="line">    <span class="comment"># TODO</span></span><br></pre></td></tr></table></figure>
+<p>Group DataFrame or Series using a mapper or by a Series of columns. <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.groupby.html#pandas-dataframe-groupby" target="_blank" rel="noopener">pandas.DataFrame.groupby</a></p>
+<h2 id="refrence">Refrence</h2>
+<ul>
+<li><a href="https://towardsdatascience.com/be-a-more-efficient-data-scientist-today-master-pandas-with-this-guide-ea362d27386" target="_blank" rel="noopener">Be a more efficient data scientist, master pandas with this guide</a></li>
+<li><a href="https://towardsdatascience.com/pandas-tips-and-tricks-33bcc8a40bb9" target="_blank" rel="noopener">Pandas tips and tricks</a></li>
+<li><a href="https://towardsdatascience.com/23-great-pandas-codes-for-data-scientists-cca5ed9d8a38" target="_blank" rel="noopener">23 great Pandas codes for Data Scientists</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechat-qcode.jpg" alt="sean lee wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎关注我的公众号！</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>感谢支持！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="sean lee 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/28/浅谈pLSA主题模型/" rel="next" title="浅谈pLSA主题模型">
+                <i class="fa fa-chevron-left"></i> 浅谈pLSA主题模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="sean lee" />
+            
+              <p class="site-author-name" itemprop="name">sean lee</p>
+              <p class="site-description motion-element" itemprop="description">NLP / DL / Python / Julia / C++</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">33</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index-1.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/SeanLee97" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:xmlee97@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://plus.google.com/u/0/114423502510761945752" target="_blank" title="Google">
+                      
+                        <i class="fa fa-fw fa-google"></i>Google</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/xmlee97" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#two-basic-data-structures"><span class="nav-number">1.</span> <span class="nav-text">Two basic data structures</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#series"><span class="nav-number">1.1.</span> <span class="nav-text">Series</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dataframe"><span class="nav-number">1.2.</span> <span class="nav-text">DataFrame</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#basic-usage"><span class="nav-number">2.</span> <span class="nav-text">Basic usage</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#import-pandas"><span class="nav-number">2.1.</span> <span class="nav-text">import pandas</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#read-data-from-file"><span class="nav-number">2.2.</span> <span class="nav-text">Read data from file</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#csv-dataset"><span class="nav-number">2.2.1.</span> <span class="nav-text">CSV dataset</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#read-data"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">read data</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#write-data"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">write data</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#excel-dataset"><span class="nav-number">2.2.2.</span> <span class="nav-text">Excel dataset</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#read-data-1"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">read data</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#write-data-1"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">write data</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#create-series"><span class="nav-number">2.3.</span> <span class="nav-text">Create Series</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#create-datafram"><span class="nav-number">2.4.</span> <span class="nav-text">Create DataFram</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#from-list"><span class="nav-number">2.4.1.</span> <span class="nav-text">from list</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#from-dict"><span class="nav-number">2.4.2.</span> <span class="nav-text">from dict</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#basic-information-of-dataframe"><span class="nav-number">2.5.</span> <span class="nav-text">Basic information of DataFrame</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#print-overview-of-columns-whose-values-are-all-of-numeric"><span class="nav-number">2.6.</span> <span class="nav-text">print overview of columns whose values are all of numeric</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#list-the-column-names"><span class="nav-number">2.7.</span> <span class="nav-text">list the column names</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#list-the-index-names"><span class="nav-number">2.8.</span> <span class="nav-text">list the index names</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#get-shape"><span class="nav-number">2.9.</span> <span class="nav-text">get shape</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#get-rows"><span class="nav-number">3.</span> <span class="nav-text">Get rows</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#print-the-first-3-rows"><span class="nav-number">3.1.</span> <span class="nav-text">print the first 3 rows</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#print-the-last-3-rows"><span class="nav-number">3.2.</span> <span class="nav-text">print the last 3 rows</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#print-the-nth-row"><span class="nav-number">3.3.</span> <span class="nav-text">print the nth row</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#pandas.dataframe.iloc"><span class="nav-number">3.3.1.</span> <span class="nav-text">pandas.DataFrame.iloc</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#get-single-row"><span class="nav-number">3.3.1.1.</span> <span class="nav-text">get single row</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#get-rows-in-a-continuous-range"><span class="nav-number">3.3.1.2.</span> <span class="nav-text">get rows in a continuous range</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#get-rows-in-a-discontinuous-range"><span class="nav-number">3.3.1.3.</span> <span class="nav-text">get rows in a discontinuous range</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pandas.dataframe.loc"><span class="nav-number">3.3.2.</span> <span class="nav-text">pandas.DataFrame.loc</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#get-columns"><span class="nav-number">4.</span> <span class="nav-text">Get columns</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#just-specify-the-column-name-in-square-bracketslike-with-a-dictionary"><span class="nav-number">4.1.</span> <span class="nav-text">just specify the column name in square brackets,(like with a dictionary)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pick-columns-by-df.columns"><span class="nav-number">4.2.</span> <span class="nav-text">pick column(s) by df.columns</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#get-specific-rows-and-columns"><span class="nav-number">5.</span> <span class="nav-text">Get specific rows and columns</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#usage"><span class="nav-number">5.1.</span> <span class="nav-text">usage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iloc"><span class="nav-number">5.2.</span> <span class="nav-text">iloc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#loc"><span class="nav-number">5.3.</span> <span class="nav-text">loc</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#basic-functions-of-pandas"><span class="nav-number">6.</span> <span class="nav-text">Basic functions of pandas</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#logical-operations"><span class="nav-number">6.1.</span> <span class="nav-text">logical operations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pandas-dataframe-methods"><span class="nav-number">6.2.</span> <span class="nav-text">pandas DataFrame methods</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#type"><span class="nav-number">6.2.1.</span> <span class="nav-text">type</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#series-1"><span class="nav-number">6.2.1.1.</span> <span class="nav-text">Series</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#dataframe-1"><span class="nav-number">6.2.1.2.</span> <span class="nav-text">DataFrame</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#head-tail"><span class="nav-number">6.2.2.</span> <span class="nav-text">head() / tail()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#get-the-unique-entries-of-a-column"><span class="nav-number">6.2.3.</span> <span class="nav-text">get the unique entries of a column</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#split-string"><span class="nav-number">6.2.4.</span> <span class="nav-text">split string</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#renaming-a-column"><span class="nav-number">6.2.5.</span> <span class="nav-text">renaming a column</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#calculate-for-numerical-columns"><span class="nav-number">6.2.6.</span> <span class="nav-text">calculate for numerical columns</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#counting-occurrences"><span class="nav-number">6.2.7.</span> <span class="nav-text">counting occurrences</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#group-by-and-value_counts"><span class="nav-number">6.2.8.</span> <span class="nav-text">group by and value_counts</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#map-apply-applymap"><span class="nav-number">6.2.9.</span> <span class="nav-text">map(), apply(), applymap()</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#map"><span class="nav-number">6.2.9.1.</span> <span class="nav-text">map()</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#apply"><span class="nav-number">6.2.9.2.</span> <span class="nav-text">apply()</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#applymap"><span class="nav-number">6.2.9.3.</span> <span class="nav-text">applymap()</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#advanced-operations-in-pandas"><span class="nav-number">7.</span> <span class="nav-text">Advanced operations in pandas</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sql-join"><span class="nav-number">7.1.</span> <span class="nav-text">SQL join</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#groupby"><span class="nav-number">7.2.</span> <span class="nav-text">groupby</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#refrence"><span class="nav-number">8.</span> <span class="nav-text">Refrence</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sean lee</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">&nbsp;总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客<span id="busuanzi_value_site_uv"></span>人</span>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://seanlee97.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://seanlee97.github.io/2019/02/09/Pandas数据处理/';
+          this.page.identifier = '2019/02/09/Pandas数据处理/';
+          this.page.title = 'Pandas数据处理';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://seanlee97.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
