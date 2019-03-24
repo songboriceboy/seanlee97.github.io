@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="NLP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文主要记录 NLP 中的特征提取以及特征选择，会借助 sklearn 工具给出具体的例子 预备知识 文本向量化 “向量化”可以理解为“数值化”，为什么要“数值化”？因为文字是不可以运算的，而数值可以。现今的 NLP 方法主要基于统计的方法所以向量化往往是建模的第一步；但也有的方法是基于规则的，这些不用向量化，一般是基于正则匹配的方法完成。 向量化的常用方式 传统向量表示  独热编码 one-ho">
+<meta name="keywords" content="NLP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NLP中的特征提取及特征选择">
+<meta property="og:url" content="http://seanlee97.github.io/2019/03/24/NLP中的特征提取及特征选择/index.html">
+<meta property="og:site_name" content="明天探索者">
+<meta property="og:description" content="本文主要记录 NLP 中的特征提取以及特征选择，会借助 sklearn 工具给出具体的例子 预备知识 文本向量化 “向量化”可以理解为“数值化”，为什么要“数值化”？因为文字是不可以运算的，而数值可以。现今的 NLP 方法主要基于统计的方法所以向量化往往是建模的第一步；但也有的方法是基于规则的，这些不用向量化，一般是基于正则匹配的方法完成。 向量化的常用方式 传统向量表示  独热编码 one-ho">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-24T05:49:34.987Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NLP中的特征提取及特征选择">
+<meta name="twitter:description" content="本文主要记录 NLP 中的特征提取以及特征选择，会借助 sklearn 工具给出具体的例子 预备知识 文本向量化 “向量化”可以理解为“数值化”，为什么要“数值化”？因为文字是不可以运算的，而数值可以。现今的 NLP 方法主要基于统计的方法所以向量化往往是建模的第一步；但也有的方法是基于规则的，这些不用向量化，一般是基于正则匹配的方法完成。 向量化的常用方式 传统向量表示  独热编码 one-ho">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://seanlee97.github.io/2019/03/24/NLP中的特征提取及特征选择/"/>
+
+
+
+
+
+  <title>NLP中的特征提取及特征选择 | 明天探索者</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">明天探索者</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://seanlee97.github.io/2019/03/24/NLP中的特征提取及特征选择/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sean lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="明天探索者">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">NLP中的特征提取及特征选择</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-24T13:45:32+08:00">
+                2019-03-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/24/NLP中的特征提取及特征选择/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2019/03/24/NLP中的特征提取及特征选择/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文主要记录 NLP 中的特征提取以及特征选择，会借助 sklearn 工具给出具体的例子</p>
+<h1 id="预备知识">预备知识</h1>
+<h2 id="文本向量化">文本向量化</h2>
+<p>“向量化”可以理解为“数值化”，为什么要“数值化”？因为文字是不可以运算的，而数值可以。现今的 NLP 方法主要基于统计的方法所以向量化往往是建模的第一步；但也有的方法是基于规则的，这些不用向量化，一般是基于正则匹配的方法完成。</p>
+<h2 id="向量化的常用方式">向量化的常用方式</h2>
+<h3 id="传统向量表示">传统向量表示</h3>
+<ul>
+<li>独热编码 one-hot</li>
+<li>词集模型</li>
+<li>词袋模型</li>
+<li>TF-IDF</li>
+</ul>
+<h3 id="分布式向量表示">分布式向量表示</h3>
+<ul>
+<li>word2vec / fasttext / glove (词级别)</li>
+<li>ELMo / GPT / BERT (句子级别)</li>
+</ul>
+<h2 id="特征提取">特征提取</h2>
+<p>NLP中字、词、词频、ngram、词性…等都可以认为是特征，只要将这些特征向量化就能放入模型中计算。比如词袋模型就是利用的词频特征，word2vec 可以认为是利用了窗口内文本的共现特征。</p>
+<h1 id="使用-sklearn-提取特征">使用 sklearn 提取特征</h1>
+<p>sklearn 是一个很强大的工具不仅集成了丰富的线性模型还提供了强大的特征处理、特征选择方法。本节主要介绍几种向量化 <code>Vectorizer</code> 方法</p>
+<h2 id="countvectorizer">CountVectorizer</h2>
+<p>CountVectorizer 会自动对语料进行分词、得到字典，统计词频等工作，CountVectorizer 提供了很多参数，详见<a href="https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html#sklearn.feature_extraction.text.CountVectorizer" target="_blank" rel="noopener">文档</a> ，大致参数如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class sklearn.feature_extraction.text.CountVectorizer(input=’content’, encoding=’utf-8’, decode_error=’strict’, strip_accents=None, lowercase=True, preprocessor=None, tokenizer=None, stop_words=None, token_pattern=’(?u)\b\w\w+\b’, ngram_range=(1, 1), analyzer=’word’, max_df=1.0, min_df=1, max_features=None, vocabulary=None, binary=False, dtype=&lt;class ‘numpy.int64’&gt;)</span><br></pre></td></tr></table></figure>
+<h3 id="提取-cbow-特征">提取 CBOW 特征</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> CountVectorizer</span><br><span class="line"></span><br><span class="line">corpus = [</span><br><span class="line">	<span class="string">"When did John F. Kennedy get elected as President ?"</span>,</span><br><span class="line">  <span class="string">"How far is the service line from the net in tennis ?"</span>,</span><br><span class="line">  <span class="string">"What is amitriptyline ?"</span>,</span><br><span class="line">  <span class="string">"Who was elected president of South Africa in 1994 ?"</span>,</span><br><span class="line">  <span class="string">"How do you measure earthquakes ?"</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">vectorizer = CountVectorizer(min_df=<span class="number">1</span>) <span class="comment"># 词袋模型</span></span><br><span class="line">X = vectorizer.fit_transform(corpus)</span><br><span class="line">X.toarray()</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">array([[0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0,</span><br><span class="line">        0, 0, 0, 0, 0, 1, 0, 0],</span><br><span class="line">       [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1,</span><br><span class="line">        0, 1, 2, 0, 0, 0, 0, 0],</span><br><span class="line">       [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,</span><br><span class="line">        0, 0, 0, 0, 1, 0, 0, 0],</span><br><span class="line">       [1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0,</span><br><span class="line">        1, 0, 0, 1, 0, 0, 1, 0],</span><br><span class="line">       [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,</span><br><span class="line">        0, 0, 0, 0, 0, 0, 0, 1]], dtype=int64)</span><br></pre></td></tr></table></figure>
+<p>可知是 CBOW 模型，主要用的特征是词频</p>
+<p>我们可以查看特征元素</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; vectorizer.get_feature_names()</span><br><span class="line"></span><br><span class="line">[<span class="string">'1994'</span>, <span class="string">'africa'</span>, <span class="string">'amitriptyline'</span>, <span class="string">'as'</span>, <span class="string">'did'</span>, <span class="string">'do'</span>, <span class="string">'earthquakes'</span>, <span class="string">'elected'</span>, <span class="string">'far'</span>, <span class="string">'from'</span>, <span class="string">'get'</span>, <span class="string">'how'</span>, <span class="string">'in'</span>, <span class="string">'is'</span>, <span class="string">'john'</span>, <span class="string">'kennedy'</span>, <span class="string">'line'</span>, <span class="string">'measure'</span>, <span class="string">'net'</span>, <span class="string">'of'</span>, <span class="string">'president'</span>, <span class="string">'service'</span>, <span class="string">'south'</span>, <span class="string">'tennis'</span>, <span class="string">'the'</span>, <span class="string">'was'</span>, <span class="string">'what'</span>, <span class="string">'when'</span>, <span class="string">'who'</span>, <span class="string">'you'</span>]</span><br></pre></td></tr></table></figure>
+<p>也可以查看得到的词典</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&gt; vectorizer.vocabulary_</span><br><span class="line"></span><br><span class="line">&#123;<span class="string">'1994'</span>: <span class="number">0</span>,</span><br><span class="line"> <span class="string">'africa'</span>: <span class="number">1</span>,</span><br><span class="line"> <span class="string">'amitriptyline'</span>: <span class="number">2</span>,</span><br><span class="line"> <span class="string">'as'</span>: <span class="number">3</span>,</span><br><span class="line"> <span class="string">'did'</span>: <span class="number">4</span>,</span><br><span class="line"> <span class="string">'do'</span>: <span class="number">5</span>,</span><br><span class="line"> <span class="string">'earthquakes'</span>: <span class="number">6</span>,</span><br><span class="line"> <span class="string">'elected'</span>: <span class="number">7</span>,</span><br><span class="line"> <span class="string">'far'</span>: <span class="number">8</span>,</span><br><span class="line"> <span class="string">'from'</span>: <span class="number">9</span>,</span><br><span class="line"> <span class="string">'get'</span>: <span class="number">10</span>,</span><br><span class="line"> <span class="string">'how'</span>: <span class="number">11</span>,</span><br><span class="line"> <span class="string">'in'</span>: <span class="number">12</span>,</span><br><span class="line"> <span class="string">'is'</span>: <span class="number">13</span>,</span><br><span class="line"> <span class="string">'john'</span>: <span class="number">14</span>,</span><br><span class="line"> <span class="string">'kennedy'</span>: <span class="number">15</span>,</span><br><span class="line"> <span class="string">'line'</span>: <span class="number">16</span>,</span><br><span class="line"> <span class="string">'measure'</span>: <span class="number">17</span>,</span><br><span class="line"> <span class="string">'net'</span>: <span class="number">18</span>,</span><br><span class="line"> <span class="string">'of'</span>: <span class="number">19</span>,</span><br><span class="line"> <span class="string">'president'</span>: <span class="number">20</span>,</span><br><span class="line"> <span class="string">'service'</span>: <span class="number">21</span>,</span><br><span class="line"> <span class="string">'south'</span>: <span class="number">22</span>,</span><br><span class="line"> <span class="string">'tennis'</span>: <span class="number">23</span>,</span><br><span class="line"> <span class="string">'the'</span>: <span class="number">24</span>,</span><br><span class="line"> <span class="string">'was'</span>: <span class="number">25</span>,</span><br><span class="line"> <span class="string">'what'</span>: <span class="number">26</span>,</span><br><span class="line"> <span class="string">'when'</span>: <span class="number">27</span>,</span><br><span class="line"> <span class="string">'who'</span>: <span class="number">28</span>,</span><br><span class="line"> <span class="string">'you'</span>: <span class="number">29</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>有时我们希望加入 <code>ngram</code> 特征，这是后可以调整 <code>ngram_range</code> , <code>ngram_range=(1, 1)</code> 代表 unigram，可以认为是字/词级别特征，<code>ngram_range=(2,2)</code> 代表 <code>bigram</code> , <code>ngram_range=(1,2)</code> 代表 <code>unigram</code> 和 <code>bigram</code> 特征都用.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vectorizer = CountVectorizer(ngram_range=(<span class="number">1</span>, <span class="number">2</span>), min_df=<span class="number">1</span>)  <span class="comment"># unigram 和 bigram 特征都用</span></span><br><span class="line">vectorizer.get_feature_names()</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&apos;1994&apos;, &apos;africa&apos;, &apos;africa in&apos;, &apos;amitriptyline&apos;, &apos;as&apos;, &apos;as president&apos;, &apos;did&apos;, &apos;did john&apos;, &apos;do&apos;, &apos;do you&apos;, &apos;earthquakes&apos;, &apos;elected&apos;, &apos;elected as&apos;, &apos;elected president&apos;, &apos;far&apos;, &apos;far is&apos;, &apos;from&apos;, &apos;from the&apos;, &apos;get&apos;, &apos;get elected&apos;, &apos;how&apos;, &apos;how do&apos;, &apos;how far&apos;, &apos;in&apos;, &apos;in 1994&apos;, &apos;in tennis&apos;, &apos;is&apos;, &apos;is amitriptyline&apos;, &apos;is the&apos;, &apos;john&apos;, &apos;john kennedy&apos;, &apos;kennedy&apos;, &apos;kennedy get&apos;, &apos;line&apos;, &apos;line from&apos;, &apos;measure&apos;, &apos;measure earthquakes&apos;, &apos;net&apos;, &apos;net in&apos;, &apos;of&apos;, &apos;of south&apos;, &apos;president&apos;, &apos;president of&apos;, &apos;service&apos;, &apos;service line&apos;, &apos;south&apos;, &apos;south africa&apos;, &apos;tennis&apos;, &apos;the&apos;, &apos;the net&apos;, &apos;the service&apos;, &apos;was&apos;, &apos;was elected&apos;, &apos;what&apos;, &apos;what is&apos;, &apos;when&apos;, &apos;when did&apos;, &apos;who&apos;, &apos;who was&apos;, &apos;you&apos;, &apos;you measure&apos;]</span><br></pre></td></tr></table></figure>
+<h2 id="tfidfvectorizer">TfidfVectorizer</h2>
+<h3 id="提取-tf-idf-特征">提取 TF-IDF 特征</h3>
+<p>CBOW 更多利用的是词频信息，而 tf-idf 可以把词频和文档频率特征利用起来，在文本分类、聚类、以及文本检索排序上有较多的应用。关于 tf-idf 可以查阅本人写的另一篇文章<a href="https://seanlee97.github.io/2018/08/25/%E4%B8%BA%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%8A%A0%E5%85%A5TF-IDF%E7%89%B9%E5%BE%81/">为朴素贝叶斯加入tf-idf特征</a> <br>sklearn 封装的 TfidfVectorizer 和 CountVectorizer 的使用一样，大部分参数也相同，详细参数见<a href="https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html#sklearn.feature_extraction.text.TfidfVectorizer" target="_blank" rel="noopener">文档</a> </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfVectorizer</span><br><span class="line">vectorizer = TfidfVectorizer(min_df=<span class="number">1</span>)</span><br><span class="line">vectorizer.fit_transform(corpus)</span><br><span class="line">X = vectorizer.fit_transform(corpus)</span><br><span class="line">X.toarray()</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">array([[0.        , 0.        , 0.        , 0.37007017, 0.37007017,</span><br><span class="line">        0.        , 0.        , 0.29857028, 0.        , 0.        ,</span><br><span class="line">        0.37007017, 0.        , 0.        , 0.        , 0.37007017,</span><br><span class="line">        0.37007017, 0.        , 0.        , 0.        , 0.        ,</span><br><span class="line">        0.29857028, 0.        , 0.        , 0.        , 0.        ,</span><br><span class="line">        0.        , 0.        , 0.37007017, 0.        , 0.        ],</span><br><span class="line">       [0.        , 0.        , 0.        , 0.        , 0.        ,</span><br><span class="line">        0.        , 0.        , 0.        , 0.28924517, 0.28924517,</span><br><span class="line">        0.        , 0.23336118, 0.23336118, 0.23336118, 0.        ,</span><br><span class="line">        0.        , 0.28924517, 0.        , 0.28924517, 0.        ,</span><br><span class="line">        0.        , 0.28924517, 0.        , 0.28924517, 0.57849034,</span><br><span class="line">        0.        , 0.        , 0.        , 0.        , 0.        ],</span><br><span class="line">       [0.        , 0.        , 0.61418897, 0.        , 0.        ,</span><br><span class="line">        0.        , 0.        , 0.        , 0.        , 0.        ,</span><br><span class="line">        0.        , 0.        , 0.        , 0.49552379, 0.        ,</span><br><span class="line">        0.        , 0.        , 0.        , 0.        , 0.        ,</span><br><span class="line">        0.        , 0.        , 0.        , 0.        , 0.        ,</span><br><span class="line">        0.        , 0.61418897, 0.        , 0.        , 0.        ],</span><br><span class="line">       [0.35460217, 0.35460217, 0.        , 0.        , 0.        ,</span><br><span class="line">        0.        , 0.        , 0.28609079, 0.        , 0.        ,</span><br><span class="line">        0.        , 0.        , 0.28609079, 0.        , 0.        ,</span><br><span class="line">        0.        , 0.        , 0.        , 0.        , 0.35460217,</span><br><span class="line">        0.28609079, 0.        , 0.35460217, 0.        , 0.        ,</span><br><span class="line">        0.35460217, 0.        , 0.        , 0.35460217, 0.        ],</span><br><span class="line">       [0.        , 0.        , 0.        , 0.        , 0.        ,</span><br><span class="line">        0.46369322, 0.46369322, 0.        , 0.        , 0.        ,</span><br><span class="line">        0.        , 0.37410477, 0.        , 0.        , 0.        ,</span><br><span class="line">        0.        , 0.        , 0.46369322, 0.        , 0.        ,</span><br><span class="line">        0.        , 0.        , 0.        , 0.        , 0.        ,</span><br><span class="line">        0.        , 0.        , 0.        , 0.        , 0.46369322]])</span><br></pre></td></tr></table></figure>
+<h2 id="dictvectorizer">DictVectorizer</h2>
+<p>DictVectorizer 可以从 python 的 dict 中得到向量化表示，对于 dict 中的数值型元素直接以原始数值表示，非数值型会转换为 one-hot 编码表征。一般对于 <code>表格</code> 类型的数据如 <code>csv</code> , <code>excel</code> 等文件类型的数据我们都可以转成 dict 然后使用 DictVectorizer 向量化。更多关于 DictVectorizer 的信息，详见 <a href="http://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.DictVectorizer.html#sklearn.feature_extraction.DictVectorizer" target="_blank" rel="noopener">文档</a>  </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_extraction <span class="keyword">import</span> DictVectorizer</span><br><span class="line"></span><br><span class="line">corpus = [</span><br><span class="line">  &#123;<span class="string">'city'</span>: <span class="string">'Dubai'</span>, <span class="string">'temperature'</span>: <span class="number">33.</span>&#125;,</span><br><span class="line">  &#123;<span class="string">'city'</span>: <span class="string">'London'</span>, <span class="string">'temperature'</span>: <span class="number">12.</span>&#125;,</span><br><span class="line">  &#123;<span class="string">'city'</span>: <span class="string">'San Fransisco'</span>, <span class="string">'temperature'</span>: <span class="number">18.</span>&#125;,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">vectorizer = DictVectorizer()</span><br><span class="line">X = vectorizer.fit_transform(corpus)</span><br><span class="line">X.toarray()</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">array([[ 1.,  0.,  0., 33.],</span><br><span class="line">       [ 0.,  1.,  0., 12.],</span><br><span class="line">       [ 0.,  0.,  1., 18.]])</span><br></pre></td></tr></table></figure>
+<h2 id="hashingvectorizer">HashingVectorizer</h2>
+<p>对于越大的语料库，词汇量往往也越大，传统的 VSM 方式得到的向量是高维稀疏的这会使用更多内存。为了解决内存不够用的问题，我们一般有两种方式处理：1. 哈希 2. 使用分布式向量（后面会介绍）在此主要讲解 sklearn 提供的哈希向量化。和之前的向量化类似，HashingVectorizer 提供的类似的接口，类似的参数，它的参数详见<a href="https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.HashingVectorizer.html" target="_blank" rel="noopener">文档</a> </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> HashingVectorizer</span><br><span class="line"></span><br><span class="line">corpus = [</span><br><span class="line">	<span class="string">"When did John F. Kennedy get elected as President ?"</span>,</span><br><span class="line">  <span class="string">"How far is the service line from the net in tennis ?"</span>,</span><br><span class="line">  <span class="string">"What is amitriptyline ?"</span>,</span><br><span class="line">  <span class="string">"Who was elected president of South Africa in 1994 ?"</span>,</span><br><span class="line">  <span class="string">"How do you measure earthquakes ?"</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">vectorizer = HashingVectorizer(n_features=<span class="number">10</span>) <span class="comment"># 输出维度是 10 维</span></span><br><span class="line">X = vectorizer.fit_transform(corpus)</span><br><span class="line">X.toarray()</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">array([[ 0.26726124,  0.        ,  0.        , -0.26726124,  0.26726124,</span><br><span class="line">        -0.80178373,  0.26726124,  0.        ,  0.26726124,  0.        ],</span><br><span class="line">       [ 0.2773501 ,  0.        , -0.5547002 , -0.2773501 ,  0.        ,</span><br><span class="line">        -0.2773501 ,  0.        ,  0.2773501 , -0.5547002 ,  0.2773501 ],</span><br><span class="line">       [ 0.        ,  0.        ,  0.        ,  0.        ,  0.        ,</span><br><span class="line">         0.        ,  0.        ,  0.57735027,  0.57735027,  0.57735027],</span><br><span class="line">       [ 0.        ,  0.33333333, -0.33333333,  0.        ,  0.33333333,</span><br><span class="line">         0.        ,  0.66666667,  0.        ,  0.33333333,  0.33333333],</span><br><span class="line">       [ 0.        ,  0.        ,  0.        ,  0.        ,  0.        ,</span><br><span class="line">        -0.57735027, -0.57735027,  0.        ,  0.57735027,  0.        ]])</span><br></pre></td></tr></table></figure>
+<h1 id="分布式向量的提取">分布式向量的提取</h1>
+<p>在深度学习方法解决 NLP 问题中 Embedding 往往是网络的第一层，Embedding 又称 <code>嵌入</code> 它可以把特征表示成分布式向量，如果特征是词我们可以成为词嵌入(word embedding)，字可以成为字嵌入(char embedding)。常用的嵌入算法有 <code>word2vec</code> 、<code>fasttext</code> 、<code>glove</code> 等。由于深度学习方法往往训练周期比较长这导致了它的灵活性不强，在真正的生产模型中使用更为灵活的线性模型更多。我们的兴趣小组 <code>4AI</code> 写了一个简单的库可以生成分布式向量表示然后放进 sklearn 封装的线性模型中训练，这个库主要基于 gensim 提供的 <code>word2vec</code> 、 <code>fasttext</code> 实现的，库的地址： <a href="https://github.com/4AI/embedding_features" target="_blank" rel="noopener">Github: embedding_features</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> embedding_features.fasttext <span class="keyword">import</span> FasttextFeature</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">corpus = [</span><br><span class="line">  <span class="string">"When did John F. Kennedy get elected as President ?"</span>,</span><br><span class="line">  <span class="string">"How far is the service line from the net in tennis ?"</span>,</span><br><span class="line">  <span class="string">"What is amitriptyline ?"</span>,</span><br><span class="line">  <span class="string">"Who was elected president of South Africa in 1994 ?"</span>,</span><br><span class="line">  <span class="string">"How do you measure earthquakes ?"</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">fea = FasttextFeature(n_dim=<span class="number">16</span>)</span><br><span class="line">X = fea.fit_transform(corpus)</span><br><span class="line">X <span class="comment"># 直接得到向量</span></span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">array([[ 0.0132795 , -0.00994841,  0.01772212,  0.00372253, -0.02406991,</span><br><span class="line">         0.00056058,  0.00999774, -0.00326835,  0.01678256,  0.01890638],</span><br><span class="line">       [ 0.0132795 , -0.00994841,  0.01772212,  0.00372253, -0.02406991,</span><br><span class="line">         0.00056058,  0.00999774, -0.00326835,  0.01678256,  0.01890638],</span><br><span class="line">       [ 0.0132795 , -0.00994841,  0.01772212,  0.00372253, -0.02406991,</span><br><span class="line">         0.00056058,  0.00999774, -0.00326835,  0.01678256,  0.01890638],</span><br><span class="line">       [ 0.0132795 , -0.00994841,  0.01772212,  0.00372253, -0.02406991,</span><br><span class="line">         0.00056058,  0.00999774, -0.00326835,  0.01678256,  0.01890638],</span><br><span class="line">       [ 0.0132795 , -0.00994841,  0.01772212,  0.00372253, -0.02406991,</span><br><span class="line">         0.00056058,  0.00999774, -0.00326835,  0.01678256,  0.01890638]])</span><br></pre></td></tr></table></figure>
+<h1 id="特征选择">特征选择</h1>
+<p>当得到的特征向量维度过高时我们可以通过特征选择的方式选择重要的特征，这起到了降维的效果。当然 PCA 等也是降维的方式。sklearn 的 <code>feature_selection</code>  提供了多种特征选择的方法，比较常用的有 <code>SelectKBest</code> ，一下给出一个通过 <code>卡方检验</code> 来提取特征的例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris</span><br><span class="line">&gt; <span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> SelectKBest, chi2</span><br><span class="line"></span><br><span class="line">&gt; iris = load_iris()</span><br><span class="line">&gt; X, y = iris.data, iris.target</span><br><span class="line">&gt; X.shape</span><br><span class="line"></span><br><span class="line">(<span class="number">150</span>, <span class="number">4</span>)</span><br></pre></td></tr></table></figure>
+<p>用卡法检验选择最重要的两个特征</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; X_new = SelectKBest(chi2, k=<span class="number">2</span>).fit_transform(X, y) <span class="comment"># 取chi2最高的两个特征，可以起到降维的作用</span></span><br><span class="line">&gt; X_new.shape</span><br><span class="line"></span><br><span class="line">(<span class="number">150</span>, <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/wechat-qcode.jpg" alt="sean lee wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎关注我的公众号！</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>感谢支持！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="sean lee 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NLP/" rel="tag"># NLP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/09/Pandas数据处理/" rel="next" title="Pandas数据处理">
+                <i class="fa fa-chevron-left"></i> Pandas数据处理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="sean lee" />
+            
+              <p class="site-author-name" itemprop="name">sean lee</p>
+              <p class="site-description motion-element" itemprop="description">NLP / DL / Python / Julia / C++</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index-1.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index-1.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/SeanLee97" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:xmlee97@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://plus.google.com/u/0/114423502510761945752" target="_blank" title="Google">
+                      
+                        <i class="fa fa-fw fa-google"></i>Google</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://twitter.com/xmlee97" target="_blank" title="Twitter">
+                      
+                        <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#预备知识"><span class="nav-number">1.</span> <span class="nav-text">预备知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#文本向量化"><span class="nav-number">1.1.</span> <span class="nav-text">文本向量化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#向量化的常用方式"><span class="nav-number">1.2.</span> <span class="nav-text">向量化的常用方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#传统向量表示"><span class="nav-number">1.2.1.</span> <span class="nav-text">传统向量表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式向量表示"><span class="nav-number">1.2.2.</span> <span class="nav-text">分布式向量表示</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特征提取"><span class="nav-number">1.3.</span> <span class="nav-text">特征提取</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用-sklearn-提取特征"><span class="nav-number">2.</span> <span class="nav-text">使用 sklearn 提取特征</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#countvectorizer"><span class="nav-number">2.1.</span> <span class="nav-text">CountVectorizer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提取-cbow-特征"><span class="nav-number">2.1.1.</span> <span class="nav-text">提取 CBOW 特征</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tfidfvectorizer"><span class="nav-number">2.2.</span> <span class="nav-text">TfidfVectorizer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提取-tf-idf-特征"><span class="nav-number">2.2.1.</span> <span class="nav-text">提取 TF-IDF 特征</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dictvectorizer"><span class="nav-number">2.3.</span> <span class="nav-text">DictVectorizer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hashingvectorizer"><span class="nav-number">2.4.</span> <span class="nav-text">HashingVectorizer</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式向量的提取"><span class="nav-number">3.</span> <span class="nav-text">分布式向量的提取</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#特征选择"><span class="nav-number">4.</span> <span class="nav-text">特征选择</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sean lee</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">&nbsp;总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客<span id="busuanzi_value_site_uv"></span>人</span>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://seanlee97.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://seanlee97.github.io/2019/03/24/NLP中的特征提取及特征选择/';
+          this.page.identifier = '2019/03/24/NLP中的特征提取及特征选择/';
+          this.page.title = 'NLP中的特征提取及特征选择';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://seanlee97.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+  
+
+  
+
+</body>
+</html>
